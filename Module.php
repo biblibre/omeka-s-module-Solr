@@ -256,7 +256,7 @@ class Module extends AbstractModule
             'client' => [
                 'hostname' => 'localhost',
                 'port' => 8983,
-                'path' => 'solr/default',
+                'path' => 'solr/omeka',
             ],
             'resource_name_field' => 'resource_name_s',
         ];
