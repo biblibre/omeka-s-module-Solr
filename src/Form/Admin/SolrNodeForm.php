@@ -96,7 +96,9 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             'type' => 'Text',
             'options' => [
                 'label' => $translator->translate('Resource name field'),
-                'info' => $translator->translate('Name of Solr field that will contain the resource name (or resource type, e.g. "items", "item_sets", ...). It must be a single-valued, string-based field. WARNING: Changing this will require a complete reindexation.'),
+                'info' => $translator->translate('Name of Solr field that will contain the resource name (or resource type, e.g. "items", "item_sets"…).')
+                    . ' ' . $translator->translate('It must be a single-valued, string-based field.')
+                    . ' ' . $translator->translate('WARNING: Changing this will require a complete reindexation.'),
             ],
             'attributes' => [
                 'required' => true,
@@ -108,7 +110,9 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             'type' => 'Text',
             'options' => [
                 'label' => $translator->translate('Sites field'),
-                'info' => $translator->translate('Name of Solr field that will contain the sites ids. It must be a single-valued, integer-based field. WARNING: Changing this will require a complete reindexation.'),
+                'info' => $translator->translate('Name of Solr field that will contain the sites ids.')
+                    . ' ' . $translator->translate('It must be a single-valued, integer-based field.')
+                    . ' ' . $translator->translate('WARNING: Changing this will require a complete reindexation.'),
             ],
             'attributes' => [
                 'required' => true,
