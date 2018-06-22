@@ -31,6 +31,7 @@ namespace Solr\Form\Admin;
 
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
+use Zend\Form\Element;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;
@@ -49,14 +50,19 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
         $translator = $this->getTranslator();
 
         $this->add([
+            'type' => Element\Collection::class,
             'name' => 'o:source',
-            'type' => 'Select',
             'options' => [
+                'count' => 1,
+                'should_create_template' => true,
+                'allow_add' => true,
                 'label' => $translator->translate('Source'),
-                'value_options' => $this->getSourceOptions(),
-            ],
-            'attributes' => [
-                'required' => true,
+                'target_element' => [
+                    'type' => Element\Select::class,
+                    'options' => [
+                        'value_options' => $this->getSourceOptions(),
+                    ],
+                ],
             ],
         ]);
 
@@ -81,6 +87,8 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
             ],
         ]);
         $this->add($settingsFieldset);
+
+        $this->remove('csrf');
     }
 
     public function setValueExtractorManager(ValueExtractorManager $valueExtractorManager)
