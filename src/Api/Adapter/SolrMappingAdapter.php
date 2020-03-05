@@ -34,6 +34,8 @@ use Omeka\Api\Adapter\AbstractEntityAdapter;
 use Omeka\Api\Request;
 use Omeka\Entity\EntityInterface;
 use Omeka\Stdlib\ErrorStore;
+use Solr\Api\Representation\SolrMappingRepresentation;
+use Solr\Entity\SolrMapping;
 
 class SolrMappingAdapter extends AbstractEntityAdapter
 {
@@ -57,7 +59,7 @@ class SolrMappingAdapter extends AbstractEntityAdapter
      */
     public function getRepresentationClass()
     {
-        return 'Solr\Api\Representation\SolrMappingRepresentation';
+        return SolrMappingRepresentation::class;
     }
 
     /**
@@ -65,7 +67,7 @@ class SolrMappingAdapter extends AbstractEntityAdapter
      */
     public function getEntityClass()
     {
-        return 'Solr\Entity\SolrMapping';
+        return SolrMapping::class;
     }
 
     /**
@@ -97,7 +99,7 @@ class SolrMappingAdapter extends AbstractEntityAdapter
     {
         if (isset($query['solr_node_id'])) {
             $solrNodeAlias = $this->createAlias();
-            $qb->innerJoin('Solr\Entity\SolrMapping.solrNode', $solrNodeAlias);
+            $qb->innerJoin('omeka_root.solrNode', $solrNodeAlias);
             $qb->andWhere($qb->expr()->eq(
                 "$solrNodeAlias.id",
                 $this->createNamedParameter($qb, $query['solr_node_id'])
@@ -105,7 +107,7 @@ class SolrMappingAdapter extends AbstractEntityAdapter
         }
         if (isset($query['resource_name'])) {
             $qb->andWhere($qb->expr()->eq(
-                $this->getEntityClass() . '.resourceName',
+                'omeka_root.resourceName',
                 $this->createNamedParameter($qb, $query['resource_name'])
             ));
         }

@@ -1,29 +1,31 @@
 <?php
+namespace Solr;
+
 return [
     'controllers' => [
         'invokables' => [
-            'Solr\Controller\Admin\Node' => 'Solr\Controller\Admin\NodeController',
+            'Solr\Controller\Admin\Node' => Controller\Admin\NodeController::class,
         ],
         'factories' => [
-            'Solr\Controller\Admin\Mapping' => 'Solr\Service\Controller\MappingControllerFactory',
+            'Solr\Controller\Admin\Mapping' => Service\Controller\MappingControllerFactory::class,
         ],
     ],
     'entity_manager' => [
         'mapping_classes_paths' => [
-            __DIR__ . '/../src/Entity',
+            dirname(__DIR__) . '/src/Entity',
         ],
         'proxy_paths' => [
-            __DIR__ . '/../data/doctrine-proxies',
+            dirname(__DIR__) . '/data/doctrine-proxies',
         ],
     ],
     'api_adapters' => [
         'invokables' => [
-            'solr_nodes' => 'Solr\Api\Adapter\SolrNodeAdapter',
-            'solr_mappings' => 'Solr\Api\Adapter\SolrMappingAdapter',
+            'solr_nodes' => Api\Adapter\SolrNodeAdapter::class,
+            'solr_mappings' => Api\Adapter\SolrMappingAdapter::class,
         ],
     ],
     'navigation' => [
-        'AdminGlobal' => [
+        'AdminModule' => [
             [
                 'label' => 'Solr',
                 'route' => 'admin/solr',
@@ -35,8 +37,8 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            'Solr\Form\Admin\SolrNodeForm' => 'Solr\Service\Form\SolrNodeFormFactory',
-            'Solr\Form\Admin\SolrMappingForm' => 'Solr\Service\Form\SolrMappingFormFactory',
+            'Solr\Form\Admin\SolrNodeForm' => Service\Form\SolrNodeFormFactory::class,
+            'Solr\Form\Admin\SolrMappingForm' => Service\Form\SolrMappingFormFactory::class,
         ],
     ],
     'router' => [
@@ -124,38 +126,38 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'Solr\ValueExtractorManager' => 'Solr\Service\ValueExtractorManagerFactory',
-            'Solr\ValueFormatterManager' => 'Solr\Service\ValueFormatterManagerFactory',
-            'Solr\Schema' => 'Solr\Service\SchemaFactory',
+            'Solr\ValueExtractorManager' => Service\ValueExtractorManagerFactory::class,
+            'Solr\ValueFormatterManager' => Service\ValueFormatterManagerFactory::class,
+            'Solr\Schema' => Service\SchemaFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            dirname(__DIR__) . '/view',
         ],
     ],
     'search_adapters' => [
         'factories' => [
-            'solr' => 'Solr\Service\AdapterFactory',
+            'solr' => Service\AdapterFactory::class,
         ],
     ],
     'solr_value_extractors' => [
         'factories' => [
-            'items' => 'Solr\Service\ValueExtractor\ItemValueExtractorFactory',
-            'item_sets' => 'Solr\Service\ValueExtractor\ItemSetValueExtractorFactory',
+            'items' => Service\ValueExtractor\ItemValueExtractorFactory::class,
+            'item_sets' => Service\ValueExtractor\ItemSetValueExtractorFactory::class,
         ],
     ],
     'solr_value_formatters' => [
         'invokables' => [
-            'date_range' => 'Solr\ValueFormatter\DateRange',
-            'plain_text' => 'Solr\ValueFormatter\PlainText',
+            'date_range' => ValueFormatter\DateRange::class,
+            'plain_text' => ValueFormatter\PlainText::class,
         ],
     ],
     'translator' => [
         'translation_file_patterns' => [
             [
                 'type' => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
+                'base_dir' => dirname(__DIR__) . '/language',
                 'pattern' => '%s.mo',
                 'text_domain' => null,
             ],
