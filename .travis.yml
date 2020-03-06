@@ -1,20 +1,26 @@
 language: php
 
+os: linux
+dist: xenial
+
+services:
+  - mysql
+
 php:
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
 
 cache:
   directories:
     - $HOME/.composer/cache
 
 before_install:
- - nvm install 7
- - nvm use 7
+ - nvm install 12
+ - nvm use 12
 
 install:
-  - yes '' | pecl install solr
+  - yes '' | pecl install solr-2.5.0
   - cd ../..
   - git clone --depth 1 https://github.com/omeka/omeka-s.git
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git omeka-s/modules/Search
