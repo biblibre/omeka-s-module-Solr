@@ -2,14 +2,16 @@
 
 This module provides a [Search](https://github.com/biblibre/omeka-s-module-Search) adapter for [Solr](https://lucene.apache.org/solr/).
 
+[![Travis (.org)](https://img.shields.io/travis/biblibre/omeka-s-module-Solr?logo=travis)](https://travis-ci.org/biblibre/omeka-s-module-Solr)
+
 ## Requirements
 
 - [Solr PHP extension](https://pecl.php.net/package/solr) (>= 2.0.0). It must be enabled for the CLI as well as the web server.
-- A running Solr 5 instance (it may work with other versions, but it's only tested with Solr 5)
+- A running Solr instance. It's recommended to use the latest version of Solr, but it should work with older versions too.
 
 ## Quick start
 
-1. Install the [Search](https://github.com/biblibre/omeka-s-module-Search) module
+1. Install the [Search] module
 2. Install this module
 3. In Search admin pages:
   1. add a new index using the Solr adapter,
@@ -21,6 +23,4 @@ This module provides a [Search](https://github.com/biblibre/omeka-s-module-Searc
 5. Go to your site, then click on the navigation link you just added.
 6. The search form should appear. Type some text then submit the form to display the results.
 
-## Build status
-
-[![Build Status](https://travis-ci.org/biblibre/omeka-s-module-Solr.svg?branch=master)](https://travis-ci.org/biblibre/omeka-s-module-Solr)
+[Search]: https://github.com/biblibre/omeka-s-module-Search
