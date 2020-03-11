@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2016-2017
+ * Copyright BibLibre, 2016-2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -69,6 +69,7 @@ class Module extends AbstractModule
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
         $acl->allow(null, 'Solr\Api\Adapter\SolrNodeAdapter');
         $acl->allow(null, 'Solr\Api\Adapter\SolrMappingAdapter');
+        $acl->allow(null, 'Solr\Api\Adapter\SolrSearchFieldAdapter');
         $acl->allow(null, 'Solr\Entity\SolrNode', 'read');
     }
 
@@ -83,35 +84,60 @@ class Module extends AbstractModule
             throw new ModuleCannotInstallException($message);
         }
 
-        $connection->exec('
-            CREATE TABLE IF NOT EXISTS `solr_node` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `name` varchar(255) NOT NULL,
-                `settings` text,
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-        ');
+        $connection->exec("
+            CREATE TABLE solr_node (
+                id INT AUTO_INCREMENT NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                settings LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)',
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+        ");
+
+        $connection->exec("
+            CREATE TABLE solr_mapping (
+                id INT AUTO_INCREMENT NOT NULL,
+                solr_node_id INT NOT NULL,
+                resource_name VARCHAR(255) NOT NULL,
+                field_name VARCHAR(255) NOT NULL,
+                source VARCHAR(255) NOT NULL,
+                settings LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)',
+                INDEX IDX_A62FEAA6A9C459FB (solr_node_id),
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        ");
+
+        $connection->exec("
+            CREATE TABLE solr_search_field (
+                id INT AUTO_INCREMENT NOT NULL,
+                solr_node_id INT NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                `label` VARCHAR(255) NOT NULL,
+                text_fields LONGTEXT DEFAULT NULL,
+                string_fields LONGTEXT DEFAULT NULL,
+                facet_field VARCHAR(255) DEFAULT NULL,
+                sort_field VARCHAR(255) DEFAULT NULL,
+                UNIQUE INDEX UNIQ_7F4FB7825E237E06 (name),
+                INDEX IDX_7F4FB782A9C459FB (solr_node_id),
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+        ");
+
+        $connection->exec("
+            ALTER TABLE solr_mapping ADD CONSTRAINT FK_A62FEAA6A9C459FB
+            FOREIGN KEY (solr_node_id) REFERENCES solr_node (id) ON DELETE CASCADE
+        ");
+
+        $connection->exec("
+            ALTER TABLE solr_search_field ADD CONSTRAINT FK_7F4FB782A9C459FB
+            FOREIGN KEY (solr_node_id) REFERENCES solr_node (id) ON DELETE CASCADE;
+        ");
+
         $sql = '
             INSERT INTO `solr_node` (`name`, `settings`)
             VALUES ("default", ?)
         ';
         $defaultSettings = $this->getSolrNodeDefaultSettings();
         $connection->executeQuery($sql, [json_encode($defaultSettings)]);
-
-        $connection->exec('
-            CREATE TABLE IF NOT EXISTS `solr_mapping` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `solr_node_id` int(11) unsigned NOT NULL,
-                `resource_name` varchar(255) NOT NULL,
-                `field_name` varchar(255) NOT NULL,
-                `source` varchar(255) NOT NULL,
-                `settings` text,
-                PRIMARY KEY (`id`),
-                CONSTRAINT `solr_mapping_fk_solr_node_id`
-                    FOREIGN KEY (`solr_node_id`) REFERENCES `solr_node` (`id`)
-                    ON DELETE CASCADE ON UPDATE CASCADE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-        ');
     }
 
     public function upgrade($oldVersion, $newVersion,
@@ -240,6 +266,29 @@ class Module extends AbstractModule
             $connection->exec('DROP TABLE IF EXISTS `solr_profile`');
             $connection->exec('DROP TABLE IF EXISTS `solr_field`');
         }
+
+        if (version_compare($oldVersion, '0.6.0', '<')) {
+            $connection->exec("
+                CREATE TABLE solr_search_field (
+                    id INT AUTO_INCREMENT NOT NULL,
+                    solr_node_id INT NOT NULL,
+                    name VARCHAR(255) NOT NULL,
+                    `label` VARCHAR(255) NOT NULL,
+                    text_fields LONGTEXT DEFAULT NULL,
+                    string_fields LONGTEXT DEFAULT NULL,
+                    facet_field VARCHAR(255) DEFAULT NULL,
+                    sort_field VARCHAR(255) DEFAULT NULL,
+                    UNIQUE INDEX UNIQ_7F4FB7825E237E06 (name),
+                    INDEX IDX_7F4FB782A9C459FB (solr_node_id),
+                    PRIMARY KEY(id)
+                ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+            ");
+
+            $connection->exec("
+                ALTER TABLE solr_search_field ADD CONSTRAINT FK_7F4FB782A9C459FB
+                FOREIGN KEY (solr_node_id) REFERENCES solr_node (id) ON DELETE CASCADE;
+            ");
+        }
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)
@@ -258,6 +307,7 @@ class Module extends AbstractModule
                 'path' => 'solr/default',
             ],
             'resource_name_field' => 'resource_name_s',
+            'sites_field' => 'sites_id_is',
         ];
     }
 }

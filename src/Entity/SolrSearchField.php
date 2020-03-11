@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2017-2020
+ * Copyright BibLibre, 2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -34,7 +34,7 @@ use Omeka\Entity\AbstractEntity;
 /**
  * @Entity
  */
-class SolrMapping extends AbstractEntity
+class SolrSearchField extends AbstractEntity
 {
     /**
      * @Id
@@ -50,24 +50,34 @@ class SolrMapping extends AbstractEntity
     protected $solrNode;
 
     /**
-     * @Column(type="string", length=255)
+     * @Column(type="string", length=255, unique=true)
      */
-    protected $resourceName;
+    protected $name;
 
     /**
      * @Column(type="string", length=255)
      */
-    protected $fieldName;
+    protected $label;
 
     /**
-     * @Column(type="string", length=255)
+     * @Column(type="text", nullable=true)
      */
-    protected $source;
+    protected $textFields;
 
     /**
-     * @Column(type="json_array")
+     * @Column(type="text", nullable=true)
      */
-    protected $settings;
+    protected $stringFields;
+
+    /**
+     * @Column(type="string", length=255, nullable=true)
+     */
+    protected $facetField;
+
+    /**
+     * @Column(type="string", length=255, nullable=true)
+     */
+    protected $sortField;
 
     public function getId()
     {
@@ -84,43 +94,79 @@ class SolrMapping extends AbstractEntity
         return $this->solrNode;
     }
 
-    public function setResourceName($resourceName)
+    public function setName($name)
     {
-        $this->resourceName = $resourceName;
+        $this->name = $name;
     }
 
-    public function getResourceName()
+    public function getName()
     {
-        return $this->resourceName;
+        return $this->name;
     }
 
-    public function setFieldName($fieldName)
+    public function setLabel($label)
     {
-        $this->fieldName = $fieldName;
+        $this->label = $label;
     }
 
-    public function getFieldName()
+    public function getLabel()
     {
-        return $this->fieldName;
+        return $this->label;
     }
 
-    public function setSource($source)
+    public function setTextFields($textFields)
     {
-        $this->source = $source;
+        if (empty($textFields)) {
+            $textFields = null;
+        }
+
+        $this->textFields = $textFields;
     }
 
-    public function getSource()
+    public function getTextFields()
     {
-        return $this->source;
+        return $this->textFields;
     }
 
-    public function setSettings($settings)
+    public function setStringFields($stringFields)
     {
-        $this->settings = $settings;
+        if (empty($stringFields)) {
+            $stringFields = null;
+        }
+
+        $this->stringFields = $stringFields;
     }
 
-    public function getSettings()
+    public function getStringFields()
     {
-        return $this->settings;
+        return $this->stringFields;
+    }
+
+    public function setFacetField($facetField)
+    {
+        if (empty($facetField)) {
+            $facetField = null;
+        }
+
+        $this->facetField = $facetField;
+    }
+
+    public function getFacetField()
+    {
+        return $this->facetField;
+    }
+
+    public function setSortField($sortField)
+    {
+        if (empty($sortField)) {
+            $sortField = null;
+        }
+
+        $this->sortField = $sortField;
+    }
+
+    public function getSortField()
+    {
+        return $this->sortField;
     }
 }
