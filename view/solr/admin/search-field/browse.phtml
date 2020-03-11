@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright BibLibre, 2016-2020
+ * Copyright BibLibre, 2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -27,72 +27,78 @@
  */
 ?>
 
-<?php $this->htmlElement('body')->appendAttribute('class', 'solr-node browse'); ?>
+<?php $this->htmlElement('body')->appendAttribute('class', 'solr-mapping browse'); ?>
 <?php $escape = $this->plugin('escapeHtml'); ?>
 
-<?php echo $this->pageTitle($this->translate('Solr configuration')); ?>
+<?php
+    $pageTitle = sprintf($this->translate('Search fields (%s)'), $solrNode->name());
+    echo $this->pageTitle($pageTitle);
+?>
 
 <div id="page-actions">
-    <a class="button" href="<?php echo $this->url('admin/solr/node', ['action' => 'add']); ?>">Add new node</a>
+    <?php $addUrl = $this->url('admin/solr/node-id-fields', [
+        'nodeId' => $solrNode->id(),
+        'action' => 'add',
+    ]); ?>
+    <a class="button" href="<?php echo $addUrl ?>">Add new field</a>
 </div>
 
-<h2>Nodes</h2>
-<?php if (count($nodes) > 0): ?>
+<nav class="breadcrumbs">
+    <?php
+        $text = $this->translate('Back to nodes list');
+        $href = $this->url('admin/solr');
+        echo $this->hyperlink($text, $href, ['class' => 'o-icon-left']);
+    ?>
+</nav>
+
+<?php if (count($fields) > 0): ?>
     <table class="tablesaw" data-tablesaw-mode="stack">
         <thead>
             <tr>
-                <th><?php echo $this->translate('Name'); ?></th>
-                <th><?php echo $this->translate('URL'); ?></th>
-                <th><?php echo $this->translate('Status'); ?></th>
+                <th><?php echo $this->translate('Label (name)'); ?></th>
+                <th><?php echo $this->translate('Text fields'); ?></th>
+                <th><?php echo $this->translate('String fields'); ?></th>
+                <th><?php echo $this->translate('Facet field'); ?></th>
+                <th><?php echo $this->translate('Sort field'); ?></th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($nodes as $node): ?>
+            <?php foreach ($fields as $field): ?>
                 <tr>
                     <td>
-                        <span><?php echo $node->name(); ?></span>
+                        <span><?php echo sprintf('%s (%s)', $field->label(), $field->name()); ?></span>
                         <ul class="actions">
                             <li>
                                 <?php
-                                    echo $node->link('', 'edit', [
+                                    $href = $field->adminUrl('edit');
+                                    echo $this->hyperlink('', $href, [
                                         'class' => 'o-icon-edit',
                                         'title' => $this->translate('Edit'),
                                     ]);
                                 ?>
                             </li>
                             <li>
-                                <?php
-                                    $href = $node->mappingUrl();
-                                    echo $this->hyperlink('', $href, [
-                                        'class' => 'o-icon- fa fa-database',
-                                        'title' => $this->translate('Configure indexation fields'),
-                                    ]);
-                                ?>
-                            </li>
-                            <li>
-                                <?php
-                                    $href = $node->fieldsUrl();
-                                    echo $this->hyperlink('', $href, [
-                                        'class' => 'o-icon-search',
-                                        'title' => $this->translate('Configure search fields'),
-                                    ]);
-                                ?>
-                            </li>
-                            <li>
                                 <a href="#"
-                                data-sidebar-content-url="<?php echo $escape($node->url('delete-confirm')); ?>"
+                                data-sidebar-content-url="<?php echo $escape($field->url('delete-confirm')); ?>"
                                 class="o-icon-delete sidebar-content"
                                 aria-label="<?php echo $escape($this->translate('Delete')); ?>"
                                 title="<?php echo $escape($this->translate('Delete')); ?>"></a>
                             </li>
                         </ul>
                     </td>
-                    <td><?php echo $node->clientUrl(); ?></td>
-                    <td><?php echo $node->status(); ?></td>
+                    <td><?php echo $field->textFields(); ?></td>
+                    <td><?php echo $field->stringFields(); ?></td>
+                    <td><?php echo $field->facetField(); ?></td>
+                    <td><?php echo $field->sortField(); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+<?php else: ?>
+    <p>
+        <?php echo $this->translate('There is no fields defined yet.'); ?>
+        <a href="<?php echo $escape($addUrl); ?>">Add a new field</a>
+    </p>
 <?php endif; ?>
 
 <div class="sidebar">

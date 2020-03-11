@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2016
+ * Copyright BibLibre, 2016-2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -33,8 +33,9 @@ use Zend\Form\Fieldset;
 use Zend\Form\Form;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
+use Zend\InputFilter\InputFilterProviderInterface;
 
-class SolrNodeForm extends Form implements TranslatorAwareInterface
+class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilterProviderInterface
 {
     use TranslatorAwareTrait;
 
@@ -115,6 +116,36 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
+        $settingsFieldset->add([
+            'name' => 'qf',
+            'type' => 'Text',
+            'options' => [
+                'label' => $translator->translate('Query fields') . ' (qf)',
+                'info' => $translator->translate('qf parameter that will be added to the query'),
+            ],
+        ]);
+
+        $settingsFieldset->add([
+            'name' => 'mm',
+            'type' => 'Text',
+            'options' => [
+                'label' => $translator->translate('Minimum should match') . ' (mm)',
+                'info' => $translator->translate('mm parameter that will be added to the query'),
+            ],
+        ]);
+
         $this->add($settingsFieldset);
+    }
+
+    public function getInputFilterSpecification()
+    {
+        return [
+            'qf' => [
+                'required' => false,
+            ],
+            'mm' => [
+                'required' => false,
+            ],
+        ];
     }
 }
