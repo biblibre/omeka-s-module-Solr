@@ -39,8 +39,7 @@ class Adapter extends AbstractAdapter
 {
     const OPERATOR_CONTAINS_ANY_WORD = 'contains_any_word';
     const OPERATOR_CONTAINS_ALL_WORDS = 'contains_all_words';
-    const OPERATOR_CONTAINS_EXPR = 'contains_expr';
-    const OPERATOR_STARTS_WITH = 'starts_with';
+    const OPERATOR_IS_LIKE = 'is_like';
 
     protected $api;
     protected $translator;
@@ -163,13 +162,9 @@ class Adapter extends AbstractAdapter
                 'name' => self::OPERATOR_CONTAINS_ALL_WORDS,
                 'display_name' => $this->translator->translate('contains all words'),
             ],
-            self::OPERATOR_CONTAINS_EXPR => [
-                'name' => self::OPERATOR_CONTAINS_EXPR,
-                'display_name' => $this->translator->translate('contains expression'),
-            ],
-            self::OPERATOR_STARTS_WITH => [
-                'name' => self::OPERATOR_STARTS_WITH,
-                'display_name' => $this->translator->translate('starts with'),
+            self::OPERATOR_IS_LIKE => [
+                'name' => self::OPERATOR_IS_LIKE,
+                'display_name' => $this->translator->translate('is like'),
             ],
         ];
 

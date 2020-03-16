@@ -308,14 +308,19 @@ class Querier extends AbstractQuerier
                     }, $words));
                     break;
 
-                case Adapter::OPERATOR_CONTAINS_EXPR:
+                case Adapter::OPERATOR_IS_LIKE:
                     $solrFields = $searchField->stringFields();
-                    $term = sprintf('/.*%s.*/', $this->escapeRegexp($q['term']));
-                    break;
-
-                case Adapter::OPERATOR_STARTS_WITH:
-                    $solrFields = $searchField->stringFields();
-                    $term = sprintf('/%s.*/', $this->escapeRegexp($q['term']));
+                    $parts = preg_split('/([*?])/', $q['term'], -1, PREG_SPLIT_DELIM_CAPTURE);
+                    $term = implode('', array_map(function ($part) {
+                        if ($part === '*') {
+                            return '.*';
+                        }
+                        if ($part === '?') {
+                            return '.';
+                        }
+                        return $this->escapeRegexp($part);
+                    }, $parts));
+                    $term = sprintf('/%s/', $term);
                     break;
 
                 default:
