@@ -225,11 +225,13 @@ class Querier extends AbstractQuerier
             }
         }
 
-        foreach ($solrResponse['facet_counts']['facet_fields'] as $name => $values) {
-            foreach ($values as $value => $count) {
-                if ($count > 0) {
-                    $searchField = $searchFieldMapByFacetField[$name];
-                    $response->addFacetCount($searchField->name(), $value, $count);
+        if (!empty($solrResponse['facet_counts']['facet_fields'])) {
+            foreach ($solrResponse['facet_counts']['facet_fields'] as $name => $values) {
+                foreach ($values as $value => $count) {
+                    if ($count > 0) {
+                        $searchField = $searchFieldMapByFacetField[$name];
+                        $response->addFacetCount($searchField->name(), $value, $count);
+                    }
                 }
             }
         }
