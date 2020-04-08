@@ -32,10 +32,8 @@ namespace Solr\ValueExtractor;
 use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\AbstractResourceRepresentation;
-use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
-use Omeka\Api\Representation\ValueRepresentation;
 
-class ItemValueExtractor implements ValueExtractorInterface
+class ItemValueExtractor extends AbstractValueExtractor
 {
     protected $api;
 
@@ -92,11 +90,21 @@ class ItemValueExtractor implements ValueExtractorInterface
             $fields['media']['children'][$term]['label'] = $term;
         }
 
+        $params = ['fields' => $fields];
+        $params = $this->triggerEvent('solr.value_extractor.fields', null, $params);
+        $fields = $params['fields'];
+
         return $fields;
     }
 
     public function extractValue(AbstractResourceRepresentation $item, $field)
     {
+        $params = ['field' => $field, 'value' => null];
+        $params = $this->triggerEvent('solr.value_extractor.extract_value', $item, $params);
+        if (isset($params['value'])) {
+            return $params['value'];
+        }
+
         if ($field === 'created') {
             return $item->created();
         }
@@ -161,33 +169,6 @@ class ItemValueExtractor implements ValueExtractorInterface
             } else {
                 $itemSetExtractedValue = $this->extractPropertyValue($itemSet, $field);
                 $extractedValue = array_merge($extractedValue, $itemSetExtractedValue);
-            }
-        }
-
-        return $extractedValue;
-    }
-
-    /**
-     * Extract the values of the given property of the given item.
-     * If the value is a resource, then its title is used.
-     * @param AbstractResourceEntityRepresentation $representation Item
-     * @param string $field Property (RDF term).
-     * @return string[] Human-readable values.
-     */
-    protected function extractPropertyValue(AbstractResourceEntityRepresentation $representation, $field)
-    {
-        $extractedValue = [];
-        /* @var $values ValueRepresentation[] */
-        $values = $representation->value($field, ['all' => true, 'default' => []]);
-        foreach ($values as $i => $value) {
-            $type = $value->type();
-            if ($type === 'literal' || $type == 'uri') {
-                $extractedValue[] = (string) $value;
-            } elseif ('resource' === explode(':', $type)[0]) {
-                $resourceTitle = $value->valueResource()->displayTitle('');
-                if (!empty($resourceTitle)) {
-                    $extractedValue[] = $resourceTitle;
-                }
             }
         }
 
