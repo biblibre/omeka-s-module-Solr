@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright BibLibre, 2016-2020
+ * Copyright BibLibre, 2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -25,18 +26,24 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-?>
 
-<?php $form->prepare(); ?>
+namespace Solr\Service\Form;
 
-<?php echo $this->pageTitle($this->translate('Edit Solr node')); ?>
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Solr\Form\Admin\SolrSearchFieldForm;
 
-<?php echo $this->form()->openTag($form); ?>
-<div id="page-actions">
-    <button><?php echo $this->translate('Save'); ?></button>
-</div>
-<?php echo $this->formCollection($form, false); ?>
-<?php $this->trigger('view.edit.form.after'); ?>
-<?php echo $this->form()->closeTag(); ?>
+class SolrSearchFieldFormFactory implements FactoryInterface
+{
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
+    {
+        $api = $services->get('Omeka\ApiManager');
+        $translator = $services->get('MvcTranslator');
 
-<?php $this->trigger('view.edit.after'); ?>
+        $form = new SolrSearchFieldForm(null, $options);
+        $form->setTranslator($translator);
+        $form->setApiManager($api);
+
+        return $form;
+    }
+}

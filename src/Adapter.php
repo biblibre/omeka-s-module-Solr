@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2016
+ * Copyright BibLibre, 2016-2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -37,6 +37,10 @@ use Solr\Form\ConfigFieldset;
 
 class Adapter extends AbstractAdapter
 {
+    const OPERATOR_CONTAINS_ANY_WORD = 'contains_any_word';
+    const OPERATOR_CONTAINS_ALL_WORDS = 'contains_all_words';
+    const OPERATOR_IS_LIKE = 'is_like';
+
     protected $api;
     protected $translator;
 
@@ -70,18 +74,36 @@ class Adapter extends AbstractAdapter
 
     public function getAvailableFacetFields(SearchIndexRepresentation $index)
     {
-        return $this->getAvailableFields($index);
+        $settings = $index->settings();
+        $solrNodeId = $settings['adapter']['solr_node_id'];
+        $response = $this->api->search('solr_search_fields', [
+            'solr_node_id' => $solrNodeId,
+            'facetable' => true,
+        ]);
+        $searchFields = $response->getContent();
+        $fields = [];
+        foreach ($searchFields as $searchField) {
+            $name = $searchField->name();
+            $fields[$name] = [
+                'name' => $name,
+                'label' => $searchField->label(),
+            ];
+        }
+
+        return $fields;
     }
 
     public function getAvailableSortFields(SearchIndexRepresentation $index)
     {
         $settings = $index->settings();
         $solrNodeId = $settings['adapter']['solr_node_id'];
-        if (!$solrNodeId) {
-            return [];
-        }
+        $response = $this->api->search('solr_search_fields', [
+            'solr_node_id' => $solrNodeId,
+            'sortable' => true,
+        ]);
+        $searchFields = $response->getContent();
 
-        $sortFields = [
+        $fields = [
             'score desc' => [
                 'name' => 'score desc',
                 'label' => $this->translator->translate('Relevance'),
@@ -93,44 +115,59 @@ class Adapter extends AbstractAdapter
             'desc' => $this->translator->translate('Desc'),
         ];
 
-        $solrNode = $this->api->read('solr_nodes', $solrNodeId)->getContent();
-        $schema = $solrNode->schema();
-        $response = $this->api->search('solr_mappings', [
-            'solr_node_id' => $solrNode->id(),
-        ]);
-        $mappings = $response->getContent();
-        foreach ($mappings as $mapping) {
-            $fieldName = $mapping->fieldName();
-            $schemaField = $schema->getField($fieldName);
-            if ($schemaField && !$schemaField->isMultivalued()) {
-                foreach (['asc', 'desc'] as $direction) {
-                    $name = $fieldName . ' ' . $direction;
-                    $sortFields[$name] = [
-                        'name' => $name,
-                    ];
-                }
+        foreach ($searchFields as $searchField) {
+            foreach (['asc', 'desc'] as $direction) {
+                $name = sprintf('%s %s', $searchField->name(), $direction);
+                $label = sprintf('%s %s', $searchField->label(), $directionLabel[$direction]);
+
+                $fields[$name] = [
+                    'name' => $name,
+                    'label' => $label,
+                ];
             }
         }
 
-        return $sortFields;
+        return $fields;
     }
 
-    public function getAvailableFields(SearchIndexRepresentation $index)
+    public function getAvailableSearchFields(SearchIndexRepresentation $index)
     {
         $settings = $index->settings();
         $solrNodeId = $settings['adapter']['solr_node_id'];
-        $response = $this->api->search('solr_mappings', [
+        $response = $this->api->search('solr_search_fields', [
             'solr_node_id' => $solrNodeId,
+            'searchable' => true,
         ]);
-        $mappings = $response->getContent();
+        $searchFields = $response->getContent();
         $fields = [];
-        foreach ($mappings as $mapping) {
-            $name = $mapping->fieldName();
-            $facetFields[$name] = [
+        foreach ($searchFields as $searchField) {
+            $name = $searchField->name();
+            $fields[$name] = [
                 'name' => $name,
+                'label' => $searchField->label(),
             ];
         }
 
-        return $facetFields;
+        return $fields;
+    }
+
+    public function getAvailableOperators(SearchIndexRepresentation $index)
+    {
+        $operators = [
+            self::OPERATOR_CONTAINS_ANY_WORD => [
+                'name' => self::OPERATOR_CONTAINS_ANY_WORD,
+                'display_name' => $this->translator->translate('contains any word'),
+            ],
+            self::OPERATOR_CONTAINS_ALL_WORDS => [
+                'name' => self::OPERATOR_CONTAINS_ALL_WORDS,
+                'display_name' => $this->translator->translate('contains all words'),
+            ],
+            self::OPERATOR_IS_LIKE => [
+                'name' => self::OPERATOR_IS_LIKE,
+                'display_name' => $this->translator->translate('is like'),
+            ],
+        ];
+
+        return $operators;
     }
 }

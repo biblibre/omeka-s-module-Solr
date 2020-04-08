@@ -5,6 +5,7 @@ return [
     'controllers' => [
         'invokables' => [
             'Solr\Controller\Admin\Node' => Controller\Admin\NodeController::class,
+            'Solr\Controller\Admin\SearchField' => Controller\Admin\SearchFieldController::class,
         ],
         'factories' => [
             'Solr\Controller\Admin\Mapping' => Service\Controller\MappingControllerFactory::class,
@@ -22,6 +23,7 @@ return [
         'invokables' => [
             'solr_nodes' => Api\Adapter\SolrNodeAdapter::class,
             'solr_mappings' => Api\Adapter\SolrMappingAdapter::class,
+            'solr_search_fields' => Api\Adapter\SolrSearchFieldAdapter::class,
         ],
     ],
     'navigation' => [
@@ -39,6 +41,7 @@ return [
         'factories' => [
             'Solr\Form\Admin\SolrNodeForm' => Service\Form\SolrNodeFormFactory::class,
             'Solr\Form\Admin\SolrMappingForm' => Service\Form\SolrMappingFormFactory::class,
+            'Solr\Form\Admin\SolrSearchFieldForm' => Service\Form\SolrSearchFieldFormFactory::class,
         ],
     ],
     'router' => [
@@ -115,6 +118,27 @@ return [
                                     ],
                                     'constraints' => [
                                         'id' => '\d+',
+                                    ],
+                                ],
+                            ],
+                            'node-id-fields' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/node/:nodeId/fields[/:action]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                        'controller' => 'SearchField',
+                                        'action' => 'browse',
+                                    ],
+                                ],
+                            ],
+                            'node-id-fields-id' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/node/:nodeId/fields/:id/:action',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                        'controller' => 'SearchField',
                                     ],
                                 ],
                             ],

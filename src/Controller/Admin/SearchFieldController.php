@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2017-2020
+ * Copyright BibLibre, 2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -32,50 +32,22 @@ namespace Solr\Controller\Admin;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Omeka\Form\ConfirmForm;
-use Solr\Form\Admin\SolrMappingForm;
-use Solr\ValueExtractor\Manager as ValueExtractorManager;
+use Solr\Form\Admin\SolrSearchFieldForm;
 
-class MappingController extends AbstractActionController
+class SearchFieldController extends AbstractActionController
 {
-    protected $valueExtractorManager;
-
-    public function setValueExtractorManager(ValueExtractorManager $valueExtractorManager)
-    {
-        $this->valueExtractorManager = $valueExtractorManager;
-    }
-
     public function browseAction()
     {
         $solrNodeId = $this->params('nodeId');
-        $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-
-        $valueExtractors = [];
-        foreach ($this->valueExtractorManager->getRegisteredNames() as $name) {
-            $valueExtractors[$name] = $this->valueExtractorManager->get($name);
-        }
-
-        $view = new ViewModel;
-        $view->setVariable('solrNode', $solrNode);
-        $view->setVariable('valueExtractors', $valueExtractors);
-
-        return $view;
-    }
-
-    public function browseResourceAction()
-    {
-        $solrNodeId = $this->params('nodeId');
-        $resourceName = $this->params('resourceName');
 
         $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-        $mappings = $this->api()->search('solr_mappings', [
+        $fields = $this->api()->search('solr_search_fields', [
             'solr_node_id' => $solrNode->id(),
-            'resource_name' => $resourceName,
         ])->getContent();
 
         $view = new ViewModel;
         $view->setVariable('solrNode', $solrNode);
-        $view->setVariable('resourceName', $resourceName);
-        $view->setVariable('mappings', $mappings);
+        $view->setVariable('fields', $fields);
 
         return $view;
     }
@@ -83,11 +55,9 @@ class MappingController extends AbstractActionController
     public function addAction()
     {
         $solrNodeId = $this->params('nodeId');
-        $resourceName = $this->params('resourceName');
 
-        $form = $this->getForm(SolrMappingForm::class, [
+        $form = $this->getForm(SolrSearchFieldForm::class, [
             'solr_node_id' => $solrNodeId,
-            'resource_name' => $resourceName,
         ]);
 
         $view = new ViewModel;
@@ -99,14 +69,12 @@ class MappingController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $data['o:solr_node']['o:id'] = $solrNodeId;
-                $data['o:resource_name'] = $resourceName;
-                $this->api()->create('solr_mappings', $data);
+                $this->api()->create('solr_search_fields', $data);
 
-                $this->messenger()->addSuccess('Solr mapping created.');
+                $this->messenger()->addSuccess('Search field added');
 
-                return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
+                return $this->redirect()->toRoute('admin/solr/node-id-fields', [
                     'nodeId' => $solrNodeId,
-                    'resourceName' => $resourceName,
                 ]);
             } else {
                 $this->messenger()->addError('There was an error during validation');
@@ -119,16 +87,14 @@ class MappingController extends AbstractActionController
     public function editAction()
     {
         $solrNodeId = $this->params('nodeId');
-        $resourceName = $this->params('resourceName');
         $id = $this->params('id');
 
-        $mapping = $this->api()->read('solr_mappings', $id)->getContent();
+        $field = $this->api()->read('solr_search_fields', $id)->getContent();
 
-        $form = $this->getForm(SolrMappingForm::class, [
+        $form = $this->getForm(SolrSearchFieldForm::class, [
             'solr_node_id' => $solrNodeId,
-            'resource_name' => $resourceName,
         ]);
-        $form->setData($mapping->jsonSerialize());
+        $form->setData($field->jsonSerialize());
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
@@ -139,14 +105,12 @@ class MappingController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $data['o:solr_node']['o:id'] = $solrNodeId;
-                $data['o:resource_name'] = $resourceName;
-                $this->api()->update('solr_mappings', $id, $data);
+                $this->api()->update('solr_search_fields', $id, $data);
 
-                $this->messenger()->addSuccess('Solr mapping modified.');
+                $this->messenger()->addSuccess('Search field updated');
 
-                return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
+                return $this->redirect()->toRoute('admin/solr/node-id-fields', [
                     'nodeId' => $solrNodeId,
-                    'resourceName' => $resourceName,
                 ]);
             } else {
                 $this->messenger()->addError('There was an error during validation');
@@ -159,14 +123,14 @@ class MappingController extends AbstractActionController
     public function deleteConfirmAction()
     {
         $id = $this->params('id');
-        $response = $this->api()->read('solr_mappings', $id);
-        $mapping = $response->getContent();
+        $response = $this->api()->read('solr_search_fields', $id);
+        $field = $response->getContent();
 
         $view = new ViewModel;
         $view->setTerminal(true);
         $view->setTemplate('common/delete-confirm-details');
-        $view->setVariable('resourceLabel', 'solr mapping');
-        $view->setVariable('resource', $mapping);
+        $view->setVariable('resourceLabel', 'search field');
+        $view->setVariable('resource', $field);
 
         return $view;
     }
@@ -174,23 +138,21 @@ class MappingController extends AbstractActionController
     public function deleteAction()
     {
         $id = $this->params('id');
-        $mapping = $this->api()->read('solr_mappings', $id)->getContent();
-        $solrNodeId = $mapping->solrNode()->id();
+        $field = $this->api()->read('solr_search_fields', $id)->getContent();
 
         if ($this->getRequest()->isPost()) {
             $form = $this->getForm(ConfirmForm::class);
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $this->api()->delete('solr_mappings', $id);
-                $this->messenger()->addSuccess('Solr mapping successfully deleted');
+                $this->api()->delete('solr_search_fields', $id);
+                $this->messenger()->addSuccess('Search field successfully deleted');
             } else {
-                $this->messenger()->addError('Solr mapping could not be deleted');
+                $this->messenger()->addError('Search field could not be deleted');
             }
         }
 
-        return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
-            'nodeId' => $solrNodeId,
-            'resourceName' => $mapping->resourceName(),
+        return $this->redirect()->toRoute('admin/solr/node-id-fields', [
+            'nodeId' => $field->solrNode()->id(),
         ]);
     }
 

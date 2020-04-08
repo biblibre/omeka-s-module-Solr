@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2016-2017
+ * Copyright BibLibre, 2016-2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -133,6 +133,20 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         ];
 
         return $url('admin/solr/node-id-mapping-resource', $params, $options);
+    }
+
+    public function fieldsUrl($action = null, $canonical = false)
+    {
+        $url = $this->getViewHelper('Url');
+        $params = [
+            'action' => $action,
+            'nodeId' => $this->id(),
+        ];
+        $options = [
+            'force_canonical' => $canonical,
+        ];
+
+        return $url('admin/solr/node-id-fields', $params, $options);
     }
 
     public function schema()
