@@ -33,7 +33,7 @@ use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\AbstractResourceRepresentation;
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 
-class ItemSetValueExtractor implements ValueExtractorInterface
+class ItemSetValueExtractor extends AbstractValueExtractor
 {
     protected $api;
 
@@ -76,11 +76,21 @@ class ItemSetValueExtractor implements ValueExtractorInterface
             $fields[$term]['label'] = $term;
         }
 
+        $params = ['fields' => $fields];
+        $params = $this->triggerEvent('solr.value_extractor.fields', null, $params);
+        $fields = $params['fields'];
+
         return $fields;
     }
 
     public function extractValue(AbstractResourceRepresentation $itemSet, $field)
     {
+        $params = ['field' => $field, 'value' => null];
+        $params = $this->triggerEvent('solr.value_extractor.extract_value', $itemSet, $params);
+        if (isset($params['value'])) {
+            return $params['value'];
+        }
+
         if ($field === 'created') {
             return $itemSet->created();
         }
@@ -108,19 +118,5 @@ class ItemSetValueExtractor implements ValueExtractorInterface
         }
 
         return $this->extractPropertyValue($itemSet, $field);
-    }
-
-    protected function extractPropertyValue(AbstractResourceEntityRepresentation $representation, $field)
-    {
-        $extractedValue = [];
-        $values = $representation->value($field, ['all' => true, 'default' => []]);
-        foreach ($values as $i => $value) {
-            $type = $value->type();
-            if ($type === 'literal' || $type == 'uri') {
-                $extractedValue[] = (string) $value;
-            }
-        }
-
-        return $extractedValue;
     }
 }
