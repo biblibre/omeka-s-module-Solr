@@ -298,11 +298,19 @@ class Querier extends AbstractQuerier
             switch ($q['operator']) {
                 case Adapter::OPERATOR_CONTAINS_ANY_WORD:
                     $solrFields = $searchField->textFields();
+                    if (empty($solrFields)) {
+                        throw new QuerierException(sprintf('Field %s cannot be used with "contains any word" operator', $searchField->name()));
+                    }
+
                     $term = $this->escape($q['term']);
                     break;
 
                 case Adapter::OPERATOR_CONTAINS_ALL_WORDS:
                     $solrFields = $searchField->textFields();
+                    if (empty($solrFields)) {
+                        throw new QuerierException(sprintf('Field %s cannot be used with "contains all words" operator', $searchField->name()));
+                    }
+
                     $term = $this->escape($q['term']);
                     $words = explode(' ', $term);
                     $term = implode(' ', array_map(function ($word) {
@@ -312,6 +320,10 @@ class Querier extends AbstractQuerier
 
                 case Adapter::OPERATOR_IS_LIKE:
                     $solrFields = $searchField->stringFields();
+                    if (empty($solrFields)) {
+                        throw new QuerierException(sprintf('Field %s cannot be used with "is like" operator', $searchField->name()));
+                    }
+
                     $parts = preg_split('/([*?])/', $q['term'], -1, PREG_SPLIT_DELIM_CAPTURE);
                     $term = implode('', array_map(function ($part) {
                         if ($part === '*') {

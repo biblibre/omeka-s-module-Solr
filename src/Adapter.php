@@ -142,9 +142,20 @@ class Adapter extends AbstractAdapter
         $fields = [];
         foreach ($searchFields as $searchField) {
             $name = $searchField->name();
+
+            $validOperators = [];
+            if (!empty($searchField->textFields())) {
+                $validOperators[] = self::OPERATOR_CONTAINS_ANY_WORD;
+                $validOperators[] = self::OPERATOR_CONTAINS_ALL_WORDS;
+            }
+            if (!empty($searchField->stringFields())) {
+                $validOperators[] = self::OPERATOR_IS_LIKE;
+            }
+
             $fields[$name] = [
                 'name' => $name,
                 'label' => $searchField->label(),
+                'valid_operators' => $validOperators,
             ];
         }
 
