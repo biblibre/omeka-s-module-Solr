@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-13 10:47+0200\n"
-"PO-Revision-Date: 2020-05-13 11:11+0200\n"
+"POT-Creation-Date: 2020-09-29 13:57+0200\n"
+"PO-Revision-Date: 2020-09-29 13:59+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -35,16 +35,16 @@ msgstr "Asc"
 msgid "Desc"
 msgstr "Desc"
 
-#: src/Adapter.php:159
+#: src/Adapter.php:170
 msgid "contains any word"
 msgstr "contient au moins un des mots"
 
-#: src/Adapter.php:163
+#: src/Adapter.php:174
 msgid "contains all words"
 msgstr "contient tous les mots"
 
-#: src/Adapter.php:167
-msgid "is like"
+#: src/Adapter.php:178
+msgid "matches pattern"
 msgstr "correspond au motif"
 
 #: src/Form/Admin/SolrMappingForm.php:67
@@ -259,75 +259,3 @@ msgstr "Il n'y a pas de champs défini pour l'instant."
 #: view/solr/admin/search-field/edit.phtml:30
 msgid "Edit search field"
 msgstr "Modifier le champ de recherche"
-
-#~ msgid "Name"
-#~ msgstr "Nom"
-
-#~ msgid "Description"
-#~ msgstr "Description"
-
-#~ msgid "Indexed"
-#~ msgstr "Indexé"
-
-#~ msgid "Multi-valued"
-#~ msgstr "Multi-valué"
-
-#~ msgid "Resource name"
-#~ msgstr "Nom de la ressource"
-
-#~ msgid "Source"
-#~ msgstr "Source"
-
-#~ msgid "None"
-#~ msgstr "Aucun"
-
-#~ msgid "Add"
-#~ msgstr "Ajouter"
-
-#~ msgid "Name (Description)"
-#~ msgstr "Nom (Description)"
-
-#~ msgid "Edit"
-#~ msgstr "Modifier"
-
-#~ msgid "Delete"
-#~ msgstr "Supprimer"
-
-#~ msgid "Yes"
-#~ msgstr "Oui"
-
-#~ msgid "No"
-#~ msgstr "Non"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "Status"
-#~ msgstr "Statut"
-
-#~ msgid "Fields"
-#~ msgstr "Champs"
-
-#~ msgid "Profiles"
-#~ msgstr "Profils"
-
-#~ msgid "Add Solr profile rule"
-#~ msgstr "Ajouter une règle de profil Solr"
-
-#~ msgid "Solr profile rules"
-#~ msgstr "Règles de profil Solr"
-
-#~ msgid "Back to profile list"
-#~ msgstr "Retour à la liste de profils"
-
-#~ msgid "Edit Solr profile rule"
-#~ msgstr "Modifier la règle de profil Solr"
-
-#~ msgid "Add Solr profile"
-#~ msgstr "Ajouter un profil Solr"
-
-#~ msgid "Solr profiles"
-#~ msgstr "Profils Solr"

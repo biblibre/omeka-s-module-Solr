@@ -318,10 +318,10 @@ class Querier extends AbstractQuerier
                     }, $words));
                     break;
 
-                case Adapter::OPERATOR_IS_LIKE:
+                case Adapter::OPERATOR_MATCHES_PATTERN:
                     $solrFields = $searchField->stringFields();
                     if (empty($solrFields)) {
-                        throw new QuerierException(sprintf('Field %s cannot be used with "is like" operator', $searchField->name()));
+                        throw new QuerierException(sprintf('Field %s cannot be used with "matches pattern" operator', $searchField->name()));
                     }
 
                     $parts = preg_split('/([*?])/', $q['term'], -1, PREG_SPLIT_DELIM_CAPTURE);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-13 10:47+0200\n"
+"POT-Creation-Date: 2020-09-29 13:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,16 +33,16 @@ msgstr ""
 msgid "Desc"
 msgstr ""
 
-#: src/Adapter.php:159
+#: src/Adapter.php:170
 msgid "contains any word"
 msgstr ""
 
-#: src/Adapter.php:163
+#: src/Adapter.php:174
 msgid "contains all words"
 msgstr ""
 
-#: src/Adapter.php:167
-msgid "is like"
+#: src/Adapter.php:178
+msgid "matches pattern"
 msgstr ""
 
 #: src/Form/Admin/SolrMappingForm.php:67
