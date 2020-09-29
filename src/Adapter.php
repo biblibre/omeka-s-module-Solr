@@ -39,6 +39,7 @@ class Adapter extends AbstractAdapter
 {
     const OPERATOR_CONTAINS_ANY_WORD = 'contains_any_word';
     const OPERATOR_CONTAINS_ALL_WORDS = 'contains_all_words';
+    const OPERATOR_CONTAINS_EXPR = 'contains_expr';
     const OPERATOR_MATCHES_PATTERN = 'matches_pattern';
 
     protected $api;
@@ -147,6 +148,7 @@ class Adapter extends AbstractAdapter
             if (!empty($searchField->textFields())) {
                 $validOperators[] = self::OPERATOR_CONTAINS_ANY_WORD;
                 $validOperators[] = self::OPERATOR_CONTAINS_ALL_WORDS;
+                $validOperators[] = self::OPERATOR_CONTAINS_EXPR;
             }
             if (!empty($searchField->stringFields())) {
                 $validOperators[] = self::OPERATOR_MATCHES_PATTERN;
@@ -172,6 +174,10 @@ class Adapter extends AbstractAdapter
             self::OPERATOR_CONTAINS_ALL_WORDS => [
                 'name' => self::OPERATOR_CONTAINS_ALL_WORDS,
                 'display_name' => $this->translator->translate('contains all words'),
+            ],
+            self::OPERATOR_CONTAINS_EXPR => [
+                'name' => self::OPERATOR_CONTAINS_EXPR,
+                'display_name' => $this->translator->translate('contains expression'),
             ],
             self::OPERATOR_MATCHES_PATTERN => [
                 'name' => self::OPERATOR_MATCHES_PATTERN,

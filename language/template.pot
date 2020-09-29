@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:57+0200\n"
+"POT-Creation-Date: 2020-09-29 14:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,27 +21,31 @@ msgstr ""
 msgid "Solr module requires PHP Solr extension, which is not loaded."
 msgstr ""
 
-#: src/Adapter.php:109
+#: src/Adapter.php:110
 msgid "Relevance"
 msgstr ""
 
-#: src/Adapter.php:114
+#: src/Adapter.php:115
 msgid "Asc"
 msgstr ""
 
-#: src/Adapter.php:115
+#: src/Adapter.php:116
 msgid "Desc"
 msgstr ""
 
-#: src/Adapter.php:170
+#: src/Adapter.php:172
 msgid "contains any word"
 msgstr ""
 
-#: src/Adapter.php:174
+#: src/Adapter.php:176
 msgid "contains all words"
 msgstr ""
 
-#: src/Adapter.php:178
+#: src/Adapter.php:180
+msgid "contains expression"
+msgstr ""
+
+#: src/Adapter.php:184
 msgid "matches pattern"
 msgstr ""
 

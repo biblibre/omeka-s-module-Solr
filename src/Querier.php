@@ -318,6 +318,15 @@ class Querier extends AbstractQuerier
                     }, $words));
                     break;
 
+                case Adapter::OPERATOR_CONTAINS_EXPR:
+                    $solrFields = $searchField->textFields();
+                    if (empty($solrFields)) {
+                        throw new QuerierException(sprintf('Field %s cannot be used with "contains expression" operator', $searchField->name()));
+                    }
+
+                    $term = sprintf('"%s"', $this->escape($q['term']));
+                    break;
+
                 case Adapter::OPERATOR_MATCHES_PATTERN:
                     $solrFields = $searchField->stringFields();
                     if (empty($solrFields)) {
