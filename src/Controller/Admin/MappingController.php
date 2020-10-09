@@ -29,8 +29,8 @@
 
 namespace Solr\Controller\Admin;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Omeka\Form\ConfirmForm;
 use Solr\Form\Admin\SolrMappingForm;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;

@@ -29,7 +29,7 @@
 
 namespace Solr\Service;
 
-use Zend\Mvc\Service\AbstractPluginManagerFactory;
+use Laminas\Mvc\Service\AbstractPluginManagerFactory;
 use Solr\ValueExtractor\Manager;
 
 class ValueExtractorManagerFactory extends AbstractPluginManagerFactory

@@ -29,10 +29,10 @@
 
 namespace Solr\Form\Admin;
 
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\I18n\Translator\TranslatorAwareInterface;
+use Laminas\I18n\Translator\TranslatorAwareTrait;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;
 use Solr\ValueFormatter\Manager as ValueFormatterManager;
 
@@ -159,7 +159,7 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
     {
         $valueFormatterManager = $this->getValueFormatterManager();
 
-        // TODO Find a way to tell Zend to accept empty values
+        // TODO Find a way to tell Laminas to accept empty values
         $options = [
             '0' => $this->getTranslator()->translate('None'),
         ];

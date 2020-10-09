@@ -29,11 +29,11 @@
 
 namespace Solr\Form\Admin;
 
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\I18n\Translator\TranslatorAwareInterface;
+use Laminas\I18n\Translator\TranslatorAwareTrait;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilterProviderInterface
 {

@@ -29,7 +29,7 @@
 
 namespace Solr\Form;
 
-use Zend\Form\Fieldset;
+use Laminas\Form\Fieldset;
 
 class ConfigFieldset extends Fieldset
 {

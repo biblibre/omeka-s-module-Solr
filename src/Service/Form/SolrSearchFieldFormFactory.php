@@ -30,7 +30,7 @@
 namespace Solr\Service\Form;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Solr\Form\Admin\SolrSearchFieldForm;
 
 class SolrSearchFieldFormFactory implements FactoryInterface

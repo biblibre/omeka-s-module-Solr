@@ -30,7 +30,7 @@
 namespace Solr\Service\ValueExtractor;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Solr\ValueExtractor\ItemValueExtractor;
 
 class ItemValueExtractorFactory implements FactoryInterface

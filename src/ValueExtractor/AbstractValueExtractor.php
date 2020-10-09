@@ -30,8 +30,8 @@
 namespace Solr\ValueExtractor;
 
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
-use Zend\EventManager\Event;
-use Zend\EventManager\EventManagerAwareTrait;
+use Laminas\EventManager\Event;
+use Laminas\EventManager\EventManagerAwareTrait;
 
 abstract class AbstractValueExtractor implements ValueExtractorInterface
 {
