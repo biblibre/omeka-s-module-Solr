@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reword 'is like' to 'matches pattern'
 
+### Fixed
+
+- Fixed omeka version contraint in config/module.ini
+
 ## [0.7.0] - 2020-09-28
 
 ### Added
