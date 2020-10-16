@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 14:33+0200\n"
+"POT-Creation-Date: 2020-10-19 08:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,6 +47,11 @@ msgstr ""
 
 #: src/Adapter.php:184
 msgid "matches pattern"
+msgstr ""
+
+#: src/Controller/Admin/MappingController.php:223
+#, php-format
+msgid "%d mappings were found and imported"
 msgstr ""
 
 #: src/Form/Admin/SolrMappingForm.php:67
@@ -187,17 +192,25 @@ msgstr ""
 msgid "Solr mapping"
 msgstr ""
 
-#: view/solr/admin/mapping/browse.phtml:40
+#: view/solr/admin/mapping/browse.phtml:42
+msgid "Import mappings"
+msgstr ""
+
+#: view/solr/admin/mapping/browse.phtml:47
 #: view/solr/admin/search-field/browse.phtml:48
 msgid "Back to nodes list"
 msgstr ""
 
-#: view/solr/admin/mapping/browse.phtml:64
+#: view/solr/admin/mapping/browse.phtml:71
 msgid "Rules"
 msgstr ""
 
 #: view/solr/admin/mapping/edit.phtml:30
 msgid "Edit Solr mapping"
+msgstr ""
+
+#: view/solr/admin/mapping/import.phtml:2
+msgid "Solr mapping import"
 msgstr ""
 
 #: view/solr/admin/node/add.phtml:32
@@ -239,4 +252,18 @@ msgstr ""
 
 #: view/solr/admin/search-field/edit.phtml:30
 msgid "Edit search field"
+msgstr ""
+
+#: src/Form/Admin/SolrMappingImportForm.php:45
+msgid ""
+"URL of a JSON-LD representation of Solr mappings, like returned by Omeka S "
+"REST API (eg. https://omeka-s/api/solr_mappings?solr_node_id=1)"
+msgstr ""
+
+#: src/Form/Admin/SolrMappingImportForm.php:56
+msgid "Delete existing mappings"
+msgstr ""
+
+#: src/Form/Admin/SolrMappingImportForm.php:57
+msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""

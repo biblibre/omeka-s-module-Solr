@@ -1,0 +1,14 @@
+<?php
+    $pageTitle = $this->translate('Solr mapping import') . ' (' . $solrNode->name() . ')';
+    echo $this->pageTitle($pageTitle);
+?>
+
+<?php $form->prepare(); ?>
+<?php echo $this->form()->openTag($form); ?>
+    <?php echo $this->formCollection($form, false); ?>
+
+    <div id="page-actions">
+        <a class="cancel button" href="#"><?php echo $this->translate('Cancel'); ?></a>
+        <button type="submit"><?php echo $this->translate('Import'); ?></button>
+    </div>
+<?php echo $this->form()->closeTag(); ?>

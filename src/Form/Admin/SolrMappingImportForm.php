@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright BibLibre, 2017
+ * Copyright BibLibre, 2020
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -27,23 +27,35 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-namespace Solr\Service\Controller;
+namespace Solr\Form\Admin;
 
-use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\Factory\FactoryInterface;
-use Solr\Controller\Admin\MappingController;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Checkbox;
+use Laminas\Form\Element\Url;
 
-class MappingControllerFactory implements FactoryInterface
+class SolrMappingImportForm extends Form
 {
-    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
+    public function init()
     {
-        $valueExtractorManager = $services->get('Solr\ValueExtractorManager');
-        $httpClient = $services->get('Omeka\HttpClient');
+        $this->add([
+            'name' => 'url',
+            'type' => Url::class,
+            'options' => [
+                'label' => 'URL', // @translate
+                'info' => 'URL of a JSON-LD representation of Solr mappings, like returned by Omeka S REST API (eg. https://omeka-s/api/solr_mappings?solr_node_id=1)', // @translate
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
 
-        $controller = new MappingController;
-        $controller->setValueExtractorManager($valueExtractorManager);
-        $controller->setHttpClient($httpClient);
-
-        return $controller;
+        $this->add([
+            'name' => 'delete_mappings',
+            'type' => Checkbox::class,
+            'options' => [
+                'label' => 'Delete existing mappings', // @translate
+                'info' => 'Delete all existing mappings for this Solr node before importing', // @translate
+            ],
+        ]);
     }
 }

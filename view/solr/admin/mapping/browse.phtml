@@ -35,6 +35,13 @@
     echo $this->pageTitle($pageTitle);
 ?>
 
+<div id="page-actions">
+    <?php $importUrl = $this->url('admin/solr/node-id-mapping-import', [
+        'nodeId' => $solrNode->id(),
+    ]); ?>
+    <a class="button" href="<?php echo $importUrl ?>"><?php echo $this->translate('Import mappings'); ?></a>
+</div>
+
 <nav class="breadcrumbs">
     <?php
         $text = $this->translate('Back to nodes list');
