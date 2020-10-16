@@ -43,6 +43,9 @@ return [
             'Solr\Form\Admin\SolrMappingForm' => Service\Form\SolrMappingFormFactory::class,
             'Solr\Form\Admin\SolrSearchFieldForm' => Service\Form\SolrSearchFieldFormFactory::class,
         ],
+        'invokables' => [
+            'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
+        ],
     ],
     'router' => [
         'routes' => [
@@ -118,6 +121,17 @@ return [
                                     ],
                                     'constraints' => [
                                         'id' => '\d+',
+                                    ],
+                                ],
+                            ],
+                            'node-id-mapping-import' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/node/:nodeId/mapping/import',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                        'controller' => 'Mapping',
+                                        'action' => 'import',
                                     ],
                                 ],
                             ],
