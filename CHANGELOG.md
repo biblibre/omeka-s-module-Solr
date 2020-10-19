@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added ability to import mappings from a URL
+
 ## [0.8.0] - 2020-10-14
 
 **BREAKING CHANGE** The module is no longer compatible with Omeka S 2.x
@@ -104,6 +110,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
+[Unreleased]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.8.0...HEAD
 [0.8.0]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.6.0...v0.7.0

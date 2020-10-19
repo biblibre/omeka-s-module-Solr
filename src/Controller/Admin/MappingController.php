@@ -29,19 +29,28 @@
 
 namespace Solr\Controller\Admin;
 
+use Laminas\Http\Client as HttpClient;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Omeka\Form\ConfirmForm;
+use Solr\Api\Representation\SolrNodeRepresentation;
 use Solr\Form\Admin\SolrMappingForm;
+use Solr\Form\Admin\SolrMappingImportForm;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;
 
 class MappingController extends AbstractActionController
 {
     protected $valueExtractorManager;
+    protected $httpClient;
 
     public function setValueExtractorManager(ValueExtractorManager $valueExtractorManager)
     {
         $this->valueExtractorManager = $valueExtractorManager;
+    }
+
+    public function setHttpClient(HttpClient $httpClient)
+    {
+        $this->httpClient = $httpClient;
     }
 
     public function browseAction()
@@ -194,9 +203,78 @@ class MappingController extends AbstractActionController
         ]);
     }
 
+    public function importAction()
+    {
+        $solrNodeId = $this->params('nodeId');
+        $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
+        $form = $this->getForm(SolrMappingImportForm::class);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                try {
+                    $mappings = $this->getMappingsFromUrl($data['url']);
+                    if ($data['delete_mappings']) {
+                        $this->deleteMappings($solrNode);
+                    }
+
+                    $this->importMappings($solrNode, $mappings);
+                    $this->messenger()->addSuccess(sprintf($this->translate('%d mappings were found and imported'), count($mappings)));
+
+                    return $this->redirect()->toRoute('admin/solr/node-id-mapping', [
+                        'nodeId' => $solrNodeId,
+                    ]);
+                } catch (\Exception $e) {
+                    $this->messenger()->addError($e->getMessage());
+                }
+            } else {
+                $this->messenger()->addFormErrors($form);
+            }
+        }
+
+        $view = new ViewModel;
+        $view->setVariable('solrNode', $solrNode);
+        $view->setVariable('form', $form);
+
+        return $view;
+    }
+
     protected function getSolrSchema($solrNodeId)
     {
         $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
         return $solrNode->schema()->getSchema();
+    }
+
+    protected function deleteMappings(SolrNodeRepresentation $solrNode)
+    {
+        $ids = $this->api()->search('solr_mappings', ['solr_node_id' => $solrNode->id()], ['returnScalar' => 'id'])->getContent();
+        $this->api()->batchDelete('solr_mappings', $ids);
+    }
+
+    protected function importMappings(SolrNodeRepresentation $solrNode, array $mappings)
+    {
+        foreach ($mappings as $mapping) {
+            $mapping['o:solr_node'] = ['o:id' => $solrNode->id()];
+            $this->api()->create('solr_mappings', $mapping);
+        }
+    }
+
+    protected function getMappingsFromUrl(string $url)
+    {
+        $this->httpClient->reset();
+        $this->httpClient->setMethod('GET');
+        $this->httpClient->setUri($url);
+        $response = $this->httpClient->send();
+        if (!$response->isSuccess()) {
+            throw new \Exception(sprintf('HTTP request failed for %s : %s', $url, $response->renderStatusLine()));
+        }
+
+        $mappings = json_decode($response->getBody(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception(sprintf('json_decode error: %s', json_last_error_msg()));
+        }
+
+        return $mappings;
     }
 }
