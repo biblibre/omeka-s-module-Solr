@@ -93,8 +93,6 @@ class Indexer extends AbstractIndexer
 
         $resource = $api->read($resource->getResourceName(), $resource->getId())->getContent();
 
-        $this->getLogger()->info(sprintf('Indexing resource %1$s (%2$s)', $resource->id(), $resource->resourceName()));
-
         $client = $this->getClient();
 
         $resourceName = $resource->resourceName();
@@ -177,7 +175,6 @@ class Indexer extends AbstractIndexer
 
     protected function commit()
     {
-        $this->getLogger()->info('Commit');
         $this->getClient()->commit();
     }
 
