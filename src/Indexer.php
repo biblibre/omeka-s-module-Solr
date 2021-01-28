@@ -130,6 +130,11 @@ class Indexer extends AbstractIndexer
             }
         }
 
+        $is_public_field = $solrNodeSettings['is_public_field'];
+        if ($is_public_field) {
+            $document->addField($is_public_field, $resource->isPublic());
+        }
+
         $solrMappings = $api->search('solr_mappings', [
             'resource_name' => $resourceName,
             'solr_node_id' => $solrNode->id(),
