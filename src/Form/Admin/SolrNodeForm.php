@@ -117,6 +117,18 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
         ]);
 
         $settingsFieldset->add([
+            'name' => 'is_public_field',
+            'type' => 'Text',
+            'options' => [
+                'label' => $translator->translate('Is Public field'),
+                'info' => $translator->translate('Name of the Solr field that will contain the isPublic flag. It must be a single-valued, boolean-based field. WARNING: Changing this will require a complete reindexation.'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
+
+        $settingsFieldset->add([
             'name' => 'qf',
             'type' => 'Text',
             'options' => [

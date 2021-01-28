@@ -56,6 +56,7 @@ class Querier extends AbstractQuerier
         $solrNodeSettings = $solrNode->settings();
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
+        $is_public_field = $solrNodeSettings['is_public_field'];
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
@@ -108,6 +109,12 @@ class Querier extends AbstractQuerier
         $site = $query->getSite();
         if (isset($site)) {
             $fq = sprintf('%s:%d', $sites_field, $site->id());
+            $solrQuery->addFilterQuery($fq);
+        }
+
+        $isPublic = $query->getIsPublic();
+        if (isset($isPublic)) {
+            $fq = sprintf('%s:%s', $is_public_field, $isPublic ? 'true' : 'false');
             $solrQuery->addFilterQuery($fq);
         }
 
