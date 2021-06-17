@@ -268,7 +268,7 @@ class Module extends AbstractModule
         }
 
         if (version_compare($oldVersion, '0.6.0', '<')) {
-            $connection->exec("ALTER TABLE solr_mapping DROP CONSTRAINT solr_mapping_fk_solr_node_id");
+            $connection->exec("ALTER TABLE solr_mapping DROP FOREIGN KEY solr_mapping_fk_solr_node_id");
             $connection->exec("
                 ALTER TABLE solr_node
                     MODIFY id INT AUTO_INCREMENT NOT NULL,
