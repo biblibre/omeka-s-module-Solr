@@ -326,6 +326,7 @@ class Module extends AbstractModule
             ],
             'resource_name_field' => 'resource_name_s',
             'sites_field' => 'sites_id_is',
+            'is_public_field' => 'is_public_b',
         ];
     }
 }
