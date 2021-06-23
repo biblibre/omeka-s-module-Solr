@@ -97,7 +97,7 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         $solrClient = new SolrClient($this->clientSettings());
 
         try {
-            $solrPingResponse = $solrClient->ping();
+            $solrPingResponse = @$solrClient->ping();
         } catch (SolrClientException $e) {
             $messages = explode("\n", $e->getMessage());
             return reset($messages);
