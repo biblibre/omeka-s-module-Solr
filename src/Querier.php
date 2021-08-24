@@ -60,6 +60,14 @@ class Querier extends AbstractQuerier
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
+        if ($query->getSpellchecking()) {
+            $solrQuery->setParam('spellcheck', 'true');
+            $solrQuery->setParam('spellcheck.extendedResults', 'true');
+            $solrQuery->setParam('spellcheck.count', 10);
+            $solrQuery->setParam('spellcheck.maxResultsForSuggest', 5);
+            $solrQuery->setParam('spellcheck.collate', 'true');
+            $solrQuery->setParam('spellcheck.maxCollations', 1);
+        }
 
         if (!empty($solrNodeSettings['qf'])) {
             $solrQuery->setParam('qf', $solrNodeSettings['qf']);
@@ -221,6 +229,7 @@ class Querier extends AbstractQuerier
             throw new QuerierException($e->getMessage(), $e->getCode(), $e);
         }
         $solrResponse = $solrQueryResponse->getResponse();
+        $solrQuery->getParam('spellcheck') && $solrResponseSuggestTerms = (array)$solrResponse['spellcheck']['collations'];
 
         $response = new Response;
         $response->setTotalResults($solrResponse['grouped'][$resource_name_field]['matches']);
@@ -242,6 +251,15 @@ class Querier extends AbstractQuerier
                 }
             }
         }
+
+        if (!empty($solrResponseSuggestTerms)) {
+            foreach ($solrResponseSuggestTerms as $suggestion) {
+                array_push($response->suggestTerms, [
+                        'word' => $suggestion,
+                    ]);
+            }
+        }
+    
 
         return $response;
     }
