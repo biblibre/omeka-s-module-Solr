@@ -132,6 +132,15 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
         ]);
 
         $settingsFieldset->add([
+            'name' => 'embed_filters_in_query',
+            'type' => 'Laminas\Form\Element\Checkbox',
+            'options' => [
+                'label' => 'Embed filters in query', // @translate
+                'info' => 'If checked, filters are embedded into the query and impact results score', // @translate
+            ],
+        ]);
+
+        $settingsFieldset->add([
             'name' => 'qf',
             'type' => 'Text',
             'options' => [

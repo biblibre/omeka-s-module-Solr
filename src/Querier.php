@@ -44,6 +44,10 @@ class Querier extends AbstractQuerier
 
     protected $searchFields;
 
+    // Used when embed_filters_in_query is enabled to autoincrement parameter
+    // names (qq1, qq2, ...)
+    protected int $paramIndex = 0;
+
     public function query(Query $query)
     {
         $serviceLocator = $this->getServiceLocator();
@@ -59,6 +63,7 @@ class Querier extends AbstractQuerier
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
+        $embed_filters_in_query = (bool) ($solrNodeSettings['embed_filters_in_query'] ?? false);
         $highlightSettings = $solrNodeSettings['highlight'] ?? [];
         $highlighting = $highlightSettings['highlighting'] ?? false;
         $highlightQueryParts = [];
@@ -179,11 +184,32 @@ class Querier extends AbstractQuerier
         }
 
         $queryFilters = $query->getQueryFilters();
-        foreach ($queryFilters as $queryFilter) {
-            $fq = $this->getQueryStringFromSearchQuery($queryFilter);
-            if (!empty($fq)) {
-                $solrQuery->addFilterQuery($fq);
-                $highlightQueryParts[] = $fq;
+        if ($embed_filters_in_query) {
+            $queryParts = [];
+            $queryParts[] = sprintf('{!edismax qf="%s" v=$qq}', $solrNodeSettings['qf']);
+            $solrQuery->setParam('qq', $q);
+
+            foreach ($queryFilters as $queryFilter) {
+                ['q' => $fq, 'params' => $params] = $this->getEmbeddedQueryStringFromSearchQuery($queryFilter);
+                if (!empty($fq)) {
+                    $queryParts[] = $fq;
+                    $highlightQueryParts[] = $fq;
+                    foreach ($params as $name => $value) {
+                        $solrQuery->setParam($name, $value);
+                    }
+                }
+            }
+            $solrQuery->setQuery(implode(' AND ', $queryParts));
+
+            // Allow embedded queries
+            $solrQuery->setParam('uf', '* _query_');
+        } else {
+            foreach ($queryFilters as $queryFilter) {
+                $fq = $this->getQueryStringFromSearchQuery($queryFilter);
+                if (!empty($fq)) {
+                    $solrQuery->addFilterQuery($fq);
+                    $highlightQueryParts[] = $fq;
+                }
             }
         }
 
@@ -341,7 +367,7 @@ class Querier extends AbstractQuerier
         return $this->solrNode;
     }
 
-    protected function getQueryStringFromSearchQuery($q)
+    protected function getQueryStringFromSearchQuery($q): string
     {
         if (is_string($q)) {
             return $this->escape($q);
@@ -362,63 +388,7 @@ class Querier extends AbstractQuerier
         }
 
         if (is_array($q) && isset($q['field']) && !empty($q['term'])) {
-            $searchField = $this->getSearchField($q['field']);
-            if (!isset($searchField)) {
-                throw new QuerierException(sprintf('Field %s does not exist', $q['field']));
-            }
-
-            $term = trim($q['term']);
-
-            switch ($q['operator']) {
-                case Adapter::OPERATOR_CONTAINS_ANY_WORD:
-                    $solrFields = $searchField->textFields();
-                    if (empty($solrFields)) {
-                        throw new QuerierException(sprintf('Field %s cannot be used with "contains any word" operator', $searchField->name()));
-                    }
-
-                    $term = $this->escape($term);
-                    break;
-
-                case Adapter::OPERATOR_CONTAINS_ALL_WORDS:
-                    $solrFields = $searchField->textFields();
-                    if (empty($solrFields)) {
-                        throw new QuerierException(sprintf('Field %s cannot be used with "contains all words" operator', $searchField->name()));
-                    }
-
-                    $term = $this->escape($term);
-                    if (isset($q['proximity']) && is_numeric($q['proximity'])) {
-                        $term = sprintf('+"%s" ~%s', $term, $q['proximity']);
-                    } else {
-                        $words = explode(' ', $term);
-                        $term = implode(' ', array_map(function ($word) {
-                            return "+$word";
-                        }, $words));
-                    }
-                    break;
-
-                case Adapter::OPERATOR_CONTAINS_EXPR:
-                    $solrFields = $searchField->textFields();
-                    if (empty($solrFields)) {
-                        throw new QuerierException(sprintf('Field %s cannot be used with "contains expression" operator', $searchField->name()));
-                    }
-
-                    $term = sprintf('"%s"', $this->escape($term));
-                    break;
-
-                case Adapter::OPERATOR_MATCHES_PATTERN:
-                    $solrFields = $searchField->stringFields();
-                    if (empty($solrFields)) {
-                        throw new QuerierException(sprintf('Field %s cannot be used with "matches pattern" operator', $searchField->name()));
-                    }
-
-                    $charsToEscape = array_diff(self::SOLR_SPECIAL_CHARS, ['*', '?']);
-                    $charsToEscape[] = ' ';
-                    $term = $this->escapeChars($charsToEscape, $term);
-                    break;
-
-                default:
-                    throw new QuerierException(sprintf("Unknown operator '%s'", $q['operator']));
-            }
+            ['solrFields' => $solrFields, 'term' => $term] = $this->parseFieldOperatorTermQuery($q);
 
             $qs = sprintf('(%s)', implode(' OR ', array_map(function ($solrField) use ($term) {
                 return sprintf('%s:(%s)', $solrField, $term);
@@ -426,6 +396,129 @@ class Querier extends AbstractQuerier
 
             return $qs;
         }
+
+        return '';
+    }
+
+    /**
+     * Takes a query as returned by Search\Query::getQuery or
+     * Search\Query::getQueryFilters and returns a query string that is
+     * embeddable in the main Solr query (`q` parameter), as well as extra
+     * parameters if needed
+     *
+     * @param string|array $q A query as returned by Search\Query::getQuery or
+     *                        Search\Query::getQueryFilters
+     *
+     * @return array An associative array with the following keys:
+     *               * 'q': the embeddable query string
+     *               * 'params': extra parameters to pass to
+     *                           Solr\SolrQuery::setParam
+     */
+    protected function getEmbeddedQueryStringFromSearchQuery(string|array $q): array
+    {
+        if (is_string($q)) {
+            return ['q' => $this->escape($q), 'params' => []];
+        }
+
+        if (is_array($q) && isset($q['match']) && !empty($q['queries'])) {
+            $joiner = $q['match'] === 'any' ? ' OR ' : ' AND ';
+            $parts = array_map(function ($query) {
+                return $this->getEmbeddedQueryStringFromSearchQuery($query);
+            }, $q['queries']);
+            $parts = array_filter($parts, fn ($part) => !empty($part['q']));
+
+            if (!empty($parts)) {
+                $qs = sprintf('(%s)', implode($joiner, array_map(fn($part) => $part['q'], $parts)));
+                $params = array_merge(...array_map(fn($part) => $part['params'], $parts));
+
+                return ['q' => $qs, 'params' => $params];
+            }
+
+            return ['q' => '', 'params' => []];
+        }
+
+        if (is_array($q) && isset($q['field']) && !empty($q['term'])) {
+            ['solrFields' => $solrFields, 'term' => $term] = $this->parseFieldOperatorTermQuery($q);
+
+            $paramName = sprintf('qq%d', ++$this->paramIndex);
+            $qs = sprintf('{!edismax qf="%s" v=$%s}', $solrFields, $paramName);
+            $params = [$paramName => $term];
+
+            return ['q' => $qs, 'params' => $params];
+        }
+
+        return ['q' => '', 'params' => []];
+    }
+
+    /**
+     * Takes an associative array with the keys 'field', 'operator' and 'term'
+     * and returns the corresponding Solr fields and the new term adapted to Solr syntax
+     *
+     * @return array an associative array containing the following keys:
+     *               * 'solrFields': a space-separated list of Solr fields to use
+     *               * 'term': the searched term, adapted to Solr syntax
+     */
+    protected function parseFieldOperatorTermQuery(array $q): array
+    {
+        $searchField = $this->getSearchField($q['field']);
+        if (!isset($searchField)) {
+            throw new QuerierException(sprintf('Field %s does not exist', $q['field']));
+        }
+
+        $term = trim($q['term']);
+
+        switch ($q['operator']) {
+            case Adapter::OPERATOR_CONTAINS_ANY_WORD:
+                $solrFields = $searchField->textFields();
+                if (empty($solrFields)) {
+                    throw new QuerierException(sprintf('Field %s cannot be used with "contains any word" operator', $searchField->name()));
+                }
+
+                $term = $this->escape($term);
+                break;
+
+            case Adapter::OPERATOR_CONTAINS_ALL_WORDS:
+                $solrFields = $searchField->textFields();
+                if (empty($solrFields)) {
+                    throw new QuerierException(sprintf('Field %s cannot be used with "contains all words" operator', $searchField->name()));
+                }
+
+                $term = $this->escape($term);
+                if (isset($q['proximity']) && is_numeric($q['proximity'])) {
+                    $term = sprintf('+"%s" ~%s', $term, $q['proximity']);
+                } else {
+                    $words = explode(' ', $term);
+                    $term = implode(' ', array_map(function ($word) {
+                        return "+$word";
+                    }, $words));
+                }
+                break;
+
+            case Adapter::OPERATOR_CONTAINS_EXPR:
+                $solrFields = $searchField->textFields();
+                if (empty($solrFields)) {
+                    throw new QuerierException(sprintf('Field %s cannot be used with "contains expression" operator', $searchField->name()));
+                }
+
+                $term = sprintf('"%s"', $this->escape($term));
+                break;
+
+            case Adapter::OPERATOR_MATCHES_PATTERN:
+                $solrFields = $searchField->stringFields();
+                if (empty($solrFields)) {
+                    throw new QuerierException(sprintf('Field %s cannot be used with "matches pattern" operator', $searchField->name()));
+                }
+
+                $charsToEscape = array_diff(self::SOLR_SPECIAL_CHARS, ['*', '?']);
+                $charsToEscape[] = ' ';
+                $term = $this->escapeChars($charsToEscape, $term);
+                break;
+
+            default:
+                throw new QuerierException(sprintf("Unknown operator '%s'", $q['operator']));
+        }
+
+        return ['solrFields' => $solrFields, 'term' => $term];
     }
 
     protected function getSearchFields()
