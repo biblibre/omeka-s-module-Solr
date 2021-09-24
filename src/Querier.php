@@ -62,6 +62,7 @@ class Querier extends AbstractQuerier
         $solrQuery->setParam('defType', 'edismax');
         if ($query->getSpellchecking()) {
             $solrQuery->setParam('spellcheck', 'true');
+            $solrQuery->setParam('spellcheck.q', $query->getQuery());
             $solrQuery->setParam('spellcheck.extendedResults', 'true');
             $solrQuery->setParam('spellcheck.count', 10);
             $solrQuery->setParam('spellcheck.maxResultsForSuggest', 5);
