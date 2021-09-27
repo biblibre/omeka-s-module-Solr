@@ -62,7 +62,9 @@ class Querier extends AbstractQuerier
         $solrQuery->setParam('defType', 'edismax');
         if ($query->getSpellchecking()) {
             $solrQuery->setParam('spellcheck', 'true');
-            $solrQuery->setParam('spellcheck.q', $query->getQuery());
+            if (!empty($query->getQuery())) {
+                $solrQuery->setParam('spellcheck.q', $query->getQuery());
+            }
             $solrQuery->setParam('spellcheck.extendedResults', 'true');
             $solrQuery->setParam('spellcheck.count', 10);
             $solrQuery->setParam('spellcheck.maxResultsForSuggest', 5);
@@ -230,7 +232,9 @@ class Querier extends AbstractQuerier
             throw new QuerierException($e->getMessage(), $e->getCode(), $e);
         }
         $solrResponse = $solrQueryResponse->getResponse();
+        if (!empty($query->getQuery())) {
         $solrQuery->getParam('spellcheck') && $solrResponseSuggestTerms = (array)$solrResponse['spellcheck']['collations'];
+        }
 
         $response = new Response;
         $response->setTotalResults($solrResponse['grouped'][$resource_name_field]['matches']);
