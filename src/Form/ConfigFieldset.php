@@ -48,6 +48,14 @@ class ConfigFieldset extends Fieldset
                 'required' => true,
             ],
         ]);
+        $this->add([
+            'name' => 'filters_impact',
+            'type' => 'Checkbox',
+            'options' => [
+                'label' => 'Filters impact score',
+                'info' => 'If checked filters are embed into query to impact results score'
+            ],
+        ]);
     }
 
     protected function getSolrNodesOptions()

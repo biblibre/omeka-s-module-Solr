@@ -183,14 +183,23 @@ class Querier extends AbstractQuerier
         $queryFilters = $query->getQueryFilters();
         foreach ($queryFilters as $queryFilter) {
             $filterFields = $this->getQueryStringFromSearchQuery($queryFilter);
+            
+            $filtersImpact = $this->getAdapterSetting('filters_impact');
+            
+            if ($filtersImpact) {
+                if (!empty($filterFields)) {
+                    $mainQueryTerm = sprintf('{!edismax qf="%s" v="%s"} AND ', $solrNodeSettings['qf'], $q);
+                    $solrQuery->setParam('uf', '* _query_');
+                    $solrQuery->setQuery($mainQueryTerm.$filterFields);
+                }
+            } else {
+                $fq = $this->getQueryStringFromSearchQuery($queryFilter);
+                if (!empty($fq)) {
+                    $solrQuery->addFilterQuery($fq);
+                }
+            }
         }
- 
-        if (!empty($filterFields)) {
-            $mainQueryTerm = sprintf('{!edismax qf="%s" v="%s"} AND ', $solrNodeSettings['qf'], $q);
-            $solrQuery->setParam('uf', '* _query_');
-            $solrQuery->setQuery($mainQueryTerm.$filterFields);
-        }
-
+            
 
         $dateRangeFilters = $query->getDateRangeFilters();
         foreach ($dateRangeFilters as $name => $filterValues) {
@@ -383,7 +392,13 @@ class Querier extends AbstractQuerier
                     throw new QuerierException(sprintf("Unknown operator '%s'", $q['operator']));
             }
 
-            $qs = sprintf('{!edismax qf="%s" v="%s"}', $solrFields, $term);
+            if ($this->getAdapterSetting('filters_impact')) {
+                $qs = sprintf('{!edismax qf="%s" v="%s"}', $solrFields, $term);
+            } else {
+                $qs = sprintf('(%s)', implode(' OR ', array_map(function ($solrField) use ($term) {
+                    return sprintf('%s:(%s)', $solrField, $term);
+                }, array_filter(explode(' ', $solrFields)))));
+            }
             return $qs;
         }
     }
