@@ -11,7 +11,7 @@ abstract class SolrControllerTestCase extends AbstractHttpControllerTestCase
     protected $searchIndex;
     protected $searchPage;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -75,7 +75,7 @@ abstract class SolrControllerTestCase extends AbstractHttpControllerTestCase
         $this->searchPage = $searchPage;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->api()->delete('search_pages', $this->searchPage->id());
         $this->api()->delete('search_indexes', $this->searchIndex->id());

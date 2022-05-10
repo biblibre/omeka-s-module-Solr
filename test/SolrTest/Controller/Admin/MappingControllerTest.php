@@ -6,7 +6,7 @@ use SolrTest\Controller\SolrControllerTestCase;
 
 class MappingControllerTest extends SolrControllerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
