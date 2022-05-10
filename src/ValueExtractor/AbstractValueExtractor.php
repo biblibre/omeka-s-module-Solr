@@ -59,14 +59,15 @@ abstract class AbstractValueExtractor implements ValueExtractorInterface
         $extractedValue = [];
         $values = $representation->value($field, ['all' => true, 'default' => []]);
         foreach ($values as $i => $value) {
-            $type = $value->type();
-            if ($type === 'literal' || $type == 'uri') {
-                $extractedValue[] = (string) $value;
-            } elseif ('resource' === explode(':', $type)[0]) {
-                $resourceTitle = $value->valueResource()->displayTitle('');
-                if (!empty($resourceTitle)) {
-                    $extractedValue[] = $resourceTitle;
-                }
+            $valueResource = $value->valueResource();
+            if ($valueResource) {
+                $text = $valueResource->title();
+            } else {
+                $text = (string) $value;
+            }
+
+            if (!empty($text)) {
+                $extractedValue[] = $text;
             }
         }
 
