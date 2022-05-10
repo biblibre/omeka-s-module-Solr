@@ -2,8 +2,6 @@
 
 This module provides a [Search](https://github.com/biblibre/omeka-s-module-Search) adapter for [Solr](https://lucene.apache.org/solr/).
 
-[![Travis (.org)](https://img.shields.io/travis/biblibre/omeka-s-module-Solr?logo=travis)](https://travis-ci.org/biblibre/omeka-s-module-Solr)
-
 ## Requirements
 
 - [Solr PHP extension](https://pecl.php.net/package/solr) (>= 2.0.0). It must be enabled for the CLI as well as the web server.
