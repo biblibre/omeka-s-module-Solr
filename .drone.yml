@@ -12,6 +12,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -43,6 +44,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -74,6 +76,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -105,6 +108,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -136,6 +140,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -167,6 +172,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -198,6 +204,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.0.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -229,6 +236,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -260,6 +268,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -291,6 +300,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -322,6 +332,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -353,6 +364,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -384,6 +396,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -415,6 +428,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -446,6 +460,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -477,6 +492,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -508,6 +524,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -539,6 +556,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -570,6 +588,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -601,6 +620,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -632,6 +652,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.1.2-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -663,6 +684,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -694,6 +716,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -725,6 +748,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -756,6 +780,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -787,6 +812,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -818,6 +844,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -849,6 +876,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php7.4
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -880,6 +908,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -911,6 +940,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -942,6 +972,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -973,6 +1004,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -1004,6 +1036,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -1035,6 +1068,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -1066,6 +1100,7 @@ workspace:
 
 steps:
 - name: test
+  pull: always
   image: biblibre/omeka-s-ci:3.2.0-php8.0
   commands:
   - cp -rT /usr/src/omeka-s ../..
@@ -1085,6 +1120,6 @@ services:
 
 ---
 kind: signature
-hmac: d4fa5f2f6ba63e4682c7f8723b2bd5c847188e6acf45aeb2d077814dba2bd972
+hmac: 7ace5743082d3a7953627f0ea93d0479424594e75972e5fdcd9ad53a677d7781
 
 ...

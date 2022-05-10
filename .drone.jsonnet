@@ -9,6 +9,7 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
         {
             name: 'test',
             image: 'biblibre/omeka-s-ci:' + omekaVersion + '-php' + phpVersion,
+            pull: 'always',
             commands: [
                 'cp -rT /usr/src/omeka-s ../..',
                 'git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search',
