@@ -279,7 +279,7 @@ class Querier extends AbstractQuerier
     protected function getQueryStringFromSearchQuery($q)
     {
         if (is_string($q)) {
-            return $q;
+            return $this->escape($q);
         }
 
         if (is_array($q) && isset($q['match']) && !empty($q['queries'])) {
