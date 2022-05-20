@@ -372,7 +372,8 @@ class Querier extends AbstractQuerier
             $searchFields = $api->search('solr_search_fields')->getContent();
             $this->searchFields = [];
             foreach ($searchFields as $searchField) {
-                $this->searchFields[$searchField->name()] = $searchField;
+                $name = trim($searchField->name());
+                $this->searchFields[$name] = $searchField;
             }
         }
 

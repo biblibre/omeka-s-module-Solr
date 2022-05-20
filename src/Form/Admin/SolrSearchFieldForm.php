@@ -102,6 +102,18 @@ class SolrSearchFieldForm extends Form implements TranslatorAwareInterface
                 'info' => $translator->translate('The Solr field which will be used for sorting. Leave empty to forbid sorting on this field.'),
             ],
         ]);
+
+        $inputFilter = $this->getInputFilter();
+        $inputFilter->add([
+            'name' => 'o:name',
+            'required' => true,
+            'filters' => [
+                ['name' => 'Laminas\Filter\StringTrim'],
+            ],
+            'validators' => [
+                ['name' => 'Solr\Validator\SolrFieldName'],
+            ]
+        ]);
     }
 
     public function setApiManager($apiManager)

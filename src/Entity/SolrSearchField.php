@@ -96,6 +96,13 @@ class SolrSearchField extends AbstractEntity
 
     public function setName($name)
     {
+        $name = trim($name);
+        $validator = new \Solr\Validator\SolrFieldName();
+        if (!$validator->isValid($name)) {
+            $errors = implode(', ', $validator->getMessages());
+            throw new \Exception(sprintf('Validation error: %s', $errors));
+        }
+
         $this->name = $name;
     }
 
