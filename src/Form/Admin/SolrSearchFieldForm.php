@@ -112,7 +112,7 @@ class SolrSearchFieldForm extends Form implements TranslatorAwareInterface
             ],
             'validators' => [
                 ['name' => 'Solr\Validator\SolrFieldName'],
-            ]
+            ],
         ]);
     }
 

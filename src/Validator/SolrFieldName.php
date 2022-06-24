@@ -3,21 +3,20 @@
 namespace Solr\Validator;
 
 use Laminas\Validator\AbstractValidator;
-use Laminas\Stdlib\ErrorHandler;
 
 class SolrFieldName extends AbstractValidator
 {
-    const INVALID   = 'solrFieldNameInvalid';
+    const INVALID = 'solrFieldNameInvalid';
     const NOT_MATCH = 'solrFieldNameNotMatch';
-    const RESERVED  = 'solrFieldNameReserved';
+    const RESERVED = 'solrFieldNameReserved';
 
     /**
      * @var array
      */
     protected $messageTemplates = [
-        self::INVALID   => 'Invalid type given. String expected',
+        self::INVALID => 'Invalid type given. String expected',
         self::NOT_MATCH => 'Solr field name must consist of alphanumeric or underscore characters only and not start with a digit',
-        self::RESERVED  => 'Solr field name must not have both leading and trailing underscores',
+        self::RESERVED => 'Solr field name must not have both leading and trailing underscores',
     ];
 
     /**
