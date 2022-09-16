@@ -52,18 +52,21 @@ class Indexer extends AbstractIndexer
     public function clearIndex()
     {
         $client = $this->getClient();
+        $client->ping();
         $client->deleteByQuery('*:*');
         $client->commit();
     }
 
     public function indexResource(Resource $resource)
     {
+        $this->getClient()->ping();
         $this->addResource($resource);
         $this->commit();
     }
 
     public function indexResources(array $resources)
     {
+        $this->getClient()->ping();
         foreach ($resources as $resource) {
             $this->addResource($resource);
         }
@@ -72,8 +75,10 @@ class Indexer extends AbstractIndexer
 
     public function deleteResource($resourceName, $resourceId)
     {
+        $client = $this->getClient();
+        $client->ping();
         $id = $this->getDocumentId($resourceName, $resourceId);
-        $this->getClient()->deleteById($id);
+        $client->deleteById($id);
         $this->commit();
     }
 
