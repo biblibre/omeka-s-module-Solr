@@ -116,8 +116,8 @@ class Module extends AbstractModule
                 string_fields LONGTEXT DEFAULT NULL,
                 facet_field VARCHAR(255) DEFAULT NULL,
                 sort_field VARCHAR(255) DEFAULT NULL,
-                UNIQUE INDEX UNIQ_7F4FB7825E237E06 (name),
                 INDEX IDX_7F4FB782A9C459FB (solr_node_id),
+                UNIQUE INDEX UNIQ_7F4FB782A9C459FB5E237E06 (solr_node_id, name),
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
         ");
@@ -305,6 +305,11 @@ class Module extends AbstractModule
                 ALTER TABLE solr_search_field ADD CONSTRAINT FK_7F4FB782A9C459FB
                 FOREIGN KEY (solr_node_id) REFERENCES solr_node (id) ON DELETE CASCADE;
             ");
+        }
+
+        if (version_compare($oldVersion, '0.9.3', '<')) {
+            $connection->exec('ALTER TABLE solr_search_field DROP INDEX UNIQ_7F4FB7825E237E06');
+            $connection->exec('ALTER TABLE solr_search_field ADD UNIQUE INDEX UNIQ_7F4FB782A9C459FB5E237E06 (solr_node_id, name)');
         }
     }
 

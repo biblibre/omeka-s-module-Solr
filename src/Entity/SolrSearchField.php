@@ -32,6 +32,12 @@ namespace Solr\Entity;
 use Omeka\Entity\AbstractEntity;
 
 /**
+ * @Table(
+ *   uniqueConstraints={
+ *     @UniqueConstraint(
+ *       columns={"solr_node_id", "name"})
+ *   }
+ * )
  * @Entity
  */
 class SolrSearchField extends AbstractEntity
@@ -50,7 +56,7 @@ class SolrSearchField extends AbstractEntity
     protected $solrNode;
 
     /**
-     * @Column(type="string", length=255, unique=true)
+     * @Column(type="string", length=255)
      */
     protected $name;
 
