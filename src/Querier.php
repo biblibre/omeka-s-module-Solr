@@ -39,6 +39,9 @@ use Search\Response;
 
 class Querier extends AbstractQuerier
 {
+    const SOLR_SPECIAL_CHARS = ['+', '-', '&', '|', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/'];
+    const PCRE_SPECIAL_CHARS = ['.', '\\', '+', '*', '?', '[', '^', ']', '$', '(', ')', '{', '}', '=', '!', '<', '>', '|', ':', '-', '#'];
+
     protected $client;
     protected $solrNode;
 
@@ -49,6 +52,7 @@ class Querier extends AbstractQuerier
         $serviceLocator = $this->getServiceLocator();
         $settings = $serviceLocator->get('Omeka\Settings');
         $api = $serviceLocator->get('Omeka\ApiManager');
+        $logger = $serviceLocator->get('Omeka\Logger');
 
         $client = $this->getClient();
 
@@ -216,6 +220,7 @@ class Querier extends AbstractQuerier
         }
 
         try {
+            $logger->debug(sprintf('Solr query params: %s', $solrQuery->toString()));
             $solrQueryResponse = $client->query($solrQuery);
         } catch (SolrClientException $e) {
             throw new QuerierException($e->getMessage(), $e->getCode(), $e);
@@ -390,11 +395,18 @@ class Querier extends AbstractQuerier
 
     protected function escape($string)
     {
-        return preg_replace('/([+\-&|!(){}[\]\^"~*?:])/', '\\\\$1', $string);
+        return $this->escapeChars(self::SOLR_SPECIAL_CHARS, $string);
     }
 
     protected function escapeRegexp($string)
     {
-        return preg_quote($string, '/');
+        $charsToEscape = array_unique(array_merge(self::SOLR_SPECIAL_CHARS, self::PCRE_SPECIAL_CHARS));
+        return $this->escapeChars($charsToEscape, $string);
+    }
+
+    protected function escapeChars($charsToEscape, $string)
+    {
+        $pattern = '/([' . implode('', array_map(function ($c) { return preg_quote($c, '/'); }, $charsToEscape)) . '])/';
+        return preg_replace($pattern, '\\\\$1', $string);
     }
 }
