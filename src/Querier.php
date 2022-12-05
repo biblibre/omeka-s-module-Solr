@@ -406,7 +406,9 @@ class Querier extends AbstractQuerier
 
     protected function escapeChars($charsToEscape, $string)
     {
-        $pattern = '/([' . implode('', array_map(function ($c) { return preg_quote($c, '/'); }, $charsToEscape)) . '])/';
+        $pattern = '/([' . implode('', array_map(function ($c) {
+            return preg_quote($c, '/');
+        }, $charsToEscape)) . '])/';
         return preg_replace($pattern, '\\\\$1', $string);
     }
 }
