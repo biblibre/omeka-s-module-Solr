@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-19 08:57+0000\n"
-"PO-Revision-Date: 2020-10-19 10:27+0200\n"
+"POT-Creation-Date: 2022-12-19 10:03+0000\n"
+"PO-Revision-Date: 2022-12-19 11:04+0100\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: Module.php:83
 msgid "Solr module requires PHP Solr extension, which is not loaded."
@@ -107,18 +107,33 @@ msgstr ""
 "nécessitera une réindexation complète."
 
 #: src/Form/Admin/SolrNodeForm.php:123
+msgid "Is Public field"
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:124
+#, fuzzy
+msgid ""
+"Name of the Solr field that will contain the isPublic flag. It must be a "
+"single-valued, boolean-based field. WARNING: Changing this will require a "
+"complete reindexation."
+msgstr ""
+"Le nom du champ Solr qui contiendra les identifiants de sites. Le champ doit "
+"être à valeur unique, et de type entier. ATTENTION : Modifier ceci "
+"nécessitera une réindexation complète."
+
+#: src/Form/Admin/SolrNodeForm.php:135
 msgid "Query fields"
 msgstr "Champs de requête"
 
-#: src/Form/Admin/SolrNodeForm.php:124
+#: src/Form/Admin/SolrNodeForm.php:136
 msgid "qf parameter that will be added to the query"
 msgstr "paramètre qf qui sera ajouté à la requête"
 
-#: src/Form/Admin/SolrNodeForm.php:132
+#: src/Form/Admin/SolrNodeForm.php:144
 msgid "Minimum should match"
 msgstr "Minimum should match"
 
-#: src/Form/Admin/SolrNodeForm.php:133
+#: src/Form/Admin/SolrNodeForm.php:145
 msgid "mm parameter that will be added to the query"
 msgstr "paramètre mm qui sera ajouté à la requête"
 
@@ -295,3 +310,12 @@ msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""
 "Supprimer toutes les correspondances existantes pour ce nœud Solr avant de "
 "démarrer l'import"
+
+#: src/Form/ConfigFieldset.php:55
+msgid "Filters impact score"
+msgstr "Les filtres impactent la pondération"
+
+#: src/Form/ConfigFieldset.php:56
+msgid "If checked filters are embed into query to impact results score"
+msgstr ""
+"Si coché, les filtres sont intégrés à la requête pour impacter la pondération"

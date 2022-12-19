@@ -52,8 +52,8 @@ class ConfigFieldset extends Fieldset
             'name' => 'filters_impact',
             'type' => 'Checkbox',
             'options' => [
-                'label' => 'Filters impact score',
-                'info' => 'If checked filters are embed into query to impact results score'
+                'label' => 'Filters impact score',// @translate
+                'info' => 'If checked filters are embed into query to impact results score'// @translate
             ],
         ]);
     }

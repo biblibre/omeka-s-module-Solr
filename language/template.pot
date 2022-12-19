@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-19 08:57+0000\n"
+"POT-Creation-Date: 2022-12-19 10:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,18 +98,29 @@ msgid ""
 msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:123
-msgid "Query fields"
+msgid "Is Public field"
 msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:124
+msgid ""
+"Name of the Solr field that will contain the isPublic flag. It must be a "
+"single-valued, boolean-based field. WARNING: Changing this will require a "
+"complete reindexation."
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:135
+msgid "Query fields"
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:136
 msgid "qf parameter that will be added to the query"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:132
+#: src/Form/Admin/SolrNodeForm.php:144
 msgid "Minimum should match"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:133
+#: src/Form/Admin/SolrNodeForm.php:145
 msgid "mm parameter that will be added to the query"
 msgstr ""
 
@@ -266,4 +277,12 @@ msgstr ""
 
 #: src/Form/Admin/SolrMappingImportForm.php:57
 msgid "Delete all existing mappings for this Solr node before importing"
+msgstr ""
+
+#: src/Form/ConfigFieldset.php:55
+msgid "Filters impact score"
+msgstr ""
+
+#: src/Form/ConfigFieldset.php:56
+msgid "If checked filters are embed into query to impact results score"
 msgstr ""
