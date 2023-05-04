@@ -193,7 +193,7 @@ class Querier extends AbstractQuerier
 
         $sort = $query->getSort();
         if (isset($sort)) {
-            list($sortField, $sortOrder) = explode(' ', $sort);
+            [$sortField, $sortOrder] = explode(' ', $sort);
             $sortOrder = $sortOrder == 'asc' ? SolrQuery::ORDER_ASC : SolrQuery::ORDER_DESC;
 
             if ($sortField !== 'score') {
@@ -232,7 +232,7 @@ class Querier extends AbstractQuerier
         foreach ($solrResponse['grouped'][$resource_name_field]['groups'] as $group) {
             $response->setResourceTotalResults($group['groupValue'], $group['doclist']['numFound']);
             foreach ($group['doclist']['docs'] as $doc) {
-                list(, $resourceId) = explode(':', $doc['id']);
+                [, $resourceId] = explode(':', $doc['id']);
                 $response->addResult($group['groupValue'], ['id' => $resourceId]);
             }
         }
