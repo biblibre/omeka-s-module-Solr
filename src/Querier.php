@@ -324,10 +324,14 @@ class Querier extends AbstractQuerier
                     }
 
                     $term = $this->escape($q['term']);
-                    $words = explode(' ', $term);
-                    $term = implode(' ', array_map(function ($word) {
-                        return "+$word";
-                    }, $words));
+                    if (isset($q['proximity']) && is_numeric($q['proximity'])) {
+                        $term = sprintf('+"%s" ~%s', $term, $q['proximity']);
+                    } else {
+                        $words = explode(' ', $term);
+                        $term = implode(' ', array_map(function ($word) {
+                            return "+$word";
+                        }, $words));
+                    }
                     break;
 
                 case Adapter::OPERATOR_CONTAINS_EXPR:

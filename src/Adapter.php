@@ -170,18 +170,22 @@ class Adapter extends AbstractAdapter
             self::OPERATOR_CONTAINS_ANY_WORD => [
                 'name' => self::OPERATOR_CONTAINS_ANY_WORD,
                 'display_name' => $this->translator->translate('contains any word'),
+                'proximity_support' => false,
             ],
             self::OPERATOR_CONTAINS_ALL_WORDS => [
                 'name' => self::OPERATOR_CONTAINS_ALL_WORDS,
                 'display_name' => $this->translator->translate('contains all words'),
+                'proximity_support' => true,
             ],
             self::OPERATOR_CONTAINS_EXPR => [
                 'name' => self::OPERATOR_CONTAINS_EXPR,
                 'display_name' => $this->translator->translate('contains expression'),
+                'proximity_support' => false,
             ],
             self::OPERATOR_MATCHES_PATTERN => [
                 'name' => self::OPERATOR_MATCHES_PATTERN,
                 'display_name' => $this->translator->translate('matches pattern'),
+                'proximity_support' => false,
             ],
         ];
 
