@@ -27,9 +27,13 @@
  */
 ?>
 
+<?php $this->headScript()->appendFile($this->assetUrl('js/solrNodeForm.js', 'Solr')); ?>
+
+
 <?php $form->prepare(); ?>
 
 <?php echo $this->pageTitle($this->translate('Add Solr node')); ?>
+
 
 <?php echo $this->form()->openTag($form); ?>
 <div id="page-actions">

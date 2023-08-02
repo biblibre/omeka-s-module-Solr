@@ -146,6 +146,54 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
             ],
         ]);
 
+        $settingsFieldset->add([
+            'name' => 'highlighting',
+            'type' => 'checkbox',
+            'options' => [
+                'label' => $translator->translate('Highlighting'),
+                'info' => $translator->translate('Enable extract retrieval in relation to search terms'),
+            ],
+            'attributes' => [
+                'required' => false,
+            ],
+        ]);
+
+        $settingsFieldset->add([
+            'name' => 'highlighting_settings_fields',
+            'type' => 'Text',
+            'options' => [
+                'label' => $translator->translate('Highlight fields'),
+                'info' => $translator->translate('Fields used for highligthing feature (default "*" mean all fields).'),
+            ],
+            'attributes' => [
+                'value' => '*',
+            ],
+        ]);
+
+        $settingsFieldset->add([
+            'name' => 'highlighting_settings_fragsize',
+            'type' => 'Number',
+            'options' => [
+                'label' => $translator->translate('Highlight fragsize'),
+                'info' => $translator->translate('Define number of caracters for the fragment size of highlight, 0 will show entire field value.'),
+            ],
+            'attributes' => [
+                'value' => 300,
+            ],
+        ]);
+
+        $settingsFieldset->add([
+            'name' => 'highlighting_settings_snippets',
+            'type' => 'Number',
+            'options' => [
+                'label' => $translator->translate('Highlight snippets'),
+                'info' => $translator->translate('Define the number of fragments where the search terms were found in the same field.'),
+            ],
+            'attributes' => [
+                'value' => 5,
+            ],
+        ]);
+
         $this->add($settingsFieldset);
     }
 

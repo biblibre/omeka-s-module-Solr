@@ -61,9 +61,18 @@ class Querier extends AbstractQuerier
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
+        $highlighting = $solrNodeSettings['highlighting'];
+        $highlight_fields = $solrNodeSettings['highlighting_settings_fields'];
+        $highlight_fragsize = $solrNodeSettings['highlighting_settings_fragsize'];
+        $highlight_snippets = $solrNodeSettings['highlighting_settings_snippets'];
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
+        if ($highlighting) {
+            $solrQuery->setHighlight(true);
+            $solrQuery->setHighlightFragsize($highlight_fragsize);
+            $solrQuery->setHighlightSnippets($highlight_snippets);
+        }
 
         if (!empty($solrNodeSettings['qf'])) {
             $solrQuery->setParam('qf', $solrNodeSettings['qf']);
@@ -177,6 +186,7 @@ class Querier extends AbstractQuerier
         $queryFilters = $query->getQueryFilters();
         foreach ($queryFilters as $queryFilter) {
             $fq = $this->getQueryStringFromSearchQuery($queryFilter);
+            $this->addHlTermsFromQueryFilter($query, $queryFilter);
             if (!empty($fq)) {
                 $solrQuery->addFilterQuery($fq);
             }
@@ -189,6 +199,18 @@ class Querier extends AbstractQuerier
                 $end = $filterValue['end'] ? $filterValue['end'] : '*';
                 $solrQuery->addFilterQuery("$name:[$start TO $end]");
             }
+        }
+        if ($query->getQuery()) {
+            $query->addHighlightingTerm($query->getQuery());
+        }
+
+        $highligthingTerms = $query->getHighlightingTerms();
+        if (!empty($highligthingTerms)) {
+            if ($highlight_fields != '*') {
+                $highlight_fields = str_replace(' ', ',', $highlight_fields);
+            }
+            $solrQuery->setParam('hl.fl', $highlight_fields);
+            $solrQuery->setParam('hl.q', implode(',', $highligthingTerms));
         }
 
         $sort = $query->getSort();
@@ -247,7 +269,29 @@ class Querier extends AbstractQuerier
                 }
             }
         }
+        if ($solrResponse->offsetGet('highlighting')) {
+            foreach ($solrResponse->offsetGet('highlighting') as $key => $termsByField) {
+                $resourceId = explode(':', $key)[1];
+                $resourceHighlights = [];
+                foreach ($termsByField as $solrFieldName => $extractContext) {
+                    if ($solrFieldName === 'txt_spell') {
+                        continue;
+                    }
+                    $totalExtractByField = count($termsByField[$solrFieldName]);
+                    $propertyLabel = $this->getSearchFieldLabel($solrFieldName, $resourceId);
 
+                    $extractContextIndexed = array_map(function ($index, $extractContext) use ($totalExtractByField) {
+                        $newIndex = ($index + 1) . '/' . $totalExtractByField;
+                        return [$newIndex => $extractContext];
+                    }, array_keys($extractContext), $extractContext);
+
+                    $resourceHighlights[$propertyLabel] = $extractContextIndexed;
+                }
+                if (!empty($resourceHighlights)) {
+                    $response->addHighlight($resourceId, $resourceHighlights);
+                }
+            }
+        }
         return $response;
     }
 
@@ -414,5 +458,47 @@ class Querier extends AbstractQuerier
             return preg_quote($c, '/');
         }, $charsToEscape)) . '])/';
         return preg_replace($pattern, '\\\\$1', $string);
+    }
+
+    protected function getSearchFieldLabel($solrFieldName, $resourceId)
+    {
+        $serviceLocator = $this->getServiceLocator();
+        $api = $serviceLocator->get('Omeka\ApiManager');
+
+        $searchFields = $this->getSearchFields();
+        foreach ($searchFields as $searchField) {
+            if ($searchField->textFields() === $solrFieldName) {
+                $label = $searchField->label();
+            }
+        }
+        if (!isset($label)) {
+            $solrFieldMappingName = $api->search('solr_mappings', ['field_name' => $solrFieldName])->getContent()[0]->source();
+            $resource = $api->read('resources', $resourceId)->getContent();
+            $targetResourcePropertyId = $resource->values()[$solrFieldMappingName]['property']->id();
+            $targetProperty = $api->read('properties', $targetResourcePropertyId)->getContent();
+            $label = $targetProperty->label();
+        }
+        return $label;
+    }
+
+    protected function buildExtractIndex(int $parentCount, array $extracts)
+    {
+        foreach ($extracts as $index => $extract) {
+            $i = 1;
+            $index = sprintf("%d/%d", $i, $parentCount);
+            $extract["$index"] = $extract;
+        }
+        return $extracts;
+    }
+
+    protected function addHlTermsFromQueryFilter($searchQuery, $queryFilter)
+    {
+        if (isset($queryFilter['queries'])) {
+            foreach ($queryFilter['queries'] as $query) {
+                if (!empty($query['term'])) {
+                    $searchQuery->addHighlightingTerm($query['term']);
+                }
+            }
+        }
     }
 }

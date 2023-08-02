@@ -111,6 +111,12 @@ class SolrMappingAdapter extends AbstractEntityAdapter
                 $this->createNamedParameter($qb, $query['resource_name'])
             ));
         }
+        if (isset($query['field_name'])) {
+            $qb->andWhere($qb->expr()->eq(
+                'omeka_root.fieldName',
+                $this->createNamedParameter($qb, $query['field_name'])
+            ));
+        }
     }
 
     protected function hydrateSolrNode(Request $request, EntityInterface $entity)
