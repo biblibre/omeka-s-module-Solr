@@ -61,10 +61,11 @@ class Querier extends AbstractQuerier
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
-        $highlighting = $solrNodeSettings['highlighting'];
-        $highlight_fields = $solrNodeSettings['highlighting_settings_fields'];
-        $highlight_fragsize = $solrNodeSettings['highlighting_settings_fragsize'];
-        $highlight_snippets = $solrNodeSettings['highlighting_settings_snippets'];
+        $highlightSettings = $solrNodeSettings['highlight'] ?? [];
+        $highlighting = $highlightSettings['highlighting'];
+        $highlight_fields = $highlightSettings['highlighting_settings_fields'];
+        $highlight_fragsize = $highlightSettings['highlighting_settings_fragsize'];
+        $highlight_snippets = $highlightSettings['highlighting_settings_snippets'];
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');

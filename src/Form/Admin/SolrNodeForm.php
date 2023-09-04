@@ -147,6 +147,15 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
         ]);
 
         $settingsFieldset->add([
+            'name' => 'highlight',
+            'type' => Fieldset::class,
+            'options' => [
+                'label' => 'Highlighting', // @translate
+            ],
+        ]);
+        $highlightFieldset = $settingsFieldset->get('highlight');
+
+        $highlightFieldset->add([
             'name' => 'highlighting',
             'type' => 'checkbox',
             'options' => [
@@ -158,7 +167,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
             ],
         ]);
 
-        $settingsFieldset->add([
+        $highlightFieldset->add([
             'name' => 'highlighting_settings_fields',
             'type' => 'Text',
             'options' => [
@@ -170,7 +179,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
             ],
         ]);
 
-        $settingsFieldset->add([
+        $highlightFieldset->add([
             'name' => 'highlighting_settings_fragsize',
             'type' => 'Number',
             'options' => [
@@ -182,7 +191,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
             ],
         ]);
 
-        $settingsFieldset->add([
+        $highlightFieldset->add([
             'name' => 'highlighting_settings_snippets',
             'type' => 'Number',
             'options' => [

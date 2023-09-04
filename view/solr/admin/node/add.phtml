@@ -27,9 +27,6 @@
  */
 ?>
 
-<?php $this->headScript()->appendFile($this->assetUrl('js/solrNodeForm.js', 'Solr')); ?>
-
-
 <?php $form->prepare(); ?>
 
 <?php echo $this->pageTitle($this->translate('Add Solr node')); ?>
@@ -39,7 +36,7 @@
 <div id="page-actions">
     <button><?php echo $this->translate('Save'); ?></button>
 </div>
-<?php echo $this->formCollection($form, false); ?>
+<?php echo $this->formCollection($form); ?>
 <?php $this->trigger('view.add.form.after'); ?>
 <?php echo $this->form()->closeTag(); ?>
 
