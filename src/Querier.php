@@ -62,17 +62,23 @@ class Querier extends AbstractQuerier
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
         $highlightSettings = $solrNodeSettings['highlight'] ?? [];
-        $highlighting = $highlightSettings['highlighting'];
-        $highlight_fields = $highlightSettings['highlighting_settings_fields'];
-        $highlight_fragsize = $highlightSettings['highlighting_settings_fragsize'];
-        $highlight_snippets = $highlightSettings['highlighting_settings_snippets'];
+        $highlighting = $highlightSettings['highlighting'] ?? false;
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
+
         if ($highlighting) {
             $solrQuery->setHighlight(true);
-            $solrQuery->setHighlightFragsize($highlight_fragsize);
-            $solrQuery->setHighlightSnippets($highlight_snippets);
+
+            $highlight_fragsize = $highlightSettings['fragsize'] ?? '';
+            if (is_numeric($highlight_fragsize)) {
+                $solrQuery->setHighlightFragsize($highlight_fragsize);
+            }
+
+            $highlight_snippets = $highlightSettings['snippets'] ?? '';
+            if (is_numeric($highlight_snippets)) {
+                $solrQuery->setHighlightSnippets($highlight_snippets);
+            }
         }
 
         if (!empty($solrNodeSettings['qf'])) {
@@ -207,10 +213,11 @@ class Querier extends AbstractQuerier
 
         $highligthingTerms = $query->getHighlightingTerms();
         if (!empty($highligthingTerms)) {
-            if ($highlight_fields != '*') {
+            $highlight_fields = $highlightSettings['fields'] ?? '';
+            if (!empty($highlight_fields)) {
                 $highlight_fields = str_replace(' ', ',', $highlight_fields);
+                $solrQuery->setParam('hl.fl', $highlight_fields);
             }
-            $solrQuery->setParam('hl.fl', $highlight_fields);
             $solrQuery->setParam('hl.q', implode(',', $highligthingTerms));
         }
 

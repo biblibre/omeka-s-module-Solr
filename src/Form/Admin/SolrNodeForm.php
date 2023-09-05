@@ -35,7 +35,7 @@ use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\I18n\Translator\TranslatorAwareTrait;
 use Laminas\InputFilter\InputFilterProviderInterface;
 
-class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilterProviderInterface
+class SolrNodeForm extends Form implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
@@ -162,59 +162,48 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
                 'label' => $translator->translate('Highlighting'),
                 'info' => $translator->translate('Enable extract retrieval in relation to search terms'),
             ],
-            'attributes' => [
-                'required' => false,
-            ],
         ]);
 
         $highlightFieldset->add([
-            'name' => 'highlighting_settings_fields',
+            'name' => 'fields',
             'type' => 'Text',
             'options' => [
                 'label' => $translator->translate('Highlight fields'),
-                'info' => $translator->translate('Fields used for highligthing feature (default "*" mean all fields).'),
-            ],
-            'attributes' => [
-                'value' => '*',
+                'info' => $translator->translate('Fields used for highligthing feature (use "*" for all fields).'),
             ],
         ]);
 
         $highlightFieldset->add([
-            'name' => 'highlighting_settings_fragsize',
+            'name' => 'fragsize',
             'type' => 'Number',
             'options' => [
-                'label' => $translator->translate('Highlight fragsize'),
-                'info' => $translator->translate('Define number of caracters for the fragment size of highlight, 0 will show entire field value.'),
-            ],
-            'attributes' => [
-                'value' => 300,
+                'label' => $translator->translate('Highlight fragment size'),
+                'info' => $translator->translate('Define number of caracters for the fragment size of highlight, 0 will show the entire field value.'),
             ],
         ]);
 
         $highlightFieldset->add([
-            'name' => 'highlighting_settings_snippets',
+            'name' => 'snippets',
             'type' => 'Number',
             'options' => [
                 'label' => $translator->translate('Highlight snippets'),
                 'info' => $translator->translate('Define the number of fragments where the search terms were found in the same field.'),
             ],
-            'attributes' => [
-                'value' => 5,
-            ],
         ]);
 
         $this->add($settingsFieldset);
-    }
 
-    public function getInputFilterSpecification()
-    {
-        return [
-            'qf' => [
-                'required' => false,
-            ],
-            'mm' => [
-                'required' => false,
-            ],
-        ];
+        $inputFilter = $this->getInputFilter();
+        $settingsInputFilter = $inputFilter->get('o:settings');
+        $highlightInputFilter = $settingsInputFilter->get('highlight');
+
+        $highlightInputFilter->add([
+            'name' => 'fragsize',
+            'required' => false,
+        ]);
+        $highlightInputFilter->add([
+            'name' => 'snippets',
+            'required' => false,
+        ]);
     }
 }
