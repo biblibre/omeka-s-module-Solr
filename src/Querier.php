@@ -69,6 +69,8 @@ class Querier extends AbstractQuerier
 
         if ($highlighting) {
             $solrQuery->setHighlight(true);
+            $solrQuery->setHighlightSimplePre('<mark>');
+            $solrQuery->setHighlightSimplePost('</mark>');
 
             $highlight_fragsize = $highlightSettings['fragsize'] ?? '';
             if (is_numeric($highlight_fragsize)) {
