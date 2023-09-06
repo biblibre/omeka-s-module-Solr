@@ -279,29 +279,18 @@ class Querier extends AbstractQuerier
                 }
             }
         }
-        if ($solrResponse->offsetGet('highlighting')) {
-            foreach ($solrResponse->offsetGet('highlighting') as $key => $termsByField) {
-                $resourceId = explode(':', $key)[1];
-                $resourceHighlights = [];
-                foreach ($termsByField as $solrFieldName => $extractContext) {
-                    if ($solrFieldName === 'txt_spell') {
-                        continue;
+
+        if ($solrResponse['highlighting']) {
+            foreach ($solrResponse['highlighting'] as $key => $highlightsByField) {
+                [$resource, $resourceId] = explode(':', $key);
+                foreach ($highlightsByField as $solrFieldName => $highlights) {
+                    foreach ($highlights as $highlight) {
+                        $response->addHighlight($resource, $resourceId, $highlight);
                     }
-                    $totalExtractByField = count($termsByField[$solrFieldName]);
-                    $propertyLabel = $this->getSearchFieldLabel($solrFieldName, $resourceId);
-
-                    $extractContextIndexed = array_map(function ($index, $extractContext) use ($totalExtractByField) {
-                        $newIndex = ($index + 1) . '/' . $totalExtractByField;
-                        return [$newIndex => $extractContext];
-                    }, array_keys($extractContext), $extractContext);
-
-                    $resourceHighlights[$propertyLabel] = $extractContextIndexed;
-                }
-                if (!empty($resourceHighlights)) {
-                    $response->addHighlight($resourceId, $resourceHighlights);
                 }
             }
         }
+
         return $response;
     }
 
@@ -468,37 +457,6 @@ class Querier extends AbstractQuerier
             return preg_quote($c, '/');
         }, $charsToEscape)) . '])/';
         return preg_replace($pattern, '\\\\$1', $string);
-    }
-
-    protected function getSearchFieldLabel($solrFieldName, $resourceId)
-    {
-        $serviceLocator = $this->getServiceLocator();
-        $api = $serviceLocator->get('Omeka\ApiManager');
-
-        $searchFields = $this->getSearchFields();
-        foreach ($searchFields as $searchField) {
-            if ($searchField->textFields() === $solrFieldName) {
-                $label = $searchField->label();
-            }
-        }
-        if (!isset($label)) {
-            $solrFieldMappingName = $api->search('solr_mappings', ['field_name' => $solrFieldName])->getContent()[0]->source();
-            $resource = $api->read('resources', $resourceId)->getContent();
-            $targetResourcePropertyId = $resource->values()[$solrFieldMappingName]['property']->id();
-            $targetProperty = $api->read('properties', $targetResourcePropertyId)->getContent();
-            $label = $targetProperty->label();
-        }
-        return $label;
-    }
-
-    protected function buildExtractIndex(int $parentCount, array $extracts)
-    {
-        foreach ($extracts as $index => $extract) {
-            $i = 1;
-            $index = sprintf("%d/%d", $i, $parentCount);
-            $extract["$index"] = $extract;
-        }
-        return $extracts;
     }
 
     protected function addHlTermsFromQueryFilter($searchQuery, $queryFilter)
