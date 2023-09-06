@@ -33,7 +33,6 @@ use Laminas\Form\Fieldset;
 use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\I18n\Translator\TranslatorAwareTrait;
-use Laminas\InputFilter\InputFilterProviderInterface;
 
 class SolrNodeForm extends Form implements TranslatorAwareInterface
 {
