@@ -198,6 +198,10 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
         $highlightInputFilter = $settingsInputFilter->get('highlight');
 
         $highlightInputFilter->add([
+            'name' => 'highlighting',
+            'required' => false,
+        ]);
+        $highlightInputFilter->add([
             'name' => 'fragsize',
             'required' => false,
         ]);
