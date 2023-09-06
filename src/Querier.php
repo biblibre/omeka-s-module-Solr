@@ -63,25 +63,10 @@ class Querier extends AbstractQuerier
         $is_public_field = $solrNodeSettings['is_public_field'];
         $highlightSettings = $solrNodeSettings['highlight'] ?? [];
         $highlighting = $highlightSettings['highlighting'] ?? false;
+        $highlightQueryParts = [];
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
-
-        if ($highlighting) {
-            $solrQuery->setHighlight(true);
-            $solrQuery->setHighlightSimplePre('<mark>');
-            $solrQuery->setHighlightSimplePost('</mark>');
-
-            $highlight_fragsize = $highlightSettings['fragsize'] ?? '';
-            if (is_numeric($highlight_fragsize)) {
-                $solrQuery->setHighlightFragsize($highlight_fragsize);
-            }
-
-            $highlight_snippets = $highlightSettings['snippets'] ?? '';
-            if (is_numeric($highlight_snippets)) {
-                $solrQuery->setHighlightSnippets($highlight_snippets);
-            }
-        }
 
         if (!empty($solrNodeSettings['qf'])) {
             $solrQuery->setParam('qf', $solrNodeSettings['qf']);
@@ -115,9 +100,13 @@ class Querier extends AbstractQuerier
 
         $q = $query->getQuery();
         $q = $this->getQueryStringFromSearchQuery($q);
+
         if (empty($q)) {
             $q = '*:*';
+        } else {
+            $highlightQueryParts[] = $q;
         }
+
         $solrQuery->setQuery($q);
         $solrQuery->addField('id');
 
@@ -195,9 +184,9 @@ class Querier extends AbstractQuerier
         $queryFilters = $query->getQueryFilters();
         foreach ($queryFilters as $queryFilter) {
             $fq = $this->getQueryStringFromSearchQuery($queryFilter);
-            $this->addHlTermsFromQueryFilter($query, $queryFilter);
             if (!empty($fq)) {
                 $solrQuery->addFilterQuery($fq);
+                $highlightQueryParts[] = $fq;
             }
         }
 
@@ -209,18 +198,32 @@ class Querier extends AbstractQuerier
                 $solrQuery->addFilterQuery("$name:[$start TO $end]");
             }
         }
-        if ($query->getQuery()) {
-            $query->addHighlightingTerm($query->getQuery());
-        }
 
-        $highligthingTerms = $query->getHighlightingTerms();
-        if (!empty($highligthingTerms)) {
+        if ($highlighting) {
+            $solrQuery->setHighlight(true);
+            $solrQuery->setHighlightSimplePre('<mark>');
+            $solrQuery->setHighlightSimplePost('</mark>');
+
+            $highlight_fragsize = $highlightSettings['fragsize'] ?? '';
+            if (is_numeric($highlight_fragsize)) {
+                $solrQuery->setHighlightFragsize($highlight_fragsize);
+            }
+
+            $highlight_snippets = $highlightSettings['snippets'] ?? '';
+            if (is_numeric($highlight_snippets)) {
+                $solrQuery->setHighlightSnippets($highlight_snippets);
+            }
+
+            if (!empty($highlightQueryParts)) {
+                $highlight_query = implode(' AND ', array_map(fn ($part) => "($part)", $highlightQueryParts));
+                $solrQuery->setParam('hl.q', $highlight_query);
+            }
+
             $highlight_fields = $highlightSettings['fields'] ?? '';
             if (!empty($highlight_fields)) {
                 $highlight_fields = str_replace(' ', ',', $highlight_fields);
                 $solrQuery->setParam('hl.fl', $highlight_fields);
             }
-            $solrQuery->setParam('hl.q', implode(',', $highligthingTerms));
         }
 
         $sort = $query->getSort();
@@ -457,16 +460,5 @@ class Querier extends AbstractQuerier
             return preg_quote($c, '/');
         }, $charsToEscape)) . '])/';
         return preg_replace($pattern, '\\\\$1', $string);
-    }
-
-    protected function addHlTermsFromQueryFilter($searchQuery, $queryFilter)
-    {
-        if (isset($queryFilter['queries'])) {
-            foreach ($queryFilter['queries'] as $query) {
-                if (!empty($query['term'])) {
-                    $searchQuery->addHighlightingTerm($query['term']);
-                }
-            }
-        }
     }
 }
