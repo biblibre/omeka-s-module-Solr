@@ -201,6 +201,7 @@ class Querier extends AbstractQuerier
 
         if ($highlighting) {
             $solrQuery->setHighlight(true);
+            $solrQuery->setParam('hl.maxAnalyzedChars', '-1');
             $solrQuery->setHighlightSimplePre('<mark>');
             $solrQuery->setHighlightSimplePost('</mark>');
 
