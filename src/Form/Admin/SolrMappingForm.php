@@ -29,6 +29,8 @@
 
 namespace Solr\Form\Admin;
 
+use Laminas\Form\Element\MultiCheckbox;
+use Laminas\Form\Element\Select;
 use Laminas\Form\Fieldset;
 use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
@@ -43,6 +45,7 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
     protected $valueExtractorManager;
     protected $valueFormatterManager;
     protected $apiManager;
+    protected $dataTypeManager;
 
     public function init()
     {
@@ -72,6 +75,7 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
         ]);
 
         $settingsFieldset = new Fieldset('o:settings');
+
         $settingsFieldset->add([
             'name' => 'formatter',
             'type' => 'Select',
@@ -80,7 +84,38 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
                 'value_options' => $this->getFormatterOptions(),
             ],
         ]);
+
+        $settingsFieldset->add([
+            'name' => 'resource_field',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Resource field', // @translate
+                'info' => 'Which field to use when a value is a resource', // @translate
+                'value_options' => [
+                    'title' => 'Resource title', // @translate
+                    'id' => 'Resource ID', // @translate
+                ],
+            ],
+        ]);
+
+        $settingsFieldset->add([
+            'name' => 'data_types',
+            'type' => MultiCheckbox::class,
+            'options' => [
+                'label' => 'Data types', // @translate
+                'info' => 'Only selected data types will be used. Selecting none is the same as selecting all. Only relevant when the source is a property.', // @translate
+                'value_options' => $this->getDataTypeOptions(),
+            ],
+        ]);
+
         $this->add($settingsFieldset);
+
+        $inputFilter = $this->getInputFilter();
+        $settingsInputFilter = $inputFilter->get('o:settings');
+        $settingsInputFilter->add([
+            'name' => 'data_types',
+            'allow_empty' => true,
+        ]);
     }
 
     public function setValueExtractorManager(ValueExtractorManager $valueExtractorManager)
@@ -111,6 +146,16 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
     public function getApiManager()
     {
         return $this->apiManager;
+    }
+
+    public function setDataTypeManager(\Omeka\DataType\Manager $dataTypeManager)
+    {
+        $this->dataTypeManager = $dataTypeManager;
+    }
+
+    public function getDataTypeManager(): \Omeka\DataType\Manager
+    {
+        return $this->dataTypeManager;
     }
 
     protected function getSourceOptions()
@@ -167,6 +212,18 @@ class SolrMappingForm extends Form implements TranslatorAwareInterface
         foreach ($valueFormatterManager->getRegisteredNames() as $name) {
             $valueFormatter = $valueFormatterManager->get($name);
             $options[$name] = $valueFormatter->getLabel();
+        }
+
+        return $options;
+    }
+
+    protected function getDataTypeOptions(): array
+    {
+        $dataTypeManager = $this->getDataTypeManager();
+
+        $options = [];
+        foreach ($dataTypeManager->getRegisteredNames() as $name) {
+            $options[$name] = $name;
         }
 
         return $options;

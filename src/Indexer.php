@@ -151,7 +151,8 @@ class Indexer extends AbstractIndexer
         foreach ($solrMappings as $solrMapping) {
             $solrField = $solrMapping->fieldName();
             $source = $solrMapping->source();
-            $values = $valueExtractor->extractValue($resource, $source);
+            $solrMappingSettings = $solrMapping->settings();
+            $values = $valueExtractor->extractValue($resource, $source, $solrMappingSettings);
 
             if (!is_array($values)) {
                 $values = (array) $values;
@@ -162,7 +163,6 @@ class Indexer extends AbstractIndexer
                 $values = array_slice($values, 0, 1);
             }
 
-            $solrMappingSettings = $solrMapping->settings();
             $formatter = $solrMappingSettings['formatter'];
             if ($formatter) {
                 $valueFormatter = $valueFormatterManager->get($formatter);
@@ -171,7 +171,13 @@ class Indexer extends AbstractIndexer
                 if ($formatter && $valueFormatter) {
                     $value = $valueFormatter->format($value);
                 }
-                $document->addField($solrField, $value);
+                if (is_array($value)) {
+                    foreach ($value as $v) {
+                        $document->addField($solrField, $v);
+                    }
+                } else {
+                    $document->addField($solrField, $value);
+                }
             }
         }
 
