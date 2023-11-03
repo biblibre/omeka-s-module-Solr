@@ -35,5 +35,5 @@ interface ValueExtractorInterface
 {
     public function getLabel();
     public function getAvailableFields();
-    public function extractValue(AbstractResourceRepresentation $resource, $field);
+    public function extractValue(AbstractResourceRepresentation $resource, $field, array $settings);
 }
