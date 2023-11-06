@@ -90,9 +90,6 @@ class SolrSearchFieldAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:string_fields')) {
             $entity->setStringFields($request->getValue('o:string_fields'));
         }
-        if ($this->shouldHydrate($request, 'o:facet_field')) {
-            $entity->setFacetField($request->getValue('o:facet_field'));
-        }
         if ($this->shouldHydrate($request, 'o:sort_field')) {
             $entity->setSortField($request->getValue('o:sort_field'));
         }
@@ -120,14 +117,6 @@ class SolrSearchFieldAdapter extends AbstractEntityAdapter
                 'omeka_root.name',
                 $this->createNamedParameter($qb, $query['name'])
             ));
-        }
-
-        if (isset($query['facetable'])) {
-            if ($query['facetable']) {
-                $qb->andWhere($qb->expr()->isNotNull('omeka_root.facetField'));
-            } else {
-                $qb->andWhere($qb->expr()->isNull('omeka_root.facetField'));
-            }
         }
 
         if (isset($query['sortable'])) {

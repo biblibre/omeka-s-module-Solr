@@ -58,7 +58,6 @@
                 <th><?php echo $this->translate('Label (name)'); ?></th>
                 <th><?php echo $this->translate('Text fields'); ?></th>
                 <th><?php echo $this->translate('String fields'); ?></th>
-                <th><?php echo $this->translate('Facet field'); ?></th>
                 <th><?php echo $this->translate('Sort field'); ?></th>
             </tr>
         </thead>
@@ -88,7 +87,6 @@
                     </td>
                     <td><?php echo $field->textFields(); ?></td>
                     <td><?php echo $field->stringFields(); ?></td>
-                    <td><?php echo $field->facetField(); ?></td>
                     <td><?php echo $field->sortField(); ?></td>
                 </tr>
             <?php endforeach; ?>

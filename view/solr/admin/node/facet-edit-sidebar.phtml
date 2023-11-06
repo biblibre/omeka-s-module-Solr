@@ -1,0 +1,33 @@
+<a href="#" class="sidebar-close o-icon-close"><span class="screen-reader-text"><?php echo $this->translate('Close'); ?></span></a>
+<div class="sidebar-content">
+    <div class="confirm-main">
+        <div id="facets-facet-form">
+            <h3><?php echo $this->translate('Edit facet'); ?></h3>
+            <?php
+            $nameInput = new \Laminas\Form\Element\Text('name');
+            $nameInput->setLabel($this->translate('Name'));
+            $nameInput->setValue($facetData['name'] ?? '');
+            $nameInput->setAttribute('disabled', true);
+            echo $this->formRow($nameInput);
+            ?>
+            <?php
+            $solrFieldNameInput = new \Laminas\Form\Element\Text('solr_field_name');
+            $solrFieldNameInput->setLabel($this->translate('Solr field name'));
+            $solrFieldNameInput->setValue($facetData['solr_field_name'] ?? '');
+            $solrFieldNameInput->setAttribute('data-facet-data-key', 'solr_field_name');
+            $solrFieldNameInput->setAttribute('required', true);
+            echo $this->formRow($solrFieldNameInput);
+            ?>
+            <?php
+            $labelInput = new \Laminas\Form\Element\Text('label');
+            $labelInput->setLabel($this->translate('Label'));
+            $labelInput->setAttribute('data-facet-data-key', 'label');
+            $labelInput->setValue($facetData['label'] ?? '');
+            echo $this->formRow($labelInput);
+            ?>
+        </div>
+    </div>
+    <div class="confirm-panel">
+        <button type="button" id="facets-facet-set-button"><?php echo $this->translate('Set facet'); ?></button>
+    </div>
+</div>

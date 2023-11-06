@@ -81,23 +81,32 @@ class NodeController extends AbstractActionController
     {
         $id = $this->params('id');
         $node = $this->api()->read('solr_nodes', $id)->getContent();
-
         $form = $this->getForm(SolrNodeForm::class);
+
+        if ($this->getRequest()->isPost()) {
+            $postData = $this->params()->fromPost();
+            $form->setData($postData);
+            if ($form->isValid()) {
+                $formData = $form->getData();
+                $formData['o:settings']['facets'] = json_decode($postData['o:settings']['facets'], true);
+                $response = $this->api()->update('solr_nodes', $id, $formData);
+
+                $this->messenger()->addSuccess('Solr node updated.');
+
+                return $this->redirect()->toRoute('admin/solr');
+            } else {
+                $this->messenger()->addError('There was an error during validation');
+            }
+        }
+
         $data = $node->jsonSerialize();
         $form->setData($data);
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
+        $view->setVariable('node', $node);
 
-        if (!$this->checkPostAndValidForm($form)) {
-            return $view;
-        }
-
-        $formData = $form->getData();
-        $response = $this->api()->update('solr_nodes', $id, $formData);
-
-        $this->messenger()->addSuccess('Solr node updated.');
-        return $this->redirect()->toRoute('admin/solr');
+        return $view;
     }
 
     public function deleteConfirmAction()
@@ -127,5 +136,39 @@ class NodeController extends AbstractActionController
             }
         }
         return $this->redirect()->toRoute('admin/solr');
+    }
+
+    public function facetListAction()
+    {
+        $id = $this->params('id');
+        $node = $this->api()->read('solr_nodes', $id)->getContent();
+
+        $view = new ViewModel;
+        $view->setTerminal(true);
+        $view->setVariable('node', $node);
+
+        return $view;
+    }
+
+    public function facetRowAction()
+    {
+        $facetData = $this->params()->fromQuery('facet_data');
+
+        $view = new ViewModel;
+        $view->setTerminal(true);
+        $view->setVariable('facetData', $facetData);
+
+        return $view;
+    }
+
+    public function facetEditSidebarAction()
+    {
+        $facetData = $this->params()->fromQuery('facet_data');
+
+        $view = new ViewModel;
+        $view->setTerminal(true);
+        $view->setVariable('facetData', $facetData);
+
+        return $view;
     }
 }

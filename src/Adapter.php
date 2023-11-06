@@ -77,17 +77,14 @@ class Adapter extends AbstractAdapter
     {
         $settings = $index->settings();
         $solrNodeId = $settings['adapter']['solr_node_id'];
-        $response = $this->api->search('solr_search_fields', [
-            'solr_node_id' => $solrNodeId,
-            'facetable' => true,
-        ]);
-        $searchFields = $response->getContent();
+        $solrNode = $this->api->read('solr_nodes', $solrNodeId)->getContent();
+        $facets = $solrNode->settings()['facets'] ?? [];
         $fields = [];
-        foreach ($searchFields as $searchField) {
-            $name = $searchField->name();
+        foreach ($facets as $facet) {
+            $name = $facet['name'];
             $fields[$name] = [
                 'name' => $name,
-                'label' => $searchField->label(),
+                'label' => $facet['label'],
             ];
         }
 

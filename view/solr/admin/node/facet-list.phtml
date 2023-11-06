@@ -1,0 +1,5 @@
+<?php $settings = $node->settings(); ?>
+<?php $facets = $settings['facets'] ?? []; ?>
+<?php foreach ($facets as $facetData): ?>
+    <?= $this->partial('solr/admin/node/facet-row', ['facetData' => $facetData]) ?>
+<?php endforeach; ?>

@@ -62,6 +62,13 @@ class Querier extends AbstractQuerier
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
 
+        $facets = [];
+        $facetFieldNameBySolrFieldName = [];
+        foreach ($solrNodeSettings['facets'] ?? [] as $facet) {
+            $facets[ $facet['name'] ] = $facet;
+            $facetFieldNameBySolrFieldName[$facet['solr_field_name']] = $facet['name'];
+        }
+
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
 
@@ -81,11 +88,6 @@ class Querier extends AbstractQuerier
                 $paramName = sprintf('f.%s.qf', $name);
                 $solrQuery->setParam($paramName, $textFields);
                 $uf[] = $name;
-            }
-
-            $facetField = $searchField->facetField();
-            if (!empty($facetField)) {
-                $searchFieldMapByFacetField[$facetField] = $searchField;
             }
         }
 
@@ -126,16 +128,11 @@ class Querier extends AbstractQuerier
         if (!empty($facetFields)) {
             $solrQuery->setFacet(true);
             foreach ($facetFields as $facetField) {
-                $searchField = $this->getSearchField($facetField);
-                if (!$searchField) {
-                    throw new QuerierException(sprintf('Field %s does not exist', $facetField));
-                }
-                $solrFacetField = $searchField->facetField();
-                if (!$solrFacetField) {
-                    throw new QuerierException(sprintf('Field %s is not facetable', $facetField));
+                if (!array_key_exists($facetField, $facets)) {
+                    throw new QuerierException(sprintf('Facet %s does not exist', $facetField));
                 }
 
-                $solrQuery->addFacetField($solrFacetField);
+                $solrQuery->addFacetField($facets[$facetField]['solr_field_name']);
             }
         }
 
@@ -160,16 +157,11 @@ class Querier extends AbstractQuerier
                         $value = $this->enclose($value);
                     }
 
-                    $searchField = $this->getSearchField($name);
-                    if (!$searchField) {
-                        throw new QuerierException(sprintf('Field %s does not exist', $name));
-                    }
-                    $solrFacetField = $searchField->facetField();
-                    if (!$solrFacetField) {
-                        throw new QuerierException(sprintf('Field %s is not facetable', $name));
+                    if (!array_key_exists($name, $facets)) {
+                        throw new QuerierException(sprintf('Facet %s does not exist', $name));
                     }
 
-                    $solrQuery->addFilterQuery(sprintf('%s:%s', $solrFacetField, $value));
+                    $solrQuery->addFilterQuery(sprintf('%s:%s', $facets[$name]['solr_field_name'], $value));
                 }
             }
         }
@@ -241,8 +233,7 @@ class Querier extends AbstractQuerier
             foreach ($solrResponse['facet_counts']['facet_fields'] as $name => $values) {
                 foreach ($values as $value => $count) {
                     if ($count > 0) {
-                        $searchField = $searchFieldMapByFacetField[$name];
-                        $response->addFacetCount($searchField->name(), $value, $count);
+                        $response->addFacetCount($facetFieldNameBySolrFieldName[$name], $value, $count);
                     }
                 }
             }

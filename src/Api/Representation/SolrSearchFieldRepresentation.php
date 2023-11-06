@@ -50,7 +50,6 @@ class SolrSearchFieldRepresentation extends AbstractEntityRepresentation
             'o:label' => $entity->getLabel(),
             'o:text_fields' => $entity->getTextFields(),
             'o:string_fields' => $entity->getStringFields(),
-            'o:facet_field' => $entity->getFacetField(),
             'o:sort_field' => $entity->getSortField(),
         ];
     }
@@ -94,11 +93,6 @@ class SolrSearchFieldRepresentation extends AbstractEntityRepresentation
     public function stringFields()
     {
         return $this->resource->getStringFields();
-    }
-
-    public function facetField()
-    {
-        return $this->resource->getFacetField();
     }
 
     public function sortField()

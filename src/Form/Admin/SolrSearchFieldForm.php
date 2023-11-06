@@ -86,15 +86,6 @@ class SolrSearchFieldForm extends Form implements TranslatorAwareInterface
         ]);
 
         $this->add([
-            'name' => 'o:facet_field',
-            'type' => 'Text',
-            'options' => [
-                'label' => $translator->translate('Facet field'),
-                'info' => $translator->translate('The Solr field which will be used for faceting. Leave empty to forbid faceting on this field.'),
-            ],
-        ]);
-
-        $this->add([
             'name' => 'o:sort_field',
             'type' => 'Text',
             'options' => [

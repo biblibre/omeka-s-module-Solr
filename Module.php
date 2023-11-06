@@ -311,6 +311,31 @@ class Module extends AbstractModule
             $connection->exec('ALTER TABLE solr_search_field DROP INDEX UNIQ_7F4FB7825E237E06');
             $connection->exec('ALTER TABLE solr_search_field ADD UNIQUE INDEX UNIQ_7F4FB782A9C459FB5E237E06 (solr_node_id, name)');
         }
+
+        if (version_compare($oldVersion, '0.11.0', '<')) {
+            $result = $connection->executeQuery('SELECT solr_node_id, name, label, facet_field FROM solr_search_field');
+            $searchFields = $result->fetchAll(\PDO::FETCH_ASSOC);
+            $facetsByNode = [];
+            foreach ($searchFields as $searchField) {
+                $solrNodeId = $searchField['solr_node_id'];
+                $facetsByNode[$solrNodeId] ??= [];
+                $facetsByNode[$solrNodeId][] = [
+                    'name' => $searchField['name'],
+                    'label' => $searchField['label'],
+                    'solr_field_name' => $searchField['facet_field'],
+                ];
+            }
+
+            foreach ($facetsByNode as $solrNodeId => $facets) {
+                $result = $connection->executeQuery('SELECT settings FROM solr_node WHERE id = ?', [$solrNodeId]);
+                $solrNode = $result->fetch(\PDO::FETCH_ASSOC);
+                if ($solrNode !== false) {
+                    $settings = json_decode($solrNode['settings'], true);
+                    $settings['facets'] = $facets;
+                    $connection->executeQuery('UPDATE solr_node SET settings = ? WHERE id = ?', [json_encode($settings), $solrNodeId]);
+                }
+            }
+        }
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)

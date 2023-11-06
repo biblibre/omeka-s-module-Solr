@@ -1,0 +1,22 @@
+<?php
+$this->headLink()->appendStylesheet($this->assetUrl('css/facets-form.css', 'Solr'));
+$this->headScript()->appendFile($this->assetUrl('js/facets-form.js', 'Solr'));
+?>
+<div class="field">
+    <div class="field-meta">
+        <label><?= $this->translate('Facets'); ?></label>
+    </div>
+    <div class="inputs">
+        <div class="facets-form-element"
+            data-facet-list-url="<?= $this->escapeHtml($this->url('admin/solr/node-id', ['id' => $node->id(), 'action' => 'facet-list'])) ?>"
+            data-facet-row-url="<?= $this->escapeHtml($this->url('admin/solr/node-id', ['id' => $node->id(), 'action' => 'facet-row'])) ?>"
+            data-facet-edit-sidebar-url="<?php echo $this->escapeHtml($this->url('admin/solr/node-id', ['id' => $node->id(), 'action' => 'facet-edit-sidebar'])); ?>">
+            <input class="facets-facets-data" type="hidden" name="o:settings[facets]" value="">
+            <fieldset class="facet-select-group">
+                <input type="text" class="facets-facet-name" name="facet_name" placeholder="<?= $this->escapeHtml($this->translate('Add a facet (enter a unique name for this facet)')) ?>">
+                <button type="button" class="facets-facet-add-button o-icon-add" disabled aria-label="<?php echo $this->translate('Add'); ?>" title="<?php echo $this->translate('Add'); ?>"></button>
+            </fieldset>
+            <ul class="facets-facets"></ul>
+        </div>
+    </div>
+</div>

@@ -29,13 +29,14 @@
 
 namespace Solr\Form\Admin;
 
+use Laminas\Filter\Callback;
+use Laminas\Form\Element\Hidden;
 use Laminas\Form\Fieldset;
 use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\I18n\Translator\TranslatorAwareTrait;
-use Laminas\InputFilter\InputFilterProviderInterface;
 
-class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilterProviderInterface
+class SolrNodeForm extends Form implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
@@ -147,17 +148,5 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface, InputFilter
         ]);
 
         $this->add($settingsFieldset);
-    }
-
-    public function getInputFilterSpecification()
-    {
-        return [
-            'qf' => [
-                'required' => false,
-            ],
-            'mm' => [
-                'required' => false,
-            ],
-        ];
     }
 }

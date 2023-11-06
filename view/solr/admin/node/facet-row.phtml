@@ -1,0 +1,23 @@
+<li class="facets-facet row"
+    data-facet-name="<?php echo $this->escapeHtml($facetData['name']); ?>"
+    data-facet-data="<?php echo $this->escapeHtml(json_encode($facetData)); ?>">
+    <span class="facets-facet-restore" style="display: none;"><?php echo $this->translate('Facet to be removed'); ?></span>
+    <?php $label = $facetData['label'] ?? $facetData['name']; ?>
+    <?php $displayLabel = sprintf('%s (%s)', $label, $facetData['solr_field_name'] ?? ''); ?>
+    <span class="facets-facet-label"><?= $this->escapeHtml($displayLabel) ?></span>
+    <ul class="actions">
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-edit facets-facet-edit-button',
+            'title' => $this->translate('Edit facet'),
+        ]); ?></li>
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-delete facets-facet-remove-button',
+            'title' => $this->translate('Remove facet'),
+        ]); ?></li>
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-undo facets-facet-restore-button',
+            'title' => $this->translate('Restore facet'),
+            'style' => 'display: none;',
+        ]); ?></li>
+    </ul>
+</li>
