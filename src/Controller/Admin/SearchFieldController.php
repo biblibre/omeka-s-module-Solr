@@ -62,7 +62,6 @@ class SearchFieldController extends AbstractActionController
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
-        $view->setVariable('schema', $this->getSolrSchema($solrNodeId));
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -98,7 +97,6 @@ class SearchFieldController extends AbstractActionController
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
-        $view->setVariable('schema', $this->getSolrSchema($solrNodeId));
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -154,11 +152,5 @@ class SearchFieldController extends AbstractActionController
         return $this->redirect()->toRoute('admin/solr/node-id-fields', [
             'nodeId' => $field->solrNode()->id(),
         ]);
-    }
-
-    protected function getSolrSchema($solrNodeId)
-    {
-        $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-        return $solrNode->schema()->getSchema();
     }
 }
