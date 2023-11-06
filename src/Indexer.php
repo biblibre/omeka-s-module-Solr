@@ -171,7 +171,13 @@ class Indexer extends AbstractIndexer
                 if ($formatter && $valueFormatter) {
                     $value = $valueFormatter->format($value);
                 }
-                $document->addField($solrField, $value);
+                if (is_array($value)) {
+                    foreach ($value as $v) {
+                        $document->addField($solrField, $v);
+                    }
+                } else {
+                    $document->addField($solrField, $value);
+                }
             }
         }
 
