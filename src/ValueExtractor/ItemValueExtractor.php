@@ -97,9 +97,9 @@ class ItemValueExtractor extends AbstractValueExtractor
         return $fields;
     }
 
-    public function extractValue(AbstractResourceRepresentation $item, $field)
+    public function extractValue(AbstractResourceRepresentation $item, $field, $settings)
     {
-        $params = ['field' => $field, 'value' => null];
+        $params = ['field' => $field, 'settings' => $settings, 'value' => null];
         $params = $this->triggerEvent('solr.value_extractor.extract_value', $item, $params);
         if (isset($params['value'])) {
             return $params['value'];
@@ -129,18 +129,18 @@ class ItemValueExtractor extends AbstractValueExtractor
 
         if (preg_match('/^media\/(.*)/', $field, $matches)) {
             $mediaField = $matches[1];
-            return $this->extractMediaValue($item, $mediaField);
+            return $this->extractMediaValue($item, $mediaField, $settings);
         }
 
         if (preg_match('/^item_set\/(.*)/', $field, $matches)) {
             $itemSetField = $matches[1];
-            return $this->extractItemSetValue($item, $itemSetField);
+            return $this->extractItemSetValue($item, $itemSetField, $settings);
         }
 
-        return $this->extractPropertyValue($item, $field);
+        return $this->extractPropertyValue($item, $field, $settings);
     }
 
-    protected function extractMediaValue(ItemRepresentation $item, $field)
+    protected function extractMediaValue(ItemRepresentation $item, $field, array $settings)
     {
         $extractedValue = [];
 
@@ -151,7 +151,7 @@ class ItemValueExtractor extends AbstractValueExtractor
                 }
                 $mediaExtractedValue = [$media->mediaData()['html']];
             } else {
-                $mediaExtractedValue = $this->extractPropertyValue($media, $field);
+                $mediaExtractedValue = $this->extractPropertyValue($media, $field, $settings);
             }
             $extractedValue = array_merge($extractedValue, $mediaExtractedValue);
         }
@@ -159,7 +159,7 @@ class ItemValueExtractor extends AbstractValueExtractor
         return $extractedValue;
     }
 
-    protected function extractItemSetValue(ItemRepresentation $item, $field)
+    protected function extractItemSetValue(ItemRepresentation $item, $field, array $settings)
     {
         $extractedValue = [];
 
@@ -167,7 +167,7 @@ class ItemValueExtractor extends AbstractValueExtractor
             if ($field == 'id') {
                 $extractedValue[] = $itemSet->id();
             } else {
-                $itemSetExtractedValue = $this->extractPropertyValue($itemSet, $field);
+                $itemSetExtractedValue = $this->extractPropertyValue($itemSet, $field, $settings);
                 $extractedValue = array_merge($extractedValue, $itemSetExtractedValue);
             }
         }

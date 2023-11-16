@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Format query string to include proximity search
+- New option for mapping: "Resource field" allow to choose if resource's title
+  or resource's ID should be indexed (only for values that are resources)
+- New option for mapping: "Data types" allow to limit which types of data will
+  get indexed
 
 ## [0.10.0] - 2023-05-04
 

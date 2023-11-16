@@ -82,9 +82,9 @@ class ItemSetValueExtractor extends AbstractValueExtractor
         return $fields;
     }
 
-    public function extractValue(AbstractResourceRepresentation $itemSet, $field)
+    public function extractValue(AbstractResourceRepresentation $itemSet, $field, array $settings)
     {
-        $params = ['field' => $field, 'value' => null];
+        $params = ['field' => $field, 'settings' => $settings, 'value' => null];
         $params = $this->triggerEvent('solr.value_extractor.extract_value', $itemSet, $params);
         if (isset($params['value'])) {
             return $params['value'];
@@ -116,6 +116,6 @@ class ItemSetValueExtractor extends AbstractValueExtractor
             return $resourceTemplate ? $resourceTemplate->label() : null;
         }
 
-        return $this->extractPropertyValue($itemSet, $field);
+        return $this->extractPropertyValue($itemSet, $field, $settings);
     }
 }

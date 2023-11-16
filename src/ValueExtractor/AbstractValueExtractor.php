@@ -54,14 +54,25 @@ abstract class AbstractValueExtractor implements ValueExtractorInterface
      * @param string $field Property (RDF term).
      * @return string[] Human-readable values.
      */
-    protected function extractPropertyValue(AbstractResourceEntityRepresentation $representation, $field)
+    protected function extractPropertyValue(AbstractResourceEntityRepresentation $representation, $field, array $settings)
     {
+        $resource_field = $settings['resource_field'] ?? 'title';
+        $data_types = $settings['data_types'] ?? [];
+
         $extractedValue = [];
         $values = $representation->value($field, ['all' => true, 'default' => []]);
         foreach ($values as $i => $value) {
+            if (!empty($data_types) && !in_array($value->type(), $data_types)) {
+                continue;
+            }
+
             $valueResource = $value->valueResource();
             if ($valueResource) {
-                $text = $valueResource->title();
+                if ($resource_field === 'title') {
+                    $text = $valueResource->title();
+                } elseif ($resource_field === 'id') {
+                    $text = $valueResource->id();
+                }
             } else {
                 $text = (string) $value;
             }
