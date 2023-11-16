@@ -61,6 +61,9 @@ class Querier extends AbstractQuerier
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
+        $highlightSettings = $solrNodeSettings['highlight'] ?? [];
+        $highlighting = $highlightSettings['highlighting'] ?? false;
+        $highlightQueryParts = [];
 
         $solrQuery = new SolrQuery;
         $solrQuery->setParam('defType', 'edismax');
@@ -97,9 +100,13 @@ class Querier extends AbstractQuerier
 
         $q = $query->getQuery();
         $q = $this->getQueryStringFromSearchQuery($q);
+
         if (empty($q)) {
             $q = '*:*';
+        } else {
+            $highlightQueryParts[] = $q;
         }
+
         $solrQuery->setQuery($q);
         $solrQuery->addField('id');
 
@@ -179,6 +186,7 @@ class Querier extends AbstractQuerier
             $fq = $this->getQueryStringFromSearchQuery($queryFilter);
             if (!empty($fq)) {
                 $solrQuery->addFilterQuery($fq);
+                $highlightQueryParts[] = $fq;
             }
         }
 
@@ -188,6 +196,34 @@ class Querier extends AbstractQuerier
                 $start = $filterValue['start'] ? $filterValue['start'] : '*';
                 $end = $filterValue['end'] ? $filterValue['end'] : '*';
                 $solrQuery->addFilterQuery("$name:[$start TO $end]");
+            }
+        }
+
+        if ($highlighting) {
+            $solrQuery->setHighlight(true);
+            $solrQuery->setParam('hl.maxAnalyzedChars', '-1');
+            $solrQuery->setHighlightSimplePre('<mark>');
+            $solrQuery->setHighlightSimplePost('</mark>');
+
+            $highlight_fragsize = $highlightSettings['fragsize'] ?? '';
+            if (is_numeric($highlight_fragsize)) {
+                $solrQuery->setHighlightFragsize($highlight_fragsize);
+            }
+
+            $highlight_snippets = $highlightSettings['snippets'] ?? '';
+            if (is_numeric($highlight_snippets)) {
+                $solrQuery->setHighlightSnippets($highlight_snippets);
+            }
+
+            if (!empty($highlightQueryParts)) {
+                $highlight_query = implode(' AND ', array_map(fn ($part) => "($part)", $highlightQueryParts));
+                $solrQuery->setParam('hl.q', $highlight_query);
+            }
+
+            $highlight_fields = $highlightSettings['fields'] ?? '';
+            if (!empty($highlight_fields)) {
+                $highlight_fields = str_replace(' ', ',', $highlight_fields);
+                $solrQuery->setParam('hl.fl', $highlight_fields);
             }
         }
 
@@ -243,6 +279,17 @@ class Querier extends AbstractQuerier
                     if ($count > 0) {
                         $searchField = $searchFieldMapByFacetField[$name];
                         $response->addFacetCount($searchField->name(), $value, $count);
+                    }
+                }
+            }
+        }
+
+        if ($solrResponse['highlighting']) {
+            foreach ($solrResponse['highlighting'] as $key => $highlightsByField) {
+                [$resource, $resourceId] = explode(':', $key);
+                foreach ($highlightsByField as $solrFieldName => $highlights) {
+                    foreach ($highlights as $highlight) {
+                        $response->addHighlight($resource, $resourceId, $highlight);
                     }
                 }
             }
