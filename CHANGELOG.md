@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.11.0] - 2023-11-16
 
 ### Added
 
@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or resource's ID should be indexed (only for values that are resources)
 - New option for mapping: "Data types" allow to limit which types of data will
   get indexed
+
+### Changed
+
+- Allow value formatters to return an array
 
 ## [0.10.0] - 2023-05-04
 
@@ -157,6 +161,7 @@ The minimum Omeka S version required is 3.0.0
 
 First release
 
+[0.11.0]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.9.4...v0.10.0
 [0.9.4]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/biblibre/omeka-s-module-Solr/compare/v0.9.2...v0.9.3
