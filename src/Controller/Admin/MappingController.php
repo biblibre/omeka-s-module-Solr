@@ -136,6 +136,7 @@ class MappingController extends AbstractActionController
         $form = $this->getForm(SolrMappingForm::class, [
             'solr_node_id' => $solrNodeId,
             'resource_name' => $resourceName,
+            'solr_mapping_id' => $id,
         ]);
         $form->setData($mapping->jsonSerialize());
 

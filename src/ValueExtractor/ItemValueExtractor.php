@@ -32,6 +32,8 @@ namespace Solr\ValueExtractor;
 use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\AbstractResourceRepresentation;
+use Solr\Value\DateTimeValue;
+use Stringable;
 
 class ItemValueExtractor extends AbstractValueExtractor
 {
@@ -97,7 +99,7 @@ class ItemValueExtractor extends AbstractValueExtractor
         return $fields;
     }
 
-    public function extractValue(AbstractResourceRepresentation $item, $field, $settings)
+    public function extractValue(AbstractResourceRepresentation $item, $field, $settings): Stringable | array | string | int | float | bool
     {
         $params = ['field' => $field, 'settings' => $settings, 'value' => null];
         $params = $this->triggerEvent('solr.value_extractor.extract_value', $item, $params);
@@ -106,11 +108,12 @@ class ItemValueExtractor extends AbstractValueExtractor
         }
 
         if ($field === 'created') {
-            return $item->created();
+            return DateTimeValue::createFromInterface($item->created());
         }
 
         if ($field === 'modified') {
-            return $item->modified();
+            $modified = $item->modified();
+            return $modified ? DateTimeValue::createFromInterface($modified) : [];
         }
 
         if ($field === 'is_public') {
@@ -119,12 +122,12 @@ class ItemValueExtractor extends AbstractValueExtractor
 
         if ($field === 'resource_class') {
             $resourceClass = $item->resourceClass();
-            return $resourceClass ? $resourceClass->term() : null;
+            return $resourceClass ? $resourceClass->term() : [];
         }
 
         if ($field === 'resource_template') {
             $resourceTemplate = $item->resourceTemplate();
-            return $resourceTemplate ? $resourceTemplate->label() : null;
+            return $resourceTemplate ? $resourceTemplate->label() : [];
         }
 
         if (preg_match('/^media\/(.*)/', $field, $matches)) {
@@ -137,7 +140,7 @@ class ItemValueExtractor extends AbstractValueExtractor
             return $this->extractItemSetValue($item, $itemSetField, $settings);
         }
 
-        return $this->extractPropertyValue($item, $field, $settings);
+        return $item->value($field, ['all' => true, 'default' => []]);
     }
 
     protected function extractMediaValue(ItemRepresentation $item, $field, array $settings)
@@ -151,7 +154,7 @@ class ItemValueExtractor extends AbstractValueExtractor
                 }
                 $mediaExtractedValue = [$media->mediaData()['html']];
             } else {
-                $mediaExtractedValue = $this->extractPropertyValue($media, $field, $settings);
+                $mediaExtractedValue = $media->value($field, ['all' => true, 'default' => []]);
             }
             $extractedValue = array_merge($extractedValue, $mediaExtractedValue);
         }
@@ -167,7 +170,7 @@ class ItemValueExtractor extends AbstractValueExtractor
             if ($field == 'id') {
                 $extractedValue[] = $itemSet->id();
             } else {
-                $itemSetExtractedValue = $this->extractPropertyValue($itemSet, $field, $settings);
+                $itemSetExtractedValue = $itemSet->value($field, ['all' => true, 'default' => []]);
                 $extractedValue = array_merge($extractedValue, $itemSetExtractedValue);
             }
         }

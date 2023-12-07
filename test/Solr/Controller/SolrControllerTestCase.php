@@ -1,10 +1,10 @@
 <?php
 
-namespace SolrTest\Controller;
+namespace Solr\Test\Controller;
 
-use Omeka\Test\AbstractHttpControllerTestCase;
+use Solr\Test\TestCase;
 
-abstract class SolrControllerTestCase extends AbstractHttpControllerTestCase
+abstract class SolrControllerTestCase extends TestCase
 {
     protected $solrNode;
     protected $solrMapping;

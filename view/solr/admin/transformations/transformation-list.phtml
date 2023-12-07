@@ -1,0 +1,7 @@
+<?php if ($solrMapping): ?>
+    <?php $settings = $solrMapping->settings(); ?>
+    <?php $transformations = $settings['transformations'] ?? [] ?>
+    <?php foreach ($transformations as $transformationData): ?>
+        <?php echo $this->partial('solr/admin/transformations/transformation-row', ['transformationData' => $transformationData]); ?>
+    <?php endforeach; ?>
+<?php endif; ?>

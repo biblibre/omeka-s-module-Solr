@@ -31,9 +31,20 @@ namespace Solr\ValueExtractor;
 
 use Omeka\Api\Representation\AbstractResourceRepresentation;
 
+use Stringable;
+
 interface ValueExtractorInterface
 {
     public function getLabel();
     public function getAvailableFields();
-    public function extractValue(AbstractResourceRepresentation $resource, $field, array $settings);
+
+    /**
+     * Extract the values of a given field from a resource.
+     *
+     * It should return:
+     * - a scalar (int, float, string, bool),
+     * - a Stringable, or
+     * - an array of string or Stringable
+     */
+    public function extractValue(AbstractResourceRepresentation $resource, $field, array $settings): Stringable | array | string | int | float | bool;
 }

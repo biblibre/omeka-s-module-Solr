@@ -8,7 +8,7 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
     steps: [
         {
             name: 'test',
-            image: 'ghcr.io/biblibre/omeka-s-ci:' + omekaVersion + '-php' + phpVersion,
+            image: 'git.biblibre.com/omeka-s/omeka-s-ci:' + omekaVersion + '-php' + phpVersion,
             pull: 'always',
             commands: [
                 'pecl install solr',
@@ -16,7 +16,6 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
                 'cp -rT /usr/src/omeka-s ../..',
                 'git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search',
                 "echo 'host = \"db\"\\nuser = \"root\"\\npassword = \"root\"\\ndbname = \"omeka_test\"\\n' > ../../application/test/config/database.ini",
-                'php ../../build/composer.phar install',
                 'bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"',
                 '../../vendor/bin/phpunit',
                 '../../node_modules/.bin/gulp test:module:cs',
@@ -36,10 +35,9 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
 };
 
 [
-    Pipeline('3.0.2', '7.4', 'mariadb:10.6'),
-    Pipeline('3.1.2', '7.4', 'mariadb:10.6'),
-    Pipeline('3.2.3', '7.4', 'mariadb:10.6'),
-    Pipeline('4.0.1', '8.0', 'mariadb:10.6'),
-    Pipeline('4.0.1', '8.1', 'mariadb:10.6'),
-    Pipeline('4.0.1', '8.2', 'mariadb:10.6'),
+    Pipeline('3.1.2', '8.0', 'mariadb:10.6'),
+    Pipeline('3.2.3', '8.0', 'mariadb:10.6'),
+    Pipeline('4.0.4', '8.0', 'mariadb:10.6'),
+    Pipeline('4.0.4', '8.1', 'mariadb:10.6'),
+    Pipeline('4.0.4', '8.2', 'mariadb:10.6'),
 ]

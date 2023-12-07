@@ -3,7 +3,7 @@
 <phpunit bootstrap="./test/bootstrap.php" colors="true" backupGlobals="false" convertDeprecationsToExceptions="false">
     <testsuites>
         <testsuite name="Solr">
-            <directory>./test/SolrTest</directory>
+            <directory>./test/Solr</directory>
         </testsuite>
     </testsuites>
 </phpunit>

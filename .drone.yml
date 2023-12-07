@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: omeka:3.0.2 php:7.4 mariadb:10.6
+name: omeka:3.1.2 php:8.0 mariadb:10.6
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
@@ -15,11 +15,10 @@ steps:
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
     > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
   - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:3.0.2-php7.4
+  image: git.biblibre.com/omeka-s/omeka-s-ci:3.1.2-php8.0
   name: test
   pull: always
 type: docker
@@ -27,7 +26,7 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: pipeline
-name: omeka:3.1.2 php:7.4 mariadb:10.6
+name: omeka:3.2.3 php:8.0 mariadb:10.6
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
@@ -42,11 +41,10 @@ steps:
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
     > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
   - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:3.1.2-php7.4
+  image: git.biblibre.com/omeka-s/omeka-s-ci:3.2.3-php8.0
   name: test
   pull: always
 type: docker
@@ -54,7 +52,7 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: pipeline
-name: omeka:3.2.3 php:7.4 mariadb:10.6
+name: omeka:4.0.4 php:8.0 mariadb:10.6
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
@@ -69,11 +67,10 @@ steps:
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
     > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
   - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:3.2.3-php7.4
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.0
   name: test
   pull: always
 type: docker
@@ -81,7 +78,7 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: pipeline
-name: omeka:4.0.1 php:8.0 mariadb:10.6
+name: omeka:4.0.4 php:8.1 mariadb:10.6
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
@@ -96,11 +93,10 @@ steps:
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
     > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
   - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:4.0.1-php8.0
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.1
   name: test
   pull: always
 type: docker
@@ -108,7 +104,7 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: pipeline
-name: omeka:4.0.1 php:8.1 mariadb:10.6
+name: omeka:4.0.4 php:8.2 mariadb:10.6
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
@@ -123,38 +119,10 @@ steps:
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
     > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
   - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:4.0.1-php8.1
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.0.1 php:8.2 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - php ../../build/composer.phar install
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: ghcr.io/biblibre/omeka-s-ci:4.0.1-php8.2
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.2
   name: test
   pull: always
 type: docker
@@ -162,6 +130,6 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: signature
-hmac: 75379dce3ad3ada828ac44cd7b8f9a9add6362bf8caa3bbf4a2a5b4e55e78d25
+hmac: 9a7a1708f8a843cb7866b9947df2d4cdec11432941d631e8fed2eb8281baa08c
 
 ...

@@ -1,0 +1,21 @@
+<a href="#" class="sidebar-close o-icon-close"><span class="screen-reader-text"><?php echo $this->translate('Close'); ?></span></a>
+<div class="sidebar-content">
+    <div class="confirm-main">
+        <div id="transformations-transformation-form">
+            <h3><?php echo $this->translate('Configure transformation'); ?></h3>
+
+            <?php
+            $nameInput = new \Laminas\Form\Element\Text('name');
+            $nameInput->setLabel($this->translate('Name'));
+            $nameInput->setValue($this->solrTransformation()->label($transformationData));
+            $nameInput->setAttribute('disabled', true);
+            echo $this->formRow($nameInput);
+            ?>
+
+            <?= $this->solrTransformation()->configForm($transformationData); ?>
+        </div>
+    </div>
+    <div class="confirm-panel">
+        <button type="button" id="transformations-transformation-set-button"><?php echo $this->translate('Save transformation'); ?></button>
+    </div>
+</div>

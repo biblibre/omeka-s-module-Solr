@@ -1,8 +1,8 @@
 <?php
 
-namespace SolrTest\Controller\Admin;
+namespace Solr\Test\Controller\Admin;
 
-use SolrTest\Controller\SolrControllerTestCase;
+use Solr\Test\Controller\SolrControllerTestCase;
 
 class NodeControllerTest extends SolrControllerTestCase
 {

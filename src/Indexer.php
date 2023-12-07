@@ -34,6 +34,7 @@ use SolrInputDocument;
 use SolrServerException;
 use Omeka\Entity\Resource;
 use Search\Indexer\AbstractIndexer;
+use Stringable;
 
 class Indexer extends AbstractIndexer
 {
@@ -93,7 +94,7 @@ class Indexer extends AbstractIndexer
         $api = $serviceLocator->get('Omeka\ApiManager');
         $settings = $serviceLocator->get('Omeka\Settings');
         $valueExtractorManager = $serviceLocator->get('Solr\ValueExtractorManager');
-        $valueFormatterManager = $serviceLocator->get('Solr\ValueFormatterManager');
+        $transformationManager = $serviceLocator->get('Solr\TransformationManager');
         $entityManager = $serviceLocator->get('Omeka\EntityManager');
 
         $resource = $api->read($resource->getResourceName(), $resource->getId())->getContent();
@@ -158,26 +159,21 @@ class Indexer extends AbstractIndexer
                 $values = (array) $values;
             }
 
+            $transformations = $solrMappingSettings['transformations'] ?? [];
+            foreach ($transformations as $transformationData) {
+                $transformation = $transformationManager->get($transformationData['name']);
+                $values = $transformation->transform($values, $transformationData);
+            }
+
+            $values = array_filter($values, fn ($v) => is_scalar($v) || $v instanceof Stringable);
+
             $schemaField = $schema->getField($solrField);
             if (!$schemaField->isMultivalued()) {
                 $values = array_slice($values, 0, 1);
             }
 
-            $formatter = $solrMappingSettings['formatter'];
-            if ($formatter) {
-                $valueFormatter = $valueFormatterManager->get($formatter);
-            }
             foreach ($values as $value) {
-                if ($formatter && $valueFormatter) {
-                    $value = $valueFormatter->format($value);
-                }
-                if (is_array($value)) {
-                    foreach ($value as $v) {
-                        $document->addField($solrField, $v);
-                    }
-                } else {
-                    $document->addField($solrField, $value);
-                }
+                $document->addField($solrField, (string) $value);
             }
         }
 

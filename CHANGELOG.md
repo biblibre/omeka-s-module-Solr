@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+The minimum PHP version required is now 8.0 and the minimum Omeka version is
+now 3.1.0
+
+- Add mapping transformations. They allow to modify values before them being
+  sent to Solr. This replaces the following mapping settings: Data types,
+  Resource field, Formatter.
+  Value formatters implemented by other Omeka modules are still supported but
+  this system is deprecated. They should switch to transformations
+
 ## [0.12.0] - 2023-11-16
 
 - Add highlighting feature when enabled by module preferences

@@ -1,9 +1,0 @@
-{
-    "require-dev": {
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "SolrTest\\": "test/SolrTest/"
-        }
-    }
-}

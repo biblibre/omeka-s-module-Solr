@@ -1,0 +1,23 @@
+<li class="transformations-transformation row"
+    data-transformation-name="<?php echo $this->escapeHtml($transformationData['name']); ?>"
+    data-transformation-data="<?php echo $this->escapeHtml(json_encode($transformationData)); ?>">
+    <span class="sortable-handle"></span>
+    <span class="transformations-transformation-restore" style="display: none;"><?php echo $this->translate('Facet to be removed'); ?></span>
+    <?php $label = $this->solrTransformation()->label($transformationData) ?? ''; ?>
+    <span class="transformations-transformation-label"><?php echo $this->escapeHtml($label); ?></span>
+    <ul class="actions">
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-edit transformations-transformation-edit-button',
+            'title' => $this->translate('Configure transformation'),
+        ]); ?></li>
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-delete transformations-transformation-remove-button',
+            'title' => $this->translate('Remove transformation'),
+        ]); ?></li>
+        <li><?php echo $this->hyperlink('', [], [
+            'class' => 'o-icon-undo transformations-transformation-restore-button',
+            'title' => $this->translate('Restore transformation'),
+            'style' => 'display: none;',
+        ]); ?></li>
+    </ul>
+</li>

@@ -1,9 +1,8 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../../../bootstrap.php';
+require dirname(dirname(dirname(__DIR__))) . '/bootstrap.php';
 
-//make sure error reporting is on for testing
+// Make sure error reporting is on for testing
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -22,11 +21,29 @@ $adapter->setIdentity('admin@example.com');
 $adapter->setCredential('root');
 $auth->authenticate();
 
+$moduleName = 'Solr';
+
 // Enable Search and Solr modules
 $moduleManager = $serviceLocator->get('Omeka\ModuleManager');
-foreach (['Search', 'Solr'] as $moduleName) {
-    $module = $moduleManager->getModule($moduleName);
+foreach (['Search', 'Solr'] as $name) {
+    $module = $moduleManager->getModule($name);
     if ($module->getState() !== \Omeka\Module\Manager::STATE_ACTIVE) {
         $moduleManager->install($module);
     }
 }
+
+spl_autoload_register(function ($class) use ($moduleName) {
+    $prefix = "$moduleName\\Test\\";
+    $base_dir = __DIR__ . "/$moduleName/";
+
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
+
+    $relative_class = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    if (file_exists($file)) {
+        require $file;
+    }
+});

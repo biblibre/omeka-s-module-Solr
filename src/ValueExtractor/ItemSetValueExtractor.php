@@ -31,6 +31,8 @@ namespace Solr\ValueExtractor;
 
 use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\AbstractResourceRepresentation;
+use Solr\Value\DateTimeValue;
+use Stringable;
 
 class ItemSetValueExtractor extends AbstractValueExtractor
 {
@@ -82,7 +84,7 @@ class ItemSetValueExtractor extends AbstractValueExtractor
         return $fields;
     }
 
-    public function extractValue(AbstractResourceRepresentation $itemSet, $field, array $settings)
+    public function extractValue(AbstractResourceRepresentation $itemSet, $field, array $settings): Stringable | array | string | int | float | bool
     {
         $params = ['field' => $field, 'settings' => $settings, 'value' => null];
         $params = $this->triggerEvent('solr.value_extractor.extract_value', $itemSet, $params);
@@ -91,11 +93,12 @@ class ItemSetValueExtractor extends AbstractValueExtractor
         }
 
         if ($field === 'created') {
-            return $itemSet->created();
+            return DateTimeValue::createFromInterface($itemSet->created());
         }
 
         if ($field === 'modified') {
-            return $itemSet->modified();
+            $modified = $itemSet->modified();
+            return $modified ? DateTimeValue::createFromInterface($modified) : [];
         }
 
         if ($field === 'is_public') {
@@ -116,6 +119,6 @@ class ItemSetValueExtractor extends AbstractValueExtractor
             return $resourceTemplate ? $resourceTemplate->label() : null;
         }
 
-        return $this->extractPropertyValue($itemSet, $field, $settings);
+        return $itemSet->value($field, ['all' => true, 'default' => []]);
     }
 }

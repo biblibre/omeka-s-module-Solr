@@ -6,6 +6,7 @@ return [
         'invokables' => [
             'Solr\Controller\Admin\Node' => Controller\Admin\NodeController::class,
             'Solr\Controller\Admin\SearchField' => Controller\Admin\SearchFieldController::class,
+            'Solr\Controller\Admin\Transformations' => Controller\Admin\TransformationsController::class,
         ],
         'factories' => [
             'Solr\Controller\Admin\Mapping' => Service\Controller\MappingControllerFactory::class,
@@ -45,6 +46,7 @@ return [
         ],
         'invokables' => [
             'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
+            'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,
         ],
     ],
     'router' => [
@@ -156,6 +158,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'transformations' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/transformations/:action',
+                                    'defaults' => [
+                                        'controller' => 'Transformations',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -167,6 +178,20 @@ return [
             'Solr\ValueExtractorManager' => Service\ValueExtractorManagerFactory::class,
             'Solr\ValueFormatterManager' => Service\ValueFormatterManagerFactory::class,
             'Solr\Schema' => Service\SchemaFactory::class,
+            'Solr\TransformationManager' => Service\TransformationManagerFactory::class,
+        ],
+    ],
+    'view_helpers' => [
+        'delegators' => [
+            'Laminas\Form\View\Helper\FormElement' => [
+                Service\Delegator\FormElementDelegatorFactory::class,
+            ],
+        ],
+        'factories' => [
+            'solrTransformation' => Service\View\Helper\TransformationFactory::class,
+        ],
+        'invokables' => [
+            'solrFormTransformations' => Form\View\Helper\FormTransformations::class,
         ],
     ],
     'view_manager' => [
@@ -179,6 +204,17 @@ return [
             'solr' => Service\AdapterFactory::class,
         ],
     ],
+    'solr_transformations' => [
+        'factories' => [
+            'Solr\Transformation\Filter\DataType' => Service\Transformation\Filter\DataTypeFactory::class,
+            'Solr\Transformation\Filter\ResourceClass' => Service\Transformation\Filter\ResourceClassFactory::class,
+        ],
+        'invokables' => [
+            'Solr\Transformation\ConvertResourceToString' => Transformation\ConvertResourceToString::class,
+            'Solr\Transformation\ConvertToSolrDateRange' => Transformation\ConvertToSolrDateRange::class,
+            'Solr\Transformation\StripHtmlTags' => Transformation\StripHtmlTags::class,
+        ],
+    ],
     'solr_value_extractors' => [
         'factories' => [
             'items' => Service\ValueExtractor\ItemValueExtractorFactory::class,
@@ -186,10 +222,6 @@ return [
         ],
     ],
     'solr_value_formatters' => [
-        'invokables' => [
-            'date_range' => ValueFormatter\DateRange::class,
-            'plain_text' => ValueFormatter\PlainText::class,
-        ],
     ],
     'translator' => [
         'translation_file_patterns' => [
