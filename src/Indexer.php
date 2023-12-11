@@ -156,7 +156,7 @@ class Indexer extends AbstractIndexer
             $values = $valueExtractor->extractValue($resource, $source, $solrMappingSettings);
 
             if (!is_array($values)) {
-                $values = (array) $values;
+                $values = [$values];
             }
 
             $transformations = $solrMappingSettings['transformations'] ?? [];

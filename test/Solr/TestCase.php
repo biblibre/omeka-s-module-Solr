@@ -6,6 +6,13 @@ use Omeka\Test\AbstractHttpControllerTestCase;
 
 abstract class TestCase extends AbstractHttpControllerTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->getApplication();
+    }
+
     protected function login($email, $password)
     {
         $serviceLocator = $this->getServiceLocator();
