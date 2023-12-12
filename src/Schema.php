@@ -46,34 +46,14 @@ class Schema
 
     protected $fields = [];
 
-    public function __construct($hostname, $port, $path, $login = null, $password = null)
+    public function __construct(array $schemaData = [])
     {
-        $this->hostname = $hostname;
-        $this->port = $port;
-        $this->path = $path;
-        $this->login = $login;
-        $this->password = $password;
+        $this->schema = $schemaData;
     }
 
     public function getSchema()
     {
-        if (!isset($this->schema)) {
-            $url = 'http://';
-            if (isset($this->login) && isset($this->password)) {
-                $url .= sprintf('%s:%s@', urlencode($this->login), urlencode($this->password));
-            }
-            $url .= sprintf('%s:%s/%s/schema', $this->hostname, $this->port, $this->path);
-
-            $response = json_decode(file_get_contents($url), true);
-            $this->schema = $response['schema'];
-        }
-
         return $this->schema;
-    }
-
-    public function setSchema($schema)
-    {
-        $this->schema = $schema;
     }
 
     public function getField($name)

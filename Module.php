@@ -33,7 +33,6 @@ use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Omeka\Module\AbstractModule;
-use Omeka\Module\Exception\ModuleCannotInstallException;
 
 class Module extends AbstractModule
 {
@@ -77,12 +76,6 @@ class Module extends AbstractModule
     {
         $connection = $serviceLocator->get('Omeka\Connection');
         $api = $serviceLocator->get('Omeka\ApiManager');
-
-        if (!extension_loaded('solr')) {
-            $translator = $serviceLocator->get('MvcTranslator');
-            $message = $translator->translate("Solr module requires PHP Solr extension, which is not loaded.");
-            throw new ModuleCannotInstallException($message);
-        }
 
         $connection->exec("
             CREATE TABLE solr_node (
@@ -356,6 +349,27 @@ class Module extends AbstractModule
                 $connection->update('solr_mapping', ['settings' => json_encode($settings)], ['id' => $mapping['id']]);
             }
         }
+
+        if (version_compare($oldVersion, '0.16.0', '<')) {
+            $nodes = $connection->executeQuery('SELECT id, settings FROM solr_node')->fetchAll();
+            foreach ($nodes as $node) {
+                $settings = json_decode($node['settings'], true);
+
+                $hostname = $settings['client']['hostname'] ?? '127.0.0.1';
+                $port = $settings['client']['port'] ?? '8983';
+                $path = $settings['client']['path'] ?? 'solr/default';
+
+                $uri = sprintf('http://%s:%s/%s', $hostname, $port, $path);
+
+                $settings['uri'] = $uri;
+                $settings['user'] = $settings['client']['login'] ?? '';
+                $settings['password'] = $settings['client']['password'] ?? '';
+
+                unset($settings['client']);
+
+                $connection->update('solr_node', ['settings' => json_encode($settings)], ['id' => $node['id']]);
+            }
+        }
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)
@@ -369,11 +383,7 @@ class Module extends AbstractModule
     protected function getSolrNodeDefaultSettings()
     {
         return [
-            'client' => [
-                'hostname' => 'localhost',
-                'port' => 8983,
-                'path' => 'solr/default',
-            ],
+            'uri' => 'http://127.0.0.1:8983/solr/default',
             'resource_name_field' => 'resource_name_s',
             'sites_field' => 'sites_id_is',
             'is_public_field' => 'is_public_b',

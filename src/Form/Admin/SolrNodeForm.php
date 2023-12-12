@@ -55,43 +55,20 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
         ]);
 
         $settingsFieldset = new Fieldset('o:settings');
-        $clientSettingsFieldset = new Fieldset('client');
 
-        $clientSettingsFieldset->add([
-            'name' => 'hostname',
+        $settingsFieldset->add([
+            'name' => 'uri',
             'type' => 'Text',
             'options' => [
-                'label' => $translator->translate('Hostname'),
+                'label' => 'URI', // @translate
             ],
             'attributes' => [
                 'required' => true,
             ],
         ]);
 
-        $clientSettingsFieldset->add([
-            'name' => 'port',
-            'type' => 'Text',
-            'options' => [
-                'label' => $translator->translate('Port'),
-            ],
-            'attributes' => [
-                'required' => true,
-            ],
-        ]);
-
-        $clientSettingsFieldset->add([
-            'name' => 'path',
-            'type' => 'Text',
-            'options' => [
-                'label' => $translator->translate('Path'),
-            ],
-            'attributes' => [
-                'required' => true,
-            ],
-        ]);
-
-        $clientSettingsFieldset->add([
-            'name' => 'login',
+        $settingsFieldset->add([
+            'name' => 'user',
             'type' => 'Text',
             'options' => [
                 'label' => 'Username', // @translate
@@ -99,7 +76,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
-        $clientSettingsFieldset->add([
+        $settingsFieldset->add([
             'name' => 'password',
             'type' => 'Text',
             'options' => [
@@ -107,8 +84,6 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
                 'info' => 'The HTTP Authentication password', // @translate
             ],
         ]);
-
-        $settingsFieldset->add($clientSettingsFieldset);
 
         $settingsFieldset->add([
             'name' => 'resource_name_field',

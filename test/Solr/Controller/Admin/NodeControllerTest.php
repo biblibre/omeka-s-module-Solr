@@ -20,9 +20,7 @@ class NodeControllerTest extends SolrControllerTestCase
         $this->assertResponseStatusCode(200);
 
         $this->assertQuery('input[name="o:name"]');
-        $this->assertQuery('input[name="o:settings[client][hostname]"]');
-        $this->assertQuery('input[name="o:settings[client][port]"]');
-        $this->assertQuery('input[name="o:settings[client][path]"]');
+        $this->assertQuery('input[name="o:settings[uri]"]');
         $this->assertQuery('input[name="o:settings[resource_name_field]"]');
     }
 

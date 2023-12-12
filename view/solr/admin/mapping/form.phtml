@@ -39,6 +39,7 @@
 
 <?php $this->trigger('view.add.after'); ?>
 
+<?php if (isset($schema)): ?>
 <script>
 (function() {
     var schema = <?php echo json_encode($schema); ?>;
@@ -271,3 +272,4 @@
     });
 })();
 </script>
+<?php endif; ?>

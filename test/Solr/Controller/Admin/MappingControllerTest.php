@@ -2,6 +2,8 @@
 
 namespace Solr\Test\Controller\Admin;
 
+use Solr\SolrClient;
+use Solr\Schema;
 use Solr\Test\Controller\SolrControllerTestCase;
 
 class MappingControllerTest extends SolrControllerTestCase
@@ -10,8 +12,10 @@ class MappingControllerTest extends SolrControllerTestCase
     {
         parent::setUp();
 
-        $schema = $this->solrNode->schema();
-        $schema->setSchema([]);
+        $schema = new Schema();
+        $solrClientStub = $this->createStub(SolrClient::class);
+        $solrClientStub->method('schema')->willReturn($schema);
+        $this->getServiceLocator()->setService('Solr\SolrClient', $solrClientStub);
     }
 
     public function testBrowseAction()

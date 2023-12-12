@@ -29,9 +29,6 @@
 
 namespace Solr;
 
-use SolrClient;
-use SolrInputDocument;
-use SolrServerException;
 use Omeka\Entity\Resource;
 use Search\Indexer\AbstractIndexer;
 use Stringable;
@@ -179,7 +176,7 @@ class Indexer extends AbstractIndexer
 
         try {
             $client->addDocument($document);
-        } catch (SolrServerException $e) {
+        } catch (\Exception $e) {
             $this->getLogger()->err($e);
             $this->getLogger()->err(sprintf('Indexing of resource %s failed', $resource->id()));
         }
@@ -193,8 +190,7 @@ class Indexer extends AbstractIndexer
     protected function getClient()
     {
         if (!isset($this->client)) {
-            $solrNode = $this->getSolrNode();
-            $this->client = new SolrClient($solrNode->clientSettings());
+            $this->client = $this->getSolrNode()->client();
         }
 
         return $this->client;

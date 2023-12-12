@@ -177,8 +177,11 @@ return [
         'factories' => [
             'Solr\ValueExtractorManager' => Service\ValueExtractorManagerFactory::class,
             'Solr\ValueFormatterManager' => Service\ValueFormatterManagerFactory::class,
-            'Solr\Schema' => Service\SchemaFactory::class,
+            'Solr\SolrClient' => Service\SolrClientFactory::class,
             'Solr\TransformationManager' => Service\TransformationManagerFactory::class,
+        ],
+        'shared' => [
+            'Solr\SolrClient' => false,
         ],
     ],
     'view_helpers' => [

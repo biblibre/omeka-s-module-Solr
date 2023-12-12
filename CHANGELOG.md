@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2024-07-12
+
+### Breaking changes
+- Solr versions older that 5.1.0 are no longer supported
+
+### Changed
+- PHP Solr extension is no longer required
+- Configuration is done using a single URI parameter instead of several
+  parameters (hostname, port, path). This means that HTTPS can be used now.
+
 ## [0.15.0] - 2024-07-11
 
 ### Added
@@ -201,6 +211,7 @@ The minimum Omeka S version required is 3.0.0
 
 First release
 
+[0.16.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.16.0
 [0.15.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.15.0
 [0.14.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.14.0
 [0.13.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.13.1

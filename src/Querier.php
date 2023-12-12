@@ -29,9 +29,6 @@
 
 namespace Solr;
 
-use SolrClient;
-use SolrClientException;
-use SolrQuery;
 use Search\Querier\AbstractQuerier;
 use Search\Querier\Exception\QuerierException;
 use Search\Query;
@@ -131,7 +128,6 @@ class Querier extends AbstractQuerier
 
         $facetFields = $query->getFacetFields();
         if (!empty($facetFields)) {
-            $solrQuery->setFacet(true);
             foreach ($facetFields as $facetField) {
                 $searchField = $this->getSearchField($facetField);
                 if (!$searchField) {
@@ -234,7 +230,6 @@ class Querier extends AbstractQuerier
         $sort = $query->getSort();
         if (isset($sort)) {
             [$sortField, $sortOrder] = explode(' ', $sort);
-            $sortOrder = $sortOrder == 'asc' ? SolrQuery::ORDER_ASC : SolrQuery::ORDER_DESC;
 
             if ($sortField !== 'score') {
                 $searchField = $this->getSearchField($sortField);
@@ -260,9 +255,9 @@ class Querier extends AbstractQuerier
         }
 
         try {
-            $logger->debug(sprintf('Solr query params: %s', $solrQuery->toString()));
+            $logger->debug(sprintf('Solr query params: %s', json_encode($solrQuery)));
             $solrQueryResponse = $client->query($solrQuery);
-        } catch (SolrClientException $e) {
+        } catch (\Exception $e) {
             throw new QuerierException($e->getMessage(), $e->getCode(), $e);
         }
         $solrResponse = $solrQueryResponse->getResponse();
@@ -277,18 +272,22 @@ class Querier extends AbstractQuerier
             }
         }
 
-        if (!empty($solrResponse['facet_counts']['facet_fields'])) {
-            foreach ($solrResponse['facet_counts']['facet_fields'] as $name => $values) {
-                foreach ($values as $value => $count) {
-                    if ($count > 0) {
+        if (!empty($solrResponse['facets'])) {
+            foreach ($solrResponse['facets'] as $name => $facetData) {
+                if ($name === 'count') {
+                    continue;
+                }
+
+                foreach ($facetData['buckets'] as $bucket) {
+                    if ($bucket['count'] > 0) {
                         $searchField = $searchFieldMapByFacetField[$name];
-                        $response->addFacetCount($searchField->name(), $value, $count);
+                        $response->addFacetCount($searchField->name(), $bucket['val'], $bucket['count']);
                     }
                 }
             }
         }
 
-        if ($solrResponse['highlighting']) {
+        if (isset($solrResponse['highlighting'])) {
             foreach ($solrResponse['highlighting'] as $key => $highlightsByField) {
                 [$resource, $resourceId] = explode(':', $key);
                 foreach ($highlightsByField as $solrFieldName => $highlights) {
@@ -310,8 +309,7 @@ class Querier extends AbstractQuerier
     protected function getClient()
     {
         if (!isset($this->client)) {
-            $solrNode = $this->getSolrNode();
-            $this->client = new SolrClient($solrNode->clientSettings());
+            $this->client = $this->getSolrNode()->client();
         }
 
         return $this->client;

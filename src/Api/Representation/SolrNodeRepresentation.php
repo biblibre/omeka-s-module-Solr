@@ -29,9 +29,8 @@
 
 namespace Solr\Api\Representation;
 
-use SolrClient;
-use SolrClientException;
 use Omeka\Api\Representation\AbstractEntityRepresentation;
+use Solr\Exception\BadCredentialsException;
 
 class SolrNodeRepresentation extends AbstractEntityRepresentation
 {
@@ -76,33 +75,42 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         return $this->resource->getSettings();
     }
 
-    public function clientSettings()
-    {
-        $settings = $this->settings();
-        return (array) $settings['client'];
-    }
-
     public function clientUrl()
     {
-        $clientSettings = $this->clientSettings();
-        $hostname = $clientSettings['hostname'];
-        $port = $clientSettings['port'];
-        $path = $clientSettings['path'];
-        return sprintf('%s:%s/%s', $hostname, $port, $path);
+        $settings = $this->settings();
+
+        return $settings['uri'] ?? null;
+    }
+
+    public function client()
+    {
+        $solrClient = $this->getServiceLocator()->get('Solr\SolrClient');
+
+        $solrClient->setUri($this->clientUrl());
+
+        $settings = $this->settings();
+        $user = $settings['user'] ?? '';
+        $password = $settings['password'] ?? '';
+        if ($user && $password) {
+            $solrClient->setAuth($user, $password);
+        }
+
+        return $solrClient;
     }
 
     public function status()
     {
-        $solrClient = new SolrClient($this->clientSettings());
+        $solrClient = $this->client();
 
         try {
-            $solrPingResponse = @$solrClient->ping();
-        } catch (SolrClientException $e) {
-            $messages = explode("\n", $e->getMessage());
-            return reset($messages);
+            $solrPingResponse = $solrClient->ping();
+        } catch (BadCredentialsException $e) {
+            return 'Bad credentials';
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
 
-        return 'OK';
+        return $solrPingResponse['status'];
     }
 
     public function mappingUrl($action = null, $canonical = false)
@@ -150,8 +158,6 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
 
     public function schema()
     {
-        $services = $this->getServiceLocator();
-
-        return $services->build('Solr\Schema', ['solr_node' => $this]);
+        return $this->client()->schema();
     }
 }

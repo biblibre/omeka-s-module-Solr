@@ -5,9 +5,8 @@ This module provides a [Search](https://github.com/biblibre/omeka-s-module-Searc
 ## Requirements
 
 - PHP >= 8.0
-- [Solr PHP extension](https://pecl.php.net/package/solr) (>= 2.0.0). It must be enabled for the CLI as well as the web server.
 - Omeka S >= 3.1.0
-- A running Solr instance. It's recommended to use the latest version of Solr, but it should work with older versions too.
+- Solr >= 5.1.0
 
 ## Quick start
 
