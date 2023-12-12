@@ -29,13 +29,11 @@
 
 namespace Solr;
 
-use SolrClient;
-use SolrClientException;
-use SolrQuery;
 use Search\Querier\AbstractQuerier;
 use Search\Querier\Exception\QuerierException;
 use Search\Query;
 use Search\Response;
+use Solr\SolrQuery;
 
 class Querier extends AbstractQuerier
 {
@@ -234,7 +232,6 @@ class Querier extends AbstractQuerier
         $sort = $query->getSort();
         if (isset($sort)) {
             [$sortField, $sortOrder] = explode(' ', $sort);
-            $sortOrder = $sortOrder == 'asc' ? SolrQuery::ORDER_ASC : SolrQuery::ORDER_DESC;
 
             if ($sortField !== 'score') {
                 $searchField = $this->getSearchField($sortField);
@@ -262,10 +259,11 @@ class Querier extends AbstractQuerier
         try {
             $logger->debug(sprintf('Solr query params: %s', $solrQuery->toString()));
             $solrQueryResponse = $client->query($solrQuery);
-        } catch (SolrClientException $e) {
+        } catch (\Exception $e) {
             throw new QuerierException($e->getMessage(), $e->getCode(), $e);
         }
         $solrResponse = $solrQueryResponse->getResponse();
+        error_log(json_encode($solrResponse, JSON_PRETTY_PRINT));
 
         $response = new Response;
         $response->setTotalResults($solrResponse['grouped'][$resource_name_field]['matches']);
@@ -288,7 +286,7 @@ class Querier extends AbstractQuerier
             }
         }
 
-        if ($solrResponse['highlighting']) {
+        if (isset($solrResponse['highlighting'])) {
             foreach ($solrResponse['highlighting'] as $key => $highlightsByField) {
                 [$resource, $resourceId] = explode(':', $key);
                 foreach ($highlightsByField as $solrFieldName => $highlights) {
@@ -310,8 +308,7 @@ class Querier extends AbstractQuerier
     protected function getClient()
     {
         if (!isset($this->client)) {
-            $solrNode = $this->getSolrNode();
-            $this->client = new SolrClient($solrNode->clientSettings());
+            $this->client = $this->getSolrNode()->client();
         }
 
         return $this->client;

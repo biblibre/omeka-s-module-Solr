@@ -260,8 +260,13 @@ class MappingController extends AbstractActionController
 
     protected function getSolrSchema($solrNodeId)
     {
-        $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-        return $solrNode->schema()->getSchema();
+        try {
+            $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
+            $schema = $solrNode->schema()->getSchema();
+            return $schema;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     protected function deleteMappings(SolrNodeRepresentation $solrNode)

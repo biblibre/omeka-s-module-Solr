@@ -29,8 +29,6 @@
 
 namespace Solr\Api\Representation;
 
-use SolrClient;
-use SolrClientException;
 use Omeka\Api\Representation\AbstractEntityRepresentation;
 
 class SolrNodeRepresentation extends AbstractEntityRepresentation
@@ -88,21 +86,28 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         $hostname = $clientSettings['hostname'];
         $port = $clientSettings['port'];
         $path = $clientSettings['path'];
-        return sprintf('%s:%s/%s', $hostname, $port, $path);
+        return sprintf('http://%s:%s/%s', $hostname, $port, $path);
+    }
+
+    public function client()
+    {
+        $solrClient = $this->getServiceLocator()->get('Solr\SolrClient');
+        $solrClient->setUri($this->clientUrl());
+
+        return $solrClient;
     }
 
     public function status()
     {
-        $solrClient = new SolrClient($this->clientSettings());
+        $solrClient = $this->client();
 
         try {
-            $solrPingResponse = @$solrClient->ping();
-        } catch (SolrClientException $e) {
-            $messages = explode("\n", $e->getMessage());
-            return reset($messages);
+            $solrPingResponse = $solrClient->ping();
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
 
-        return 'OK';
+        return $solrPingResponse['status'];
     }
 
     public function mappingUrl($action = null, $canonical = false)
@@ -150,8 +155,6 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
 
     public function schema()
     {
-        $services = $this->getServiceLocator();
-
-        return $services->build('Solr\Schema', ['solr_node' => $this]);
+        return $this->client()->schema();
     }
 }
