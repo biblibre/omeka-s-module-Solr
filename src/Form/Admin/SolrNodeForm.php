@@ -29,6 +29,7 @@
 
 namespace Solr\Form\Admin;
 
+use Laminas\Form\Element\Text;
 use Laminas\Form\Fieldset;
 use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
@@ -187,6 +188,15 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             'options' => [
                 'label' => $translator->translate('Highlight snippets'),
                 'info' => $translator->translate('Define the number of fragments where the search terms were found in the same field.'),
+            ],
+        ]);
+
+        $highlightFieldset->add([
+            'name' => 'maxAnalyzedChars',
+            'type' => Text::class,
+            'options' => [
+                'label' => 'Maximum characters analyzed', // @translate
+                'info' => 'Set the value of hl.maxAnalyzedChars parameter. Great values can have impact on performance', // @translate
             ],
         ]);
 

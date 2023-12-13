@@ -201,7 +201,6 @@ class Querier extends AbstractQuerier
 
         if ($highlighting) {
             $solrQuery->setHighlight(true);
-            $solrQuery->setParam('hl.maxAnalyzedChars', '-1');
             $solrQuery->setHighlightSimplePre('<mark>');
             $solrQuery->setHighlightSimplePost('</mark>');
 
@@ -213,6 +212,11 @@ class Querier extends AbstractQuerier
             $highlight_snippets = $highlightSettings['snippets'] ?? '';
             if (is_numeric($highlight_snippets)) {
                 $solrQuery->setHighlightSnippets($highlight_snippets);
+            }
+
+            $highlight_maxAnalyzedChars = $highlightSettings['maxAnalyzedChars'] ?? '';
+            if (is_numeric($highlight_maxAnalyzedChars)) {
+                $solrQuery->setParam('hl.maxAnalyzedChars', $highlight_maxAnalyzedChars);
             }
 
             if (!empty($highlightQueryParts)) {
