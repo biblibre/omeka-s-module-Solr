@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - Make hl.maxAnalyzedChars configurable
+- Fix text for transformations to be removed
 
 ## [0.13.1] - 2023-12-12
 
