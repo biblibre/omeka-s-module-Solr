@@ -46,7 +46,9 @@ class SchemaFactory implements FactoryInterface
             $this->schemas[$solr_node->id()] = new Schema(
                 $settings['hostname'],
                 $settings['port'],
-                $settings['path']
+                $settings['path'],
+                $settings['login'] ?? null,
+                $settings['password'] ?? null,
             );
         }
 
