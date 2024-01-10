@@ -90,6 +90,24 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
+        $clientSettingsFieldset->add([
+            'name' => 'login',
+            'type' => 'Text',
+            'options' => [
+                'label' => 'Username', // @translate
+                'info' => 'The username used for HTTP Authentication, if any', // @translate
+            ],
+        ]);
+
+        $clientSettingsFieldset->add([
+            'name' => 'password',
+            'type' => 'Text',
+            'options' => [
+                'label' => 'Password', // @translate
+                'info' => 'The HTTP Authentication password', // @translate
+            ],
+        ]);
+
         $settingsFieldset->add($clientSettingsFieldset);
 
         $settingsFieldset->add([
