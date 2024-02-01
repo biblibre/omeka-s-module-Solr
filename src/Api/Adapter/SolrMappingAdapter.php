@@ -44,6 +44,8 @@ class SolrMappingAdapter extends AbstractEntityAdapter
      */
     protected $sortFields = [
         'id' => 'id',
+        'field_name' => 'fieldName',
+        'source' => 'source',
     ];
 
     /**
@@ -115,6 +117,12 @@ class SolrMappingAdapter extends AbstractEntityAdapter
             $qb->andWhere($qb->expr()->eq(
                 'omeka_root.fieldName',
                 $this->createNamedParameter($qb, $query['field_name'])
+            ));
+        }
+        if (isset($query['source'])) {
+            $qb->andWhere($qb->expr()->eq(
+                'omeka_root.source',
+                $this->createNamedParameter($qb, $query['source'])
             ));
         }
     }

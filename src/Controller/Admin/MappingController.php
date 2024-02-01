@@ -72,14 +72,20 @@ class MappingController extends AbstractActionController
 
     public function browseResourceAction()
     {
+        $this->setBrowseDefaults('field_name', 'asc');
+
         $solrNodeId = $this->params('nodeId');
         $resourceName = $this->params('resourceName');
 
         $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-        $mappings = $this->api()->search('solr_mappings', [
-            'solr_node_id' => $solrNode->id(),
-            'resource_name' => $resourceName,
-        ])->getContent();
+
+        $query = $this->params()->fromQuery();
+        $query['solr_node_id'] = $solrNode->id();
+        $query['resource_name'] = $resourceName;
+        $response = $this->api()->search('solr_mappings', $query);
+        $mappings = $response->getContent();
+
+        $this->paginator($response->getTotalResults());
 
         $view = new ViewModel;
         $view->setVariable('solrNode', $solrNode);

@@ -55,6 +55,15 @@
 </nav>
 
 <?php if (count($mappings) > 0): ?>
+    <div class="browse-controls">
+        <?= $this->pagination(); ?>
+        <?php $sortBy = [
+            ['value' => 'field_name', 'label' => $this->translate('Solr field')],
+            ['value' => 'source', 'label' => $this->translate('Source')],
+        ] ?>
+        <?= $this->sortSelector($sortBy); ?>
+    </div>
+
     <table class="tablesaw" data-tablesaw-mode="stack">
         <thead>
             <tr>
