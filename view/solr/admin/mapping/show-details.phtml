@@ -1,0 +1,25 @@
+<h3 class="o-title"><?= $this->translate('Mapping details') ?></h3>
+
+<div class="meta-group">
+    <h4><?= $this->escapeHtml($this->translate('Solr field')); ?></h4>
+    <div class="value"><?= $this->escapeHtml($mapping->fieldName()); ?></div>
+</div>
+
+<div class="meta-group">
+    <h4><?= $this->escapeHtml($this->translate('Source')); ?></h4>
+    <div class="value"><?= $this->escapeHtml($mapping->source()) ?></div>
+</div>
+
+<?php $settings = $mapping->settings(); ?>
+<?php $transformations = $settings['transformations'] ?? []; ?>
+<?php if (!empty($transformations)): ?>
+    <div class="meta-group">
+        <h4><?= $this->escapeHtml($this->translate('Transformations')); ?></h4>
+
+        <?php foreach ($transformations as $transformation): ?>
+            <div class="value"><?= $this->solrTransformation()->label($transformation) ?></div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php $this->trigger('view.details', array('entity' => $mapping)); ?>

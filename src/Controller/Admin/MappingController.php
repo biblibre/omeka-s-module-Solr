@@ -210,6 +210,17 @@ class MappingController extends AbstractActionController
         ]);
     }
 
+    public function showDetailsAction()
+    {
+        $response = $this->api()->read('solr_mappings', $this->params('id'));
+        $mapping = $response->getContent();
+
+        $view = new ViewModel;
+        $view->setTerminal(true);
+        $view->setVariable('mapping', $mapping);
+        return $view;
+    }
+
     public function importAction()
     {
         $solrNodeId = $this->params('nodeId');
