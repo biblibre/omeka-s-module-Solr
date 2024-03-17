@@ -84,7 +84,7 @@ class ItemValueExtractor extends AbstractValueExtractor
             ],
         ];
         $fields['media']['label'] = 'Media';
-        $fields['media']['children']['content']['label'] = 'HTML Content';
+        $fields['media']['children']['content']['label'] = 'Text Content';
 
         foreach ($properties as $property) {
             $term = $property->term();
@@ -149,10 +149,14 @@ class ItemValueExtractor extends AbstractValueExtractor
 
         foreach ($item->media() as $media) {
             if ($field === 'content') {
-                if ($media->ingester() !== 'html') {
+                if ($media->ingester() === 'html') {
+                    $mediaExtractedValue = [$media->mediaData()['html']];
+                } elseif (explode('/', $media->mediaType())[0] === 'text') {
+                    $fileURL = $media->originalUrl();
+                    $mediaExtractedValue = [file_get_contents($fileURL)];
+                } else {
                     continue;
                 }
-                $mediaExtractedValue = [$media->mediaData()['html']];
             } else {
                 $mediaExtractedValue = $media->value($field, ['all' => true, 'default' => []]);
             }
