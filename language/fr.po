@@ -99,7 +99,7 @@ msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:141
 msgid "Is Public field"
-msgstr "Est un champ public"
+msgstr "Champ public"
 
 #: src/Form/Admin/SolrNodeForm.php:142
 msgid ""
@@ -136,36 +136,35 @@ msgid "Enable extract retrieval in relation to search terms"
 msgstr "Activer la récupération d'extraits par rapport aux termes de recherche"
 
 #: src/Form/Admin/SolrNodeForm.php:189
-#, fuzzy
 msgid "Highlight fields"
-msgstr "Mettre en surbrillance les champs"
+msgstr "Mettre en évidence les champs"
 
 #: src/Form/Admin/SolrNodeForm.php:190
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
-msgstr "Champs utilisés pour mettre en évidence la fonctionnalité (use \"*\" for all fields)."
+msgstr "La fonctionalité de mise en évidence (use \"*\" for all fields)."
 
 #: src/Form/Admin/SolrNodeForm.php:198
 msgid "Highlight fragment size"
-msgstr "Mettre en évidence la taille des fragments"
+msgstr "La taille des extraits de mise en évidence"
 
 #: src/Form/Admin/SolrNodeForm.php:199
 msgid ""
 "Define number of caracters for the fragment size of highlight, 0 will show "
 "the entire field value."
 msgstr ""
-"Définissez le nombre de caractères pour la taille du fragment en surbrillance, 0 affichera "
+"Définissez le nombre de caractères pour la taille des extraits de mise en évidence, 0 affichera "
 "la valeur entière du champ."
 
 #: src/Form/Admin/SolrNodeForm.php:207
 msgid "Highlight snippets"
-msgstr "Extraits de surbrillance"
+msgstr "Extraits de mise en évidence"
 
 #: src/Form/Admin/SolrNodeForm.php:208
 msgid ""
 "Define the number of fragments where the search terms were found in the same "
 "field."
 msgstr ""
-"Définissez le nombre de fragments dans lesquels les termes de recherche ont été trouvés"
+"Définissez le nombre d'extraits dans lesquels les termes de recherche ont été trouvés"
 "champ."
 
 #: src/Form/Admin/SolrSearchFieldForm.php:51
@@ -290,11 +289,11 @@ msgstr "Import de correspondance Solr"
 
 #: view/solr/admin/mapping/show-details.phtml:1
 msgid "Mapping details"
-msgstr "Détails du mappage"
+msgstr "Détails de correspondance"
 
 #: view/solr/admin/mapping/show-details.phtml:17
 msgid "Transformations"
-msgstr "Transformations"
+msgstr ""
 
 #: view/solr/admin/node/add.phtml:32
 msgid "Add Solr node"
@@ -446,5 +445,4 @@ msgstr "Supprimer les correspondances existantes"
 #: src/Form/Admin/SolrMappingImportForm.php:57
 msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""
-"Supprimer toutes les correspondances existantes pour ce nœud Solr avant de "
-"démarrer l'import"
+"Supprimer toutes les correspondances existantes pour ce nœud Solr avant de démarrer l'import "
