@@ -29,11 +29,11 @@ msgstr "Pertinence"
 
 #: src/Adapter.php:115
 msgid "Asc"
-msgstr "Asc"
+msgstr ""
 
 #: src/Adapter.php:116
 msgid "Desc"
-msgstr "Desc"
+msgstr ""
 
 #: src/Adapter.php:172
 msgid "contains any word"
@@ -62,7 +62,7 @@ msgstr "Nom d'ĥôte"
 
 #: src/Form/Admin/SolrNodeForm.php:75
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:86
 msgid "Path"
@@ -121,7 +121,7 @@ msgstr "paramètre qf qui sera ajouté à la requête"
 
 #: src/Form/Admin/SolrNodeForm.php:162
 msgid "Minimum should match"
-msgstr "Minimum should match"
+msgstr "Correspondance minimum"
 
 #: src/Form/Admin/SolrNodeForm.php:163
 msgid "mm parameter that will be added to the query"
@@ -141,7 +141,7 @@ msgstr "Mettre en évidence les champs"
 
 #: src/Form/Admin/SolrNodeForm.php:190
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
-msgstr "La fonctionalité de mise en évidence (use \"*\" for all fields)."
+msgstr "La fonctionalité de mise en évidence (utilisez \"*\" pour tous les champs)."
 
 #: src/Form/Admin/SolrNodeForm.php:198
 msgid "Highlight fragment size"
@@ -426,7 +426,7 @@ msgid ""
 "Set the value of hl.maxAnalyzedChars parameter. Great values can have impact "
 "on performance"
 msgstr ""
-"Définissez la valeur du paramètre hl.maxAnalyzedChars. Des valeurs élevées peuvent avoir un impact"
+"Définissez la valeur du paramètre hl.maxAnalyzedChars. Des valeurs élevées peuvent avoir un impact "
 "sur les performances"
 
 #: src/Form/Admin/SolrMappingImportForm.php:45
