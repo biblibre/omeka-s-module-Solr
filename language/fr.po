@@ -117,7 +117,7 @@ msgstr "Champs de requête"
 
 #: src/Form/Admin/SolrNodeForm.php:154
 msgid "qf parameter that will be added to the query"
-msgstr "paramètre qf qui sera ajouté à la requête"
+msgstr "Paramètre qf qui sera ajouté à la requête"
 
 #: src/Form/Admin/SolrNodeForm.php:162
 msgid "Minimum should match"
@@ -125,7 +125,7 @@ msgstr "Correspondance minimum"
 
 #: src/Form/Admin/SolrNodeForm.php:163
 msgid "mm parameter that will be added to the query"
-msgstr "paramètre mm qui sera ajouté à la requête"
+msgstr "Paramètre mm qui sera ajouté à la requête"
 
 #: src/Form/Admin/SolrNodeForm.php:180
 msgid "Highlighting"
