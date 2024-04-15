@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-19 08:57+0000\n"
+"POT-Creation-Date: 2024-04-15 16:58+0200\n"
 "PO-Revision-Date: 2020-10-19 10:27+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
@@ -39,31 +39,22 @@ msgstr "Desc"
 msgid "contains any word"
 msgstr "contient au moins un des mots"
 
-#: src/Adapter.php:176
+#: src/Adapter.php:177
 msgid "contains all words"
 msgstr "contient tous les mots"
 
-#: src/Adapter.php:180
+#: src/Adapter.php:182
 msgid "contains expression"
 msgstr "contient l'expression"
 
-#: src/Adapter.php:184
+#: src/Adapter.php:187
 msgid "matches pattern"
 msgstr "correspond au motif"
 
-#: src/Controller/Admin/MappingController.php:223
+#: src/Controller/Admin/MappingController.php:241
 #, php-format
 msgid "%d mappings were found and imported"
 msgstr "%d correspondances ont été trouvées et importées"
-
-#: src/Form/Admin/SolrMappingForm.php:67
-#: view/solr/admin/mapping/browse-resource.phtml:61
-msgid "Solr field"
-msgstr "Champ Solr"
-
-#: src/Form/Admin/SolrMappingForm.php:79
-msgid "Formatter"
-msgstr "Formateur"
 
 #: src/Form/Admin/SolrNodeForm.php:64
 msgid "Hostname"
@@ -77,11 +68,11 @@ msgstr "Port"
 msgid "Path"
 msgstr "Chemin"
 
-#: src/Form/Admin/SolrNodeForm.php:99
+#: src/Form/Admin/SolrNodeForm.php:117
 msgid "Resource name field"
-msgstr "Champ 'nom de la ressource'"
+msgstr "Champ nom de la ressource"
 
-#: src/Form/Admin/SolrNodeForm.php:100
+#: src/Form/Admin/SolrNodeForm.php:118
 msgid ""
 "Name of Solr field that will contain the resource name (or resource type, e."
 "g. \"items\", \"item_sets\", ...). It must be a single-valued, string-based "
@@ -92,11 +83,11 @@ msgstr ""
 "valué, de type chaîne de caractères (string). ATTENTION: Modifier ce "
 "paramètre nécessitera une réindexation complète."
 
-#: src/Form/Admin/SolrNodeForm.php:111
+#: src/Form/Admin/SolrNodeForm.php:129
 msgid "Sites field"
 msgstr "Champ Sites"
 
-#: src/Form/Admin/SolrNodeForm.php:112
+#: src/Form/Admin/SolrNodeForm.php:130
 msgid ""
 "Name of Solr field that will contain the sites ids. It must be a single-"
 "valued, integer-based field. WARNING: Changing this will require a complete "
@@ -106,21 +97,75 @@ msgstr ""
 "être à valeur unique, et de type entier. ATTENTION : Modifier ceci "
 "nécessitera une réindexation complète."
 
-#: src/Form/Admin/SolrNodeForm.php:123
+#: src/Form/Admin/SolrNodeForm.php:141
+msgid "Is Public field"
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:142
+msgid ""
+"Name of the Solr field that will contain the isPublic flag. It must be a "
+"single-valued, boolean-based field. WARNING: Changing this will require a "
+"complete reindexation."
+msgstr ""
+"Le nom du champ Solr qui contiendra le flag isPublic. Le champ doit "
+"être à valeur unique, et de type entier. ATTENTION : Modifier ceci "
+"nécessitera une réindexation complète."
+
+#: src/Form/Admin/SolrNodeForm.php:153
 msgid "Query fields"
 msgstr "Champs de requête"
 
-#: src/Form/Admin/SolrNodeForm.php:124
+#: src/Form/Admin/SolrNodeForm.php:154
 msgid "qf parameter that will be added to the query"
 msgstr "paramètre qf qui sera ajouté à la requête"
 
-#: src/Form/Admin/SolrNodeForm.php:132
+#: src/Form/Admin/SolrNodeForm.php:162
 msgid "Minimum should match"
 msgstr "Minimum should match"
 
-#: src/Form/Admin/SolrNodeForm.php:133
+#: src/Form/Admin/SolrNodeForm.php:163
 msgid "mm parameter that will be added to the query"
 msgstr "paramètre mm qui sera ajouté à la requête"
+
+#: src/Form/Admin/SolrNodeForm.php:180
+msgid "Highlighting"
+msgstr "Mise en évidence"
+
+#: src/Form/Admin/SolrNodeForm.php:181
+msgid "Enable extract retrieval in relation to search terms"
+msgstr "Activer la récupération d'extraits par rapport aux termes de recherche"
+
+#: src/Form/Admin/SolrNodeForm.php:189
+msgid "Highlight fields"
+msgstr "Liste des champs concernés par la mise en évidence"
+
+#: src/Form/Admin/SolrNodeForm.php:190
+msgid "Fields used for highligthing feature (use \"*\" for all fields)."
+msgstr "La fonctionalité de mise en évidence (utilisez \"*\" pour tous les champs)."
+
+#: src/Form/Admin/SolrNodeForm.php:198
+msgid "Highlight fragment size"
+msgstr "La taille des extraits de mise en évidence"
+
+#: src/Form/Admin/SolrNodeForm.php:199
+msgid ""
+"Define number of caracters for the fragment size of highlight, 0 will show "
+"the entire field value."
+msgstr ""
+"Définissez le nombre de caractères pour la taille des extraits de mise en évidence, 0 affichera "
+"la valeur entière du champ."
+
+#: src/Form/Admin/SolrNodeForm.php:207
+msgid "Highlight snippets"
+msgstr "Extraits de mis en évidence"
+
+#: src/Form/Admin/SolrNodeForm.php:208
+msgid ""
+"Define the number of fragments where the search terms were found in the same "
+"field."
+msgstr ""
+"Définissez le nombre d'extraits dans lesquels les termes de recherche ont été trouvés "
+"dans le même champ."
 
 #: src/Form/Admin/SolrSearchFieldForm.php:51
 msgid ""
@@ -207,7 +252,13 @@ msgstr "Configuration Solr pour %s"
 msgid "Back to resources list"
 msgstr "Retour à la liste des ressources"
 
-#: view/solr/admin/mapping/browse-resource.phtml:96
+#: view/solr/admin/mapping/browse-resource.phtml:61
+#: view/solr/admin/mapping/browse-resource.phtml:70
+#: view/solr/admin/mapping/show-details.phtml:4
+msgid "Solr field"
+msgstr "Champ Solr"
+
+#: view/solr/admin/mapping/browse-resource.phtml:111
 msgid "There is no mappings defined yet."
 msgstr "Il n'y a pas de correspondances définies pour l'instant."
 
@@ -235,6 +286,14 @@ msgstr "Modifier la correspondance Solr"
 #: view/solr/admin/mapping/import.phtml:2
 msgid "Solr mapping import"
 msgstr "Import de correspondance Solr"
+
+#: view/solr/admin/mapping/show-details.phtml:1
+msgid "Mapping details"
+msgstr "Détails de correspondance"
+
+#: view/solr/admin/mapping/show-details.phtml:17
+msgid "Transformations"
+msgstr "Transformations"
 
 #: view/solr/admin/node/add.phtml:32
 msgid "Add Solr node"
@@ -276,6 +335,99 @@ msgstr "Il n'y a pas de champs défini pour l'instant."
 #: view/solr/admin/search-field/edit.phtml:30
 msgid "Edit search field"
 msgstr "Modifier le champ de recherche"
+
+#: view/solr/admin/transformations/transformation-edit-sidebar.phtml:5
+#: view/solr/admin/transformations/transformation-row.phtml:11
+msgid "Configure transformation"
+msgstr "Configurer la transformation"
+
+#: view/solr/admin/transformations/transformation-edit-sidebar.phtml:19
+msgid "Save transformation"
+msgstr "Enregistrer la transformation"
+
+#: view/solr/admin/transformations/transformation-row.phtml:5
+msgid "Transformation to be removed"
+msgstr "Transformation à supprimer"
+
+#: view/solr/admin/transformations/transformation-row.phtml:15
+msgid "Remove transformation"
+msgstr "Supprimer la transformation"
+
+#: view/solr/admin/transformations/transformation-row.phtml:19
+msgid "Restore transformation"
+msgstr "Restaurer la transformation"
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr "Supprimer les balises HTML"
+
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
+msgstr "Convertir la ressource en chaîne"
+
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr "Champ de ressource"
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr "Convertir en plage de dates Solr"
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr "Exclure les valeurs sans correspondance"
+
+#: src/Transformation/Filter/ResourceClass.php:24
+msgid "Filter resources by class"
+msgstr "Filtres par type de ressource"
+
+#: src/Transformation/Filter/ResourceClass.php:35
+msgid "Resource classes"
+msgstr "Type de ressource"
+
+#: src/Transformation/Filter/DataType.php:20
+msgid "Filter by data type"
+msgstr "Filtrer par type de données"
+
+#: src/Transformation/Filter/DataType.php:29
+msgid ""
+"Only selected data types will be used. Selecting none is the same as "
+"selecting all. Only relevant when the source is a property."
+msgstr ""
+"Seuls les types de données sélectionnés seront utilisés. En sélectionner aucun équivaut à "
+"tout sélectionner. Uniquement pertinent lorsque la source est une propriété."
+
+#: src/Transformation/Format.php:20
+msgid "Format (deprecated)"
+msgstr "Format (obsolète)"
+
+#: src/Transformation/Format.php:32
+msgid "Formatter"
+msgstr "Formateur"
+
+#: src/Form/Admin/SolrNodeForm.php:97
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: src/Form/Admin/SolrNodeForm.php:98
+msgid "The username used for HTTP Authentication, if any"
+msgstr "Le nom d'utilisateur utilisé pour l'authentification HTTP, le cas échéant"
+
+#: src/Form/Admin/SolrNodeForm.php:107
+msgid "The HTTP Authentication password"
+msgstr "Le mot de passe d'authentification HTTP"
+
+#: src/Form/Admin/SolrNodeForm.php:216
+msgid "Maximum characters analyzed"
+msgstr "Nombre maximum de caractères analysés"
+
+#: src/Form/Admin/SolrNodeForm.php:217
+msgid ""
+"Set the value of hl.maxAnalyzedChars parameter. Great values can have impact "
+"on performance"
+msgstr ""
+"Définissez la valeur du paramètre hl.maxAnalyzedChars. Des valeurs élevées peuvent avoir un impact "
+"sur les performances"
 
 #: src/Form/Admin/SolrMappingImportForm.php:45
 msgid ""
