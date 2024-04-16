@@ -99,7 +99,7 @@ msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:141
 msgid "Is Public field"
-msgstr "Champ public"
+msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:142
 msgid ""
@@ -137,7 +137,7 @@ msgstr "Activer la récupération d'extraits par rapport aux termes de recherche
 
 #: src/Form/Admin/SolrNodeForm.php:189
 msgid "Highlight fields"
-msgstr "Mettre en évidence les champs"
+msgstr "Liste des champs concernés par la mise en évidence"
 
 #: src/Form/Admin/SolrNodeForm.php:190
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
@@ -157,15 +157,15 @@ msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:207
 msgid "Highlight snippets"
-msgstr "Extraits de mise en évidence"
+msgstr "Extraits de mis en évidence"
 
 #: src/Form/Admin/SolrNodeForm.php:208
 msgid ""
 "Define the number of fragments where the search terms were found in the same "
 "field."
 msgstr ""
-"Définissez le nombre d'extraits dans lesquels les termes de recherche ont été trouvés"
-"champ."
+"Définissez le nombre d'extraits dans lesquels les termes de recherche ont été trouvés "
+"dans le même champ."
 
 #: src/Form/Admin/SolrSearchFieldForm.php:51
 msgid ""
