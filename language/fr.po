@@ -99,7 +99,7 @@ msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:141
 msgid "Is Public field"
-msgstr ""
+msgstr "Is Public field"
 
 #: src/Form/Admin/SolrNodeForm.php:142
 msgid ""
@@ -157,7 +157,7 @@ msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:207
 msgid "Highlight snippets"
-msgstr "Extraits de mis en évidence"
+msgstr "Extraits mis en évidence"
 
 #: src/Form/Admin/SolrNodeForm.php:208
 msgid ""
