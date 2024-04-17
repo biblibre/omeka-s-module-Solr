@@ -411,7 +411,8 @@ msgstr "Nom d'utilisateur"
 
 #: src/Form/Admin/SolrNodeForm.php:98
 msgid "The username used for HTTP Authentication, if any"
-msgstr "Le nom d'utilisateur utilisé pour l'authentification HTTP, le cas échéant"
+msgstr "Le nom d'utilisateur utilisé pour l'authentification HTTP, "
+"le cas échéant"
 
 #: src/Form/Admin/SolrNodeForm.php:107
 msgid "The HTTP Authentication password"
