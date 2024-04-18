@@ -338,7 +338,6 @@ msgstr "Modifier le champ de recherche"
 
 #: view/solr/admin/transformations/transformation-edit-sidebar.phtml:5
 #: view/solr/admin/transformations/transformation-row.phtml:11
-#, fuzzy
 msgid "Configure transformation"
 msgstr "Configurer la transformation"
 
