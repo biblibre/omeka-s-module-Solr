@@ -400,17 +400,9 @@ class Querier extends AbstractQuerier
                         throw new QuerierException(sprintf('Field %s cannot be used with "matches pattern" operator', $searchField->name()));
                     }
 
-                    $parts = preg_split('/([*?])/', $q['term'], -1, PREG_SPLIT_DELIM_CAPTURE);
-                    $term = implode('', array_map(function ($part) {
-                        if ($part === '*') {
-                            return '.*';
-                        }
-                        if ($part === '?') {
-                            return '.';
-                        }
-                        return $this->escapeRegexp($part);
-                    }, $parts));
-                    $term = sprintf('/%s/', $term);
+                    $charsToEscape = array_diff(self::SOLR_SPECIAL_CHARS, ['*', '?']);
+                    $charsToEscape[] = ' ';
+                    $term = $this->escapeChars($charsToEscape, $q['term']);
                     break;
 
                 default:
@@ -451,12 +443,6 @@ class Querier extends AbstractQuerier
     protected function escape($string)
     {
         return $this->escapeChars(self::SOLR_SPECIAL_CHARS, $string);
-    }
-
-    protected function escapeRegexp($string)
-    {
-        $charsToEscape = array_unique(array_merge(self::SOLR_SPECIAL_CHARS, self::PCRE_SPECIAL_CHARS));
-        return $this->escapeChars($charsToEscape, $string);
     }
 
     protected function escapeChars($charsToEscape, $string)

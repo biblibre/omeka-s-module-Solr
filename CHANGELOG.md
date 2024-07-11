@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add pagination and sort controls on mappings browse page
 - Add sidebar to show mapping details on browse page
 
+### Fixed
+- Fix "matches pattern" operator by using wildcard search instead of regular
+  expression which is not documented and seems to not be supported anymore
+
 ## [0.14.0] - 2024-01-10
 
 ### Added
