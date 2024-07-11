@@ -46,6 +46,10 @@ class SolrSearchFieldAdapter extends AbstractEntityAdapter
         'id' => 'id',
         'name' => 'name',
         'label' => 'label',
+        'text_fields' => 'textFields',
+        'string_fields' => 'stringFields',
+        'facet_field' => 'facetField',
+        'sort_field' => 'sortField',
     ];
 
     /**

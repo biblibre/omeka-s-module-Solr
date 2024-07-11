@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add pagination and sort controls on mappings browse page
+- Add pagination and sort controls on search fields browse page
 - Add sidebar to show mapping details on browse page
 
 ### Fixed

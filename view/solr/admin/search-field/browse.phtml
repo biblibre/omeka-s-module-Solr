@@ -52,6 +52,19 @@
 </nav>
 
 <?php if (count($fields) > 0): ?>
+    <div class="browse-controls">
+        <?= $this->pagination(); ?>
+        <?php $sortBy = [
+            ['value' => 'label', 'label' => $this->translate('Label')],
+            ['value' => 'name', 'label' => $this->translate('Name')],
+            ['value' => 'text_fields', 'label' => $this->translate('Text fields')],
+            ['value' => 'string_fields', 'label' => $this->translate('String fields')],
+            ['value' => 'facet_field', 'label' => $this->translate('Facet field')],
+            ['value' => 'sort_field', 'label' => $this->translate('Sort field')],
+        ] ?>
+        <?= $this->sortSelector($sortBy); ?>
+    </div>
+
     <table class="tablesaw" data-tablesaw-mode="stack">
         <thead>
             <tr>

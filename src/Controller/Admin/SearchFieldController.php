@@ -38,12 +38,18 @@ class SearchFieldController extends AbstractActionController
 {
     public function browseAction()
     {
-        $solrNodeId = $this->params('nodeId');
+        $this->setBrowseDefaults('label', 'asc');
 
+        $solrNodeId = $this->params('nodeId');
         $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-        $fields = $this->api()->search('solr_search_fields', [
-            'solr_node_id' => $solrNode->id(),
-        ])->getContent();
+
+        $query = $this->params()->fromQuery();
+        $query['solr_node_id'] = $solrNodeId;
+
+        $response = $this->api()->search('solr_search_fields', $query);
+        $fields = $response->getContent();
+
+        $this->paginator($response->getTotalResults());
 
         $view = new ViewModel;
         $view->setVariable('solrNode', $solrNode);
