@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-12 13:57+0200\n"
+"POT-Creation-Date: 2024-08-06 14:56+0200\n"
 "PO-Revision-Date: 2024-07-12 14:40+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
-
-#: src/Adapter.php:110
-msgid "Relevance"
-msgstr "Pertinence"
 
 #: src/Adapter.php:115
 msgid "Asc"
@@ -236,6 +232,10 @@ msgstr "Ajouter une correspondance Solr"
 msgid "Solr mapping for %s"
 msgstr "Configuration Solr pour %s"
 
+#: view/solr/admin/mapping/browse-resource.phtml:44
+msgid "Add new mapping"
+msgstr "Ajouter une correspondance Solr"
+
 #: view/solr/admin/mapping/browse-resource.phtml:49
 msgid "Back to resources list"
 msgstr "Retour à la liste des ressources"
@@ -290,6 +290,10 @@ msgstr "Ajouter un noeud Solr"
 #: view/solr/admin/node/browse.phtml:33
 msgid "Solr configuration"
 msgstr "Configuration de Solr"
+
+#: view/solr/admin/node/browse.phtml:36
+msgid "Add new node"
+msgstr "Ajouter un noeud Solr"
 
 #: view/solr/admin/node/browse.phtml:68
 msgid "Configure indexation fields"
@@ -397,26 +401,6 @@ msgstr "Format (obsolète)"
 msgid "Formatter"
 msgstr "Formateur"
 
-#: src/Transformation/StripHtmlTags.php:9
-msgid "Strip HTML tags"
-msgstr "Supprimer les balises HTML"
-
-#: src/Transformation/ConvertResourceToString.php:14
-msgid "Convert resource to string"
-msgstr "Convertir la ressource en chaîne"
-
-#: src/Transformation/ConvertResourceToString.php:20
-msgid "Resource field"
-msgstr "Champ de ressource"
-
-#: src/Transformation/ConvertToSolrDateRange.php:11
-msgid "Convert to Solr date range"
-msgstr "Convertir en plage de dates Solr"
-
-#: src/Transformation/ConvertToSolrDateRange.php:18
-msgid "Exclude unmatching values"
-msgstr "Exclure les valeurs sans correspondance"
-
 #: src/Transformation/Filter/DataType.php:20
 msgid "Filter by data type"
 msgstr "Filtrer par type de données"
@@ -437,3 +421,26 @@ msgstr "Filtres par type de ressource"
 #: src/Transformation/Filter/ResourceClass.php:35
 msgid "Resource classes"
 msgstr "Type de ressource"
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr "Supprimer les balises HTML"
+
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
+msgstr "Convertir la ressource en chaîne"
+
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr "Champ de ressource"
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr "Convertir en plage de dates Solr"
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr "Exclure les valeurs sans correspondance"
+
+#~ msgid "Relevance"
+#~ msgstr "Pertinence"
