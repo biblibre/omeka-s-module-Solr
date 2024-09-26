@@ -9,8 +9,6 @@ services:
   name: db
 steps:
 - commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
   - cp -rT /usr/src/omeka-s ../..
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
@@ -35,8 +33,6 @@ services:
   name: db
 steps:
 - commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
   - cp -rT /usr/src/omeka-s ../..
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
@@ -61,8 +57,6 @@ services:
   name: db
 steps:
 - commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
   - cp -rT /usr/src/omeka-s ../..
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
@@ -87,8 +81,6 @@ services:
   name: db
 steps:
 - commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
   - cp -rT /usr/src/omeka-s ../..
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
@@ -113,8 +105,6 @@ services:
   name: db
 steps:
 - commands:
-  - pecl install solr
-  - docker-php-ext-enable solr
   - cp -rT /usr/src/omeka-s ../..
   - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
   - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
@@ -129,7 +119,79 @@ type: docker
 workspace:
   path: omeka-s/modules/Solr
 ---
+kind: pipeline
+name: omeka:4.1.1 php:8.0 mariadb:10.6
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:10.6
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.0
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.1.1 php:8.1 mariadb:10.6
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:10.6
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.1
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.1.1 php:8.2 mariadb:10.6
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:10.6
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.2
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
 kind: signature
-hmac: 9a7a1708f8a843cb7866b9947df2d4cdec11432941d631e8fed2eb8281baa08c
+hmac: e2427d86e045c3fcfd3a7a8022afe0921d0dbb114902468a25b329c273ad0bf6
 
 ...
