@@ -11,8 +11,6 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
             image: 'git.biblibre.com/omeka-s/omeka-s-ci:' + omekaVersion + '-php' + phpVersion,
             pull: 'always',
             commands: [
-                'pecl install solr',
-                'docker-php-ext-enable solr',
                 'cp -rT /usr/src/omeka-s ../..',
                 'git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search',
                 "echo 'host = \"db\"\\nuser = \"root\"\\npassword = \"root\"\\ndbname = \"omeka_test\"\\n' > ../../application/test/config/database.ini",
@@ -40,4 +38,7 @@ local Pipeline(omekaVersion, phpVersion, dbImage) = {
     Pipeline('4.0.4', '8.0', 'mariadb:10.6'),
     Pipeline('4.0.4', '8.1', 'mariadb:10.6'),
     Pipeline('4.0.4', '8.2', 'mariadb:10.6'),
+    Pipeline('4.1.1', '8.0', 'mariadb:10.6'),
+    Pipeline('4.1.1', '8.1', 'mariadb:10.6'),
+    Pipeline('4.1.1', '8.2', 'mariadb:10.6'),
 ]
