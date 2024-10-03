@@ -19,8 +19,10 @@ abstract class SolrControllerTestCase extends TestCase
 
         $response = $this->api()->create('solr_nodes', [
             'o:name' => 'TestNode',
+            'o:uri' => 'http://127.0.0.1:8983/solr/test_node',
+            'o:user' => '',
+            'o:password' => '',
             'o:settings' => [
-                'uri' => 'http://127.0.0.1:8983/solr/test_node',
                 'resource_name_field' => 'resource_name_s',
             ],
         ]);

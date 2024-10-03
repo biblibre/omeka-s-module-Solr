@@ -129,11 +129,15 @@ class Module extends AbstractModule
         ");
 
         $sql = '
-            INSERT INTO `solr_node` (`name`, `settings`)
-            VALUES ("default", ?)
+            INSERT INTO `solr_node` (`name`, `uri`, `settings`)
+            VALUES ("default", ?, ?)
         ';
-        $defaultSettings = $this->getSolrNodeDefaultSettings();
-        $connection->executeQuery($sql, [json_encode($defaultSettings)]);
+        $defaultSettings = [
+            'resource_name_field' => 'resource_name_s',
+            'sites_field' => 'sites_id_is',
+            'is_public_field' => 'is_public_b',
+        ];
+        $connection->executeQuery($sql, ['http://127.0.0.1:8983/solr/default', json_encode($defaultSettings)]);
     }
 
     public function upgrade($oldVersion, $newVersion,
@@ -156,7 +160,14 @@ class Module extends AbstractModule
                 INSERT INTO `solr_node` (`name`, `settings`)
                 VALUES ("default", ?)
             ';
-            $defaultSettings = $this->getSolrNodeDefaultSettings();
+            $defaultSettings = [
+                'client' => [
+                    'hostname' => '127.0.0.1',
+                    'port' => 8983,
+                    'path' => 'solr/default',
+                ],
+                'resource_name_field' => 'resource_name_s',
+            ];
             $connection->executeQuery($sql, [json_encode($defaultSettings)]);
             $solrNodeId = $connection->lastInsertId();
 
@@ -418,15 +429,5 @@ class Module extends AbstractModule
         $connection->exec('DROP TABLE IF EXISTS `solr_search_field`');
         $connection->exec('DROP TABLE IF EXISTS `solr_mapping`');
         $connection->exec('DROP TABLE IF EXISTS `solr_node`');
-    }
-
-    protected function getSolrNodeDefaultSettings()
-    {
-        return [
-            'uri' => 'http://127.0.0.1:8983/solr/default',
-            'resource_name_field' => 'resource_name_s',
-            'sites_field' => 'sites_id_is',
-            'is_public_field' => 'is_public_b',
-        ];
     }
 }

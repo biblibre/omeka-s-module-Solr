@@ -20,7 +20,7 @@ class NodeControllerTest extends SolrControllerTestCase
         $this->assertResponseStatusCode(200);
 
         $this->assertQuery('input[name="o:name"]');
-        $this->assertQuery('input[name="o:settings[uri]"]');
+        $this->assertQuery('input[name="o:uri"]');
         $this->assertQuery('input[name="o:settings[resource_name_field]"]');
     }
 
@@ -30,12 +30,10 @@ class NodeControllerTest extends SolrControllerTestCase
         $form = $forms->get('Solr\Form\Admin\SolrNodeForm');
         $this->dispatch('/admin/solr/node/add', 'POST', [
             'o:name' => 'TestNode2',
+            'o:uri' => 'http://example.com:8983/solr/test_node2',
+            'o:user' => '',
+            'o:password' => '',
             'o:settings' => [
-                'client' => [
-                    'hostname' => 'example.com',
-                    'port' => '8983',
-                    'path' => 'solr/test_node2',
-                ],
                 'resource_name_field' => 'resource_name_s',
             ],
             'csrf' => $form->get('csrf')->getValue(),
@@ -59,12 +57,10 @@ class NodeControllerTest extends SolrControllerTestCase
     {
         $solrNode3 = $this->api()->create('solr_nodes', [
             'o:name' => 'TestNode3',
+            'o:uri' => 'http://example.com:8983/solr/test_node3',
+            'o:user' => '',
+            'o:password' => '',
             'o:settings' => [
-                'client' => [
-                    'hostname' => 'localhost',
-                    'port' => '8983',
-                    'path' => 'solr/test_node3',
-                ],
                 'resource_name_field' => 'resource_name_s',
             ],
         ])->getContent();
