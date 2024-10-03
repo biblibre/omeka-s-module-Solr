@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 14:56+0200\n"
+"POT-Creation-Date: 2024-10-03 14:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/Adapter.php:110
+msgid "Relevance"
+msgstr ""
 
 #: src/Adapter.php:115
 msgid "Asc"
@@ -319,15 +323,15 @@ msgstr ""
 msgid "Restore transformation"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:74
+#: src/Form/Admin/SolrNodeForm.php:72
 msgid "Username"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:75
+#: src/Form/Admin/SolrNodeForm.php:73
 msgid "The username used for HTTP Authentication, if any"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:84
+#: src/Form/Admin/SolrNodeForm.php:82
 msgid "The HTTP Authentication password"
 msgstr ""
 
@@ -355,30 +359,20 @@ msgstr ""
 msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""
 
+#: src/Controller/Admin/NodeController.php:73
+msgid "Solr node created."
+msgstr ""
+
+#: src/Controller/Admin/NodeController.php:100
+msgid "Solr node updated."
+msgstr ""
+
 #: src/Transformation/Format.php:20
 msgid "Format (deprecated)"
 msgstr ""
 
 #: src/Transformation/Format.php:32
 msgid "Formatter"
-msgstr ""
-
-#: src/Transformation/Filter/DataType.php:20
-msgid "Filter by data type"
-msgstr ""
-
-#: src/Transformation/Filter/DataType.php:29
-msgid ""
-"Only selected data types will be used. Selecting none is the same as "
-"selecting all. Only relevant when the source is a property."
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:24
-msgid "Filter resources by class"
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:35
-msgid "Resource classes"
 msgstr ""
 
 #: src/Transformation/StripHtmlTags.php:9
@@ -399,4 +393,30 @@ msgstr ""
 
 #: src/Transformation/ConvertToSolrDateRange.php:18
 msgid "Exclude unmatching values"
+msgstr ""
+
+#: src/Transformation/Filter/DataType.php:20
+msgid "Filter by data type"
+msgstr ""
+
+#: src/Transformation/Filter/DataType.php:29
+msgid ""
+"Only selected data types will be used. Selecting none is the same as "
+"selecting all. Only relevant when the source is a property."
+msgstr ""
+
+#: src/Transformation/Filter/ResourceClass.php:24
+msgid "Filter resources by class"
+msgstr ""
+
+#: src/Transformation/Filter/ResourceClass.php:35
+msgid "Resource classes"
+msgstr ""
+
+#: src/Api/Adapter/SolrNodeAdapter.php:105
+msgid "The URI cannot be empty"
+msgstr ""
+
+#: src/Api/Adapter/SolrNodeAdapter.php:109
+msgid "Another Solr node already uses this URI"
 msgstr ""

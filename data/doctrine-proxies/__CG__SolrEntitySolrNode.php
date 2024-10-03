@@ -66,10 +66,10 @@ class SolrNode extends \Solr\Entity\SolrNode implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'settings'];
+            return ['__isInitialized__', 'id', 'name', 'uri', 'user', 'password', 'settings'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'settings'];
+        return ['__isInitialized__', 'id', 'name', 'uri', 'user', 'password', 'settings'];
     }
 
     /**
@@ -211,6 +211,72 @@ class SolrNode extends \Solr\Entity\SolrNode implements \Doctrine\ORM\Proxy\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getName', []);
 
         return parent::getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUri(string $uri)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUri', [$uri]);
+
+        return parent::setUri($uri);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUri(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUri', []);
+
+        return parent::getUri();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUser(string $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', [$user]);
+
+        return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', []);
+
+        return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPassword(string $password)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPassword', [$password]);
+
+        return parent::setPassword($password);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPassword(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPassword', []);
+
+        return parent::getPassword();
     }
 
     /**

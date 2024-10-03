@@ -46,35 +46,28 @@ class NodeController extends AbstractActionController
         return $view;
     }
 
-    protected function checkPostAndValidForm($form)
-    {
-        if (!$this->getRequest()->isPost()) {
-            return false;
-        }
-
-        $form->setData($this->params()->fromPost());
-        if (!$form->isValid()) {
-            $this->messenger()->addError('There was an error during validation');
-            return false;
-        }
-        return true;
-    }
-
     public function addAction()
     {
         $form = $this->getForm(SolrNodeForm::class);
 
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $response = $this->api($form)->create('solr_nodes', $data);
+                if ($response) {
+                    $this->messenger()->addSuccess('Solr node created.'); // @translate
+                    return $this->redirect()->toRoute('admin/solr');
+                }
+            } else {
+                $this->messenger()->addFormErrors($form);
+            }
+        }
+
         $view = new ViewModel;
         $view->setVariable('form', $form);
 
-        if (!$this->checkPostAndValidForm($form)) {
-            return $view;
-        }
-
-        $data = $form->getData();
-        $response = $this->api()->create('solr_nodes', $data);
-        $this->messenger()->addSuccess('Solr node created.');
-        return $this->redirect()->toRoute('admin/solr');
+        return $view;
     }
 
     public function editAction()
@@ -83,21 +76,27 @@ class NodeController extends AbstractActionController
         $node = $this->api()->read('solr_nodes', $id)->getContent();
 
         $form = $this->getForm(SolrNodeForm::class);
-        $data = $node->jsonSerialize();
-        $form->setData($data);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $response = $this->api($form)->update('solr_nodes', $id, $data);
+                if ($response) {
+                    $this->messenger()->addSuccess('Solr node updated.'); // @translate
+                    return $this->redirect()->toRoute('admin/solr');
+                }
+            } else {
+                $this->messenger()->addFormErrors($form);
+            }
+        } else {
+            $form->setData($node->jsonSerialize());
+        }
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
 
-        if (!$this->checkPostAndValidForm($form)) {
-            return $view;
-        }
-
-        $formData = $form->getData();
-        $response = $this->api()->update('solr_nodes', $id, $formData);
-
-        $this->messenger()->addSuccess('Solr node updated.');
-        return $this->redirect()->toRoute('admin/solr');
+        return $view;
     }
 
     public function deleteConfirmAction()

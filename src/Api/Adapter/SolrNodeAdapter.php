@@ -77,6 +77,15 @@ class SolrNodeAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:name')) {
             $entity->setName($request->getValue('o:name'));
         }
+        if ($this->shouldHydrate($request, 'o:uri')) {
+            $entity->setUri($request->getValue('o:uri'));
+        }
+        if ($this->shouldHydrate($request, 'o:user')) {
+            $entity->setUser($request->getValue('o:user'));
+        }
+        if ($this->shouldHydrate($request, 'o:password')) {
+            $entity->setPassword($request->getValue('o:password'));
+        }
         if ($this->shouldHydrate($request, 'o:settings')) {
             $entity->setSettings($request->getValue('o:settings'));
         }
@@ -89,6 +98,15 @@ class SolrNodeAdapter extends AbstractEntityAdapter
     {
         if (false == $entity->getName()) {
             $errorStore->addError('o:name', 'The name cannot be empty.');
+        }
+
+        $uri = $entity->getUri();
+        if (!is_string($uri) || $uri === '') {
+            $errorStore->addError('o:uri', 'The URI cannot be empty'); // @translate
+        }
+
+        if (!$this->isUnique($entity, ['uri' => $uri])) {
+            $errorStore->addError('o:uri', 'Another Solr node already uses this URI'); // @translate
         }
     }
 }

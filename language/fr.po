@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-06 14:56+0200\n"
-"PO-Revision-Date: 2024-07-12 14:40+0200\n"
+"POT-Creation-Date: 2024-10-03 14:07+0200\n"
+"PO-Revision-Date: 2024-10-03 14:09+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -16,7 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.5\n"
+
+#: src/Adapter.php:110
+msgid "Relevance"
+msgstr "Pertinence"
 
 #: src/Adapter.php:115
 msgid "Asc"
@@ -349,16 +353,16 @@ msgstr "Supprimer la transformation"
 msgid "Restore transformation"
 msgstr "Restaurer la transformation"
 
-#: src/Form/Admin/SolrNodeForm.php:74
+#: src/Form/Admin/SolrNodeForm.php:72
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: src/Form/Admin/SolrNodeForm.php:75
+#: src/Form/Admin/SolrNodeForm.php:73
 msgid "The username used for HTTP Authentication, if any"
 msgstr ""
 "Le nom d'utilisateur utilisé pour l'authentification HTTP, le cas échéant"
 
-#: src/Form/Admin/SolrNodeForm.php:84
+#: src/Form/Admin/SolrNodeForm.php:82
 msgid "The HTTP Authentication password"
 msgstr "Le mot de passe d'authentification HTTP"
 
@@ -393,6 +397,14 @@ msgstr ""
 "Supprimer toutes les correspondances existantes pour ce nœud Solr avant de "
 "démarrer l'import"
 
+#: src/Controller/Admin/NodeController.php:73
+msgid "Solr node created."
+msgstr "Nœud Solr créé."
+
+#: src/Controller/Admin/NodeController.php:100
+msgid "Solr node updated."
+msgstr "Nœud Solr mis à jour."
+
 #: src/Transformation/Format.php:20
 msgid "Format (deprecated)"
 msgstr "Format (obsolète)"
@@ -400,6 +412,26 @@ msgstr "Format (obsolète)"
 #: src/Transformation/Format.php:32
 msgid "Formatter"
 msgstr "Formateur"
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr "Supprimer les balises HTML"
+
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
+msgstr "Convertir la ressource en chaîne"
+
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr "Champ de ressource"
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr "Convertir en plage de dates Solr"
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr "Exclure les valeurs sans correspondance"
 
 #: src/Transformation/Filter/DataType.php:20
 msgid "Filter by data type"
@@ -422,25 +454,10 @@ msgstr "Filtres par type de ressource"
 msgid "Resource classes"
 msgstr "Type de ressource"
 
-#: src/Transformation/StripHtmlTags.php:9
-msgid "Strip HTML tags"
-msgstr "Supprimer les balises HTML"
+#: src/Api/Adapter/SolrNodeAdapter.php:105
+msgid "The URI cannot be empty"
+msgstr "L'URI ne peut pas être vide"
 
-#: src/Transformation/ConvertResourceToString.php:14
-msgid "Convert resource to string"
-msgstr "Convertir la ressource en chaîne"
-
-#: src/Transformation/ConvertResourceToString.php:20
-msgid "Resource field"
-msgstr "Champ de ressource"
-
-#: src/Transformation/ConvertToSolrDateRange.php:11
-msgid "Convert to Solr date range"
-msgstr "Convertir en plage de dates Solr"
-
-#: src/Transformation/ConvertToSolrDateRange.php:18
-msgid "Exclude unmatching values"
-msgstr "Exclure les valeurs sans correspondance"
-
-#~ msgid "Relevance"
-#~ msgstr "Pertinence"
+#: src/Api/Adapter/SolrNodeAdapter.php:109
+msgid "Another Solr node already uses this URI"
+msgstr "Un autre nœud Solr utilise déjà cette URI"

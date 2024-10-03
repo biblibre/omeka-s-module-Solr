@@ -49,6 +49,21 @@ class SolrNode extends AbstractEntity
     protected $name;
 
     /**
+     * @Column(type="string", length=255)
+     */
+    protected string $uri;
+
+    /**
+     * @Column(type="string", length=255, options={"default":""})
+     */
+    protected string $user;
+
+    /**
+     * @Column(type="string", length=255, options={"default":""})
+     */
+    protected string $password;
+
+    /**
      * @Column(type="json_array")
      */
     protected $settings;
@@ -66,6 +81,36 @@ class SolrNode extends AbstractEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setUri(string $uri)
+    {
+        $this->uri = $uri;
+    }
+
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    public function setUser(string $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
     }
 
     public function setSettings($settings)

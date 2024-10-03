@@ -47,6 +47,9 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         $entity = $this->resource;
         return [
             'o:name' => $entity->getName(),
+            'o:uri' => $entity->getUri(),
+            'o:user' => $entity->getUser(),
+            'o:password' => $entity->getPassword(),
             'o:settings' => $entity->getSettings(),
         ];
     }
@@ -70,6 +73,21 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
         return $this->resource->getName();
     }
 
+    public function uri(): string
+    {
+        return $this->resource->getUri();
+    }
+
+    public function user(): string
+    {
+        return $this->resource->getUser();
+    }
+
+    public function password(): string
+    {
+        return $this->resource->getPassword();
+    }
+
     public function settings()
     {
         return $this->resource->getSettings();
@@ -77,20 +95,17 @@ class SolrNodeRepresentation extends AbstractEntityRepresentation
 
     public function clientUrl()
     {
-        $settings = $this->settings();
-
-        return $settings['uri'] ?? null;
+        return $this->uri();
     }
 
     public function client()
     {
         $solrClient = $this->getServiceLocator()->get('Solr\SolrClient');
 
-        $solrClient->setUri($this->clientUrl());
+        $solrClient->setUri($this->uri());
 
-        $settings = $this->settings();
-        $user = $settings['user'] ?? '';
-        $password = $settings['password'] ?? '';
+        $user = $this->user();
+        $password = $this->password();
         if ($user && $password) {
             $solrClient->setAuth($user, $password);
         }

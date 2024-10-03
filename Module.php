@@ -81,9 +81,12 @@ class Module extends AbstractModule
             CREATE TABLE solr_node (
                 id INT AUTO_INCREMENT NOT NULL,
                 name VARCHAR(255) NOT NULL,
+                uri VARCHAR(255) NOT NULL,
+                user VARCHAR(255) DEFAULT '' NOT NULL,
+                password VARCHAR(255) DEFAULT '' NOT NULL,
                 settings LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)',
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
         ");
 
         $connection->exec("
@@ -368,6 +371,43 @@ class Module extends AbstractModule
                 unset($settings['client']);
 
                 $connection->update('solr_node', ['settings' => json_encode($settings)], ['id' => $node['id']]);
+            }
+        }
+
+        if (version_compare($oldVersion, '0.17.0', '<')) {
+            $connection->exec(<<<SQL
+                ALTER TABLE `solr_node`
+                ADD COLUMN `uri` VARCHAR(255) NOT NULL AFTER `name`
+            SQL);
+            $connection->exec(<<<SQL
+                ALTER TABLE `solr_node`
+                ADD COLUMN `user` VARCHAR(255) DEFAULT '' NOT NULL AFTER `uri`
+            SQL);
+            $connection->exec(<<<SQL
+                ALTER TABLE `solr_node`
+                ADD COLUMN `password` VARCHAR(255) DEFAULT '' NOT NULL AFTER `user`
+            SQL);
+
+            $nodes = $connection->executeQuery('SELECT id, settings FROM solr_node')->fetchAll();
+            foreach ($nodes as $node) {
+                $id = $node['id'];
+                $settings = json_decode($node['settings'], true);
+
+                $uri = $settings['uri'] ?? '';
+                $user = $settings['user'] ?? '';
+                $password = $settings['password'] ?? '';
+
+                unset($settings['uri']);
+                unset($settings['user']);
+                unset($settings['password']);
+
+                $data = [
+                    'uri' => $uri,
+                    'user' => $user,
+                    'password' => $password,
+                    'settings' => json_encode($settings),
+                ];
+                $connection->update('solr_node', $data, ['id' => $id]);
             }
         }
     }

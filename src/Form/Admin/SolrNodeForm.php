@@ -54,10 +54,8 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
-        $settingsFieldset = new Fieldset('o:settings');
-
-        $settingsFieldset->add([
-            'name' => 'uri',
+        $this->add([
+            'name' => 'o:uri',
             'type' => 'Text',
             'options' => [
                 'label' => 'URI', // @translate
@@ -67,8 +65,8 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
-        $settingsFieldset->add([
-            'name' => 'user',
+        $this->add([
+            'name' => 'o:user',
             'type' => 'Text',
             'options' => [
                 'label' => 'Username', // @translate
@@ -76,14 +74,16 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
-        $settingsFieldset->add([
-            'name' => 'password',
+        $this->add([
+            'name' => 'o:password',
             'type' => 'Text',
             'options' => [
                 'label' => 'Password', // @translate
                 'info' => 'The HTTP Authentication password', // @translate
             ],
         ]);
+
+        $settingsFieldset = new Fieldset('o:settings');
 
         $settingsFieldset->add([
             'name' => 'resource_name_field',
