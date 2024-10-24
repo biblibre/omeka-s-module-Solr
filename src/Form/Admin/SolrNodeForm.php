@@ -122,6 +122,16 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
         ]);
 
         $settingsFieldset->add([
+            'name' => 'groups_field',
+            'type' => 'Text',
+            'options' => [
+                'label' => 'Groups field', // @translate
+                'info' => 'Name of the Solr field that will contain the groups ids. It must be a multi-valued, integer-based field.<br>Only useful if the module Group is enabled<br><strong>WARNING: Changing this will require a complete reindexation</strong>', // @translate
+                'escape_info' => false,
+            ],
+        ]);
+
+        $settingsFieldset->add([
             'name' => 'qf',
             'type' => 'Text',
             'options' => [

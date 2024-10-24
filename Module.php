@@ -29,6 +29,8 @@
 
 namespace Solr;
 
+use Laminas\EventManager\SharedEventManagerInterface;
+use Laminas\EventManager\Event;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -70,6 +72,64 @@ class Module extends AbstractModule
         $acl->allow(null, 'Solr\Api\Adapter\SolrMappingAdapter');
         $acl->allow(null, 'Solr\Api\Adapter\SolrSearchFieldAdapter');
         $acl->allow(null, 'Solr\Entity\SolrNode', 'read');
+    }
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager)
+    {
+        $sharedEventManager->attach('Solr\Querier', 'solr.query', [$this, 'onSolrQuery']);
+        $sharedEventManager->attach('Solr\Indexer', 'solr.indexDocument', [$this, 'onSolrIndexDocument']);
+    }
+
+    public function onSolrQuery(Event $event)
+    {
+        $acl = $this->getServiceLocator()->get('Omeka\Acl');
+        $entityManager = $this->getServiceLocator()->get('Omeka\EntityManager');
+
+        $solrQuery = $event->getTarget();
+        $solrNode = $event->getParam('solrNode');
+
+        $solrNodeSettings = $solrNode->settings();
+        $is_public_field = $solrNodeSettings['is_public_field'];
+        $groups_field = $solrNodeSettings['groups_field'];
+
+        if (!$acl->userIsAllowed('Omeka\Entity\Resource', 'view-all')) {
+            $user = $acl->getAuthenticationService()->getIdentity();
+            if ($user && $this->isModuleActive('Group')) {
+                $groupUserRepository = $entityManager->getRepository('Group\Entity\GroupUser');
+                $groupUsers = $groupUserRepository->findBy(['user' => $user]);
+                $groupsIds = array_map(fn ($groupUser) => $groupUser->getGroup()->getId(), $groupUsers);
+                if (!empty($groupsIds)) {
+                    $fq = sprintf('%s:%s OR %s:(%s)', $is_public_field, 'true', $groups_field, implode(' OR ', $groupsIds));
+                    $solrQuery->addFilterQuery($fq);
+                } else {
+                    $solrQuery->addFilterQuery("$is_public_field:true");
+                }
+            } else {
+                $solrQuery->addFilterQuery("$is_public_field:true");
+            }
+        }
+    }
+
+    public function onSolrIndexDocument(Event $event)
+    {
+        $entityManager = $this->getServiceLocator()->get('Omeka\EntityManager');
+
+        $document = $event->getTarget();
+        $resource = $event->getParam('resource');
+        $solrNode = $event->getParam('solrNode');
+
+        if ($this->isModuleActive('Group')) {
+            $solrNodeSettings = $solrNode->settings();
+            $groups_field = $solrNodeSettings['groups_field'];
+            if ($groups_field) {
+                $groupResourceRepository = $entityManager->getRepository('Group\Entity\GroupResource');
+                $groupResources = $groupResourceRepository->findBy(['resource' => $resource->id()]);
+                $groupsIds = array_map(fn ($groupResource) => $groupResource->getGroup()->getId(), $groupResources);
+                foreach ($groupsIds as $groupId) {
+                    $document->addField($groups_field, (string) $groupId);
+                }
+            }
+        }
     }
 
     public function install(ServiceLocatorInterface $serviceLocator)
@@ -429,5 +489,15 @@ class Module extends AbstractModule
         $connection->exec('DROP TABLE IF EXISTS `solr_search_field`');
         $connection->exec('DROP TABLE IF EXISTS `solr_mapping`');
         $connection->exec('DROP TABLE IF EXISTS `solr_node`');
+    }
+
+    protected function isModuleActive($moduleName): bool
+    {
+        $moduleManager = $this->getServiceLocator()->get('Omeka\ModuleManager');
+        if (!$moduleManager->isRegistered($moduleName)) {
+            return false;
+        }
+
+        return $moduleManager->getModule($moduleName)->getState() === \Omeka\Module\Manager::STATE_ACTIVE;
     }
 }

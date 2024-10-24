@@ -50,6 +50,7 @@ class Querier extends AbstractQuerier
         $settings = $serviceLocator->get('Omeka\Settings');
         $api = $serviceLocator->get('Omeka\ApiManager');
         $logger = $serviceLocator->get('Omeka\Logger');
+        $eventManager = $serviceLocator->get('EventManager');
 
         $client = $this->getClient();
 
@@ -253,6 +254,9 @@ class Querier extends AbstractQuerier
         if ($offset = $query->getOffset()) {
             $solrQuery->setGroupOffset($offset);
         }
+
+        $eventManager->setIdentifiers(['Solr\Querier']);
+        $eventManager->trigger('solr.query', $solrQuery, ['query' => $query, 'solrNode' => $solrNode]);
 
         try {
             $logger->debug(sprintf('Solr query params: %s', json_encode($solrQuery)));
