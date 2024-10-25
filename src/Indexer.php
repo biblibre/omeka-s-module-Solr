@@ -93,6 +93,7 @@ class Indexer extends AbstractIndexer
         $valueExtractorManager = $serviceLocator->get('Solr\ValueExtractorManager');
         $transformationManager = $serviceLocator->get('Solr\TransformationManager');
         $entityManager = $serviceLocator->get('Omeka\EntityManager');
+        $eventManager = $serviceLocator->get('EventManager');
 
         $resource = $api->read($resource->getResourceName(), $resource->getId())->getContent();
 
@@ -173,6 +174,9 @@ class Indexer extends AbstractIndexer
                 $document->addField($solrField, (string) $value);
             }
         }
+
+        $eventManager->setIdentifiers(['Solr\Indexer']);
+        $eventManager->trigger('solr.indexDocument', $document, ['resource' => $resource, 'solrNode' => $solrNode]);
 
         try {
             $client->addDocument($document);
