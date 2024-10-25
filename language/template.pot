@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 14:07+0200\n"
+"POT-Creation-Date: 2024-10-25 11:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,53 +83,53 @@ msgid ""
 "complete reindexation."
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:128
+#: src/Form/Admin/SolrNodeForm.php:138
 msgid "Query fields"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:129
+#: src/Form/Admin/SolrNodeForm.php:139
 msgid "qf parameter that will be added to the query"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:137
+#: src/Form/Admin/SolrNodeForm.php:147
 msgid "Minimum should match"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:138
+#: src/Form/Admin/SolrNodeForm.php:148
 msgid "mm parameter that will be added to the query"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:155
+#: src/Form/Admin/SolrNodeForm.php:165
 msgid "Highlighting"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:156
+#: src/Form/Admin/SolrNodeForm.php:166
 msgid "Enable extract retrieval in relation to search terms"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:164
+#: src/Form/Admin/SolrNodeForm.php:174
 msgid "Highlight fields"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:165
+#: src/Form/Admin/SolrNodeForm.php:175
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:173
+#: src/Form/Admin/SolrNodeForm.php:183
 msgid "Highlight fragment size"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:174
+#: src/Form/Admin/SolrNodeForm.php:184
 msgid ""
 "Define number of caracters for the fragment size of highlight, 0 will show "
 "the entire field value."
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:182
+#: src/Form/Admin/SolrNodeForm.php:192
 msgid "Highlight snippets"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:183
+#: src/Form/Admin/SolrNodeForm.php:193
 msgid ""
 "Define the number of fragments where the search terms were found in the same "
 "field."
@@ -335,11 +335,23 @@ msgstr ""
 msgid "The HTTP Authentication password"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:191
+#: src/Form/Admin/SolrNodeForm.php:128
+msgid "Groups field"
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:129
+msgid ""
+"Name of the Solr field that will contain the groups ids. It must be a multi-"
+"valued, integer-based field.<br>Only useful if the module Group is "
+"enabled<br><strong>WARNING: Changing this will require a complete "
+"reindexation</strong>"
+msgstr ""
+
+#: src/Form/Admin/SolrNodeForm.php:201
 msgid "Maximum characters analyzed"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:192
+#: src/Form/Admin/SolrNodeForm.php:202
 msgid ""
 "Set the value of hl.maxAnalyzedChars parameter. Great values can have impact "
 "on performance"
@@ -359,11 +371,11 @@ msgstr ""
 msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""
 
-#: src/Controller/Admin/NodeController.php:73
+#: src/Controller/Admin/NodeController.php:59
 msgid "Solr node created."
 msgstr ""
 
-#: src/Controller/Admin/NodeController.php:100
+#: src/Controller/Admin/NodeController.php:86
 msgid "Solr node updated."
 msgstr ""
 

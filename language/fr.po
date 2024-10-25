@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 14:07+0200\n"
-"PO-Revision-Date: 2024-10-03 14:09+0200\n"
+"POT-Creation-Date: 2024-10-25 11:07+0200\n"
+"PO-Revision-Date: 2024-10-25 11:09+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -94,44 +94,44 @@ msgstr ""
 "champ doit être à valeur unique, et de type booléen. ATTENTION : Modifier "
 "ceci nécessitera une réindexation complète."
 
-#: src/Form/Admin/SolrNodeForm.php:128
+#: src/Form/Admin/SolrNodeForm.php:138
 msgid "Query fields"
 msgstr "Champs de requête"
 
-#: src/Form/Admin/SolrNodeForm.php:129
+#: src/Form/Admin/SolrNodeForm.php:139
 msgid "qf parameter that will be added to the query"
 msgstr "paramètre qf qui sera ajouté à la requête"
 
-#: src/Form/Admin/SolrNodeForm.php:137
+#: src/Form/Admin/SolrNodeForm.php:147
 msgid "Minimum should match"
 msgstr "Minimum should match"
 
-#: src/Form/Admin/SolrNodeForm.php:138
+#: src/Form/Admin/SolrNodeForm.php:148
 msgid "mm parameter that will be added to the query"
 msgstr "paramètre mm qui sera ajouté à la requête"
 
-#: src/Form/Admin/SolrNodeForm.php:155
+#: src/Form/Admin/SolrNodeForm.php:165
 msgid "Highlighting"
 msgstr "Mise en évidence"
 
-#: src/Form/Admin/SolrNodeForm.php:156
+#: src/Form/Admin/SolrNodeForm.php:166
 msgid "Enable extract retrieval in relation to search terms"
 msgstr "Activer la récupération d'extraits par rapport aux termes de recherche"
 
-#: src/Form/Admin/SolrNodeForm.php:164
+#: src/Form/Admin/SolrNodeForm.php:174
 msgid "Highlight fields"
 msgstr "Liste des champs concernés par la mise en évidence"
 
-#: src/Form/Admin/SolrNodeForm.php:165
+#: src/Form/Admin/SolrNodeForm.php:175
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
 msgstr ""
 "La fonctionalité de mise en évidence (utilisez \"*\" pour tous les champs)."
 
-#: src/Form/Admin/SolrNodeForm.php:173
+#: src/Form/Admin/SolrNodeForm.php:183
 msgid "Highlight fragment size"
 msgstr "La taille des extraits de mise en évidence"
 
-#: src/Form/Admin/SolrNodeForm.php:174
+#: src/Form/Admin/SolrNodeForm.php:184
 msgid ""
 "Define number of caracters for the fragment size of highlight, 0 will show "
 "the entire field value."
@@ -139,11 +139,11 @@ msgstr ""
 "Définissez le nombre de caractères pour la taille des extraits de mise en "
 "évidence, 0 affichera la valeur entière du champ."
 
-#: src/Form/Admin/SolrNodeForm.php:182
+#: src/Form/Admin/SolrNodeForm.php:192
 msgid "Highlight snippets"
 msgstr "Extraits mis en évidence"
 
-#: src/Form/Admin/SolrNodeForm.php:183
+#: src/Form/Admin/SolrNodeForm.php:193
 msgid ""
 "Define the number of fragments where the search terms were found in the same "
 "field."
@@ -366,11 +366,27 @@ msgstr ""
 msgid "The HTTP Authentication password"
 msgstr "Le mot de passe d'authentification HTTP"
 
-#: src/Form/Admin/SolrNodeForm.php:191
+#: src/Form/Admin/SolrNodeForm.php:128
+msgid "Groups field"
+msgstr "Champ de groupes"
+
+#: src/Form/Admin/SolrNodeForm.php:129
+msgid ""
+"Name of the Solr field that will contain the groups ids. It must be a multi-"
+"valued, integer-based field.<br>Only useful if the module Group is "
+"enabled<br><strong>WARNING: Changing this will require a complete "
+"reindexation</strong>"
+msgstr ""
+"Le nom du champ Solr qui contiendra les identifiants de groupes. Le champ "
+"doit être à valeur multiple, et de type entier.<br>Utile uniquement si le "
+"module Group est activé<br><strong>ATTENTION : Modifier ceci nécessitera une "
+"réindexation complète</strong>"
+
+#: src/Form/Admin/SolrNodeForm.php:201
 msgid "Maximum characters analyzed"
 msgstr "Nombre maximum de caractères analysés"
 
-#: src/Form/Admin/SolrNodeForm.php:192
+#: src/Form/Admin/SolrNodeForm.php:202
 msgid ""
 "Set the value of hl.maxAnalyzedChars parameter. Great values can have impact "
 "on performance"
@@ -397,11 +413,11 @@ msgstr ""
 "Supprimer toutes les correspondances existantes pour ce nœud Solr avant de "
 "démarrer l'import"
 
-#: src/Controller/Admin/NodeController.php:73
+#: src/Controller/Admin/NodeController.php:59
 msgid "Solr node created."
 msgstr "Nœud Solr créé."
 
-#: src/Controller/Admin/NodeController.php:100
+#: src/Controller/Admin/NodeController.php:86
 msgid "Solr node updated."
 msgstr "Nœud Solr mis à jour."
 
