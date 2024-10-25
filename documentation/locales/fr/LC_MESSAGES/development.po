@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, BibLibre
+# This file is distributed under the same license as the Solr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Solr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-25 13:11+0200\n"
+"PO-Revision-Date: 2024-10-25 13:37+0200\n"
+"Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.16.0\n"
+"X-Generator: Poedit 3.5\n"
+
+#: ../../development/server-event-reference.rst:2
+msgid "Server event reference"
+msgstr "Référence d'évènement serveur"
+
+#: ../../development/server-event-reference.rst:5
+msgid "``Solr\\Indexer``"
+msgstr "``Solr\\Indexer``"
+
+#: ../../development/server-event-reference.rst:8
+msgid "``solr.indexDocument``"
+msgstr "``solr.indexDocument``"
+
+#: ../../development/server-event-reference.rst:10
+msgid "Triggered right before the document is sent to Solr."
+msgstr "Déclenché juste avant que le document soit envoyé à Solr."
+
+#: ../../development/server-event-reference.rst:12
+msgid "Event's target is a ``Solr\\SolrInputDocument``. Can be modified."
+msgstr "La cible de l'évènement est un ``Solr\\SolrInputDocument``. Peut être modifié."
+
+#: ../../development/server-event-reference.rst:15
+#: ../../development/server-event-reference.rst:46
+msgid "Parameters"
+msgstr "Paramètres"
+
+#: ../../development/server-event-reference.rst:17
+msgid "``resource: Omeka\\Entity\\Resource``"
+msgstr "``resource: Omeka\\Entity\\Resource``"
+
+#: ../../development/server-event-reference.rst:18
+msgid "The resource being indexed"
+msgstr "La ressource étant indexée"
+
+#: ../../development/server-event-reference.rst:19
+#: ../../development/server-event-reference.rst:50
+msgid "``solrNode: Solr\\Api\\Representation\\SolrNodeRepresentation``"
+msgstr "``solrNode: Solr\\Api\\Representation\\SolrNodeRepresentation``"
+
+#: ../../development/server-event-reference.rst:20
+msgid "The solr node where the document is being sent"
+msgstr "Le nœud Solr où le document est envoyé"
+
+#: ../../development/server-event-reference.rst:23
+#: ../../development/server-event-reference.rst:54
+msgid "Example"
+msgstr "Exemple"
+
+#: ../../development/server-event-reference.rst:36
+msgid "``Solr\\Querier``"
+msgstr "``Solr\\Querier``"
+
+#: ../../development/server-event-reference.rst:39
+msgid "``solr.query``"
+msgstr "``solr.query``"
+
+#: ../../development/server-event-reference.rst:41
+msgid "Triggered right before the query is sent to Solr."
+msgstr "Déclenché juste avant que la requête soit envoyée à Solr."
+
+#: ../../development/server-event-reference.rst:43
+msgid "Event's target is a ``Solr\\SolrQuery``. Can be modified."
+msgstr "La cible de l'évènement est un ``Solr\\SolrQuery``. Peut être modifié."
+
+#: ../../development/server-event-reference.rst:48
+msgid "``query: Search\\Query``"
+msgstr "``query: Search\\Query``"
+
+#: ../../development/server-event-reference.rst:49
+msgid "The original search query"
+msgstr "La requête originale"
+
+#: ../../development/server-event-reference.rst:51
+msgid "The solr node about to be queried"
+msgstr "Le nœud Solr étant requêté"

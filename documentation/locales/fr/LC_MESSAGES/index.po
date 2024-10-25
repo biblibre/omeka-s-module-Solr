@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, BibLibre
+# This file is distributed under the same license as the Solr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Solr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-25 13:23+0200\n"
+"PO-Revision-Date: 2024-10-25 13:24+0200\n"
+"Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.16.0\n"
+"X-Generator: Poedit 3.5\n"
+
+#: ../../index.rst:27
+msgid "User documentation"
+msgstr "Documentation utilisateur"
+
+#: ../../index.rst:34
+msgid "Developer documentation"
+msgstr "Documentation développeur"
+
+#: ../../index.rst:2
+msgid "Solr module for Omeka S"
+msgstr "Module Solr pour Omeka S"
+
+#: ../../index.rst:4
+msgid ""
+"This module provides a `Search <https://github.com/biblibre/omeka-s-module-"
+"Search>`_ adapter for `Solr <https://lucene.apache.org/solr/>`_."
+msgstr ""
+"Ce module fournit un adaptateur `Search <https://github.com/biblibre/omeka-s-"
+"module-Search>`_ pour `Solr <https://lucene.apache.org/solr/>`_."
+
+#: ../../index.rst:9
+msgid "Features"
+msgstr "Fonctionnalités"
+
+#: ../../index.rst:11
+msgid "Search among items and item sets"
+msgstr "Recherche parmi les contenus et collections"
+
+#: ../../index.rst:12
+msgid "Highlighting (show fragments of documents that match the user’s query)"
+msgstr ""
+"Mise en évidence (`highlighting`, affiche des fragments de documents "
+"correspondant à la requête de l'utilisateur)"
+
+#: ../../index.rst:13
+msgid "Customizable facets and sort options"
+msgstr "Facettes et options de tri personnalisables"
+
+#: ../../index.rst:14
+msgid "Customizable mappings"
+msgstr "Correspondances (`mappings`) personnalisables"
+
+#: ../../index.rst:15
+msgid "Extensible by other modules:"
+msgstr "Extensible par d'autres modules:"
+
+#: ../../index.rst:17
+msgid ""
+"Custom transformations (modifications applied to a value before being added to a "
+"Solr document)"
+msgstr ""
+"Transformations (modifications appliquées à une valeur avant d'être ajoutée à un "
+"document Solr)"
+
+#: ../../index.rst:19
+msgid ""
+"Custom value extractors (make module-specific data related to resources "
+"available to the indexer)"
+msgstr ""
+"Extracteurs de valeur (rend des données spécifiques à un module accessible pour "
+"l'indexeur)"
+
+#: ../../index.rst:21
+msgid "Solr documents can be altered right before being sent to Solr"
+msgstr "Les documents Solr peuvent être modifiés juste avant d'être envoyés à Solr"
+
+#: ../../index.rst:22
+msgid "Solr query can be altered right before being sent to Solr"
+msgstr "La requête Solr peut être modifiée juste avant d'être envoyée à Solr"
+
+#: ../../index.rst:24
+msgid ""
+"Compatible with the module `Group <https://omeka.org/s/modules/Group>`_ (can "
+"return private resources if they belong to user's groups)"
+msgstr ""
+"Compatible avec le module `Group <https://omeka.org/s/modules/Group>`_ (peut "
+"renvoyer des ressources privées si elles appartiennent aux groupes de "
+"l'utilisateur)"

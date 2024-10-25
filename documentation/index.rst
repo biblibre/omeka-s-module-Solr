@@ -21,7 +21,7 @@ Features
     * Solr documents can be altered right before being sent to Solr
     * Solr query can be altered right before being sent to Solr
 
-* Compatible with the module [Group]
+* Compatible with the module `Group <https://omeka.org/s/modules/Group>`_
   (can return private resources if they belong to user's groups)
 
 .. toctree::
