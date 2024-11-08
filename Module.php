@@ -90,11 +90,11 @@ class Module extends AbstractModule
 
         $solrNodeSettings = $solrNode->settings();
         $is_public_field = $solrNodeSettings['is_public_field'];
-        $groups_field = $solrNodeSettings['groups_field'];
+        $groups_field = $solrNodeSettings['groups_field'] ?? '';
 
         if (!$acl->userIsAllowed('Omeka\Entity\Resource', 'view-all')) {
             $user = $acl->getAuthenticationService()->getIdentity();
-            if ($user && $this->isModuleActive('Group')) {
+            if ($user && $groups_field && $this->isModuleActive('Group')) {
                 $groupUserRepository = $entityManager->getRepository('Group\Entity\GroupUser');
                 $groupUsers = $groupUserRepository->findBy(['user' => $user]);
                 $groupsIds = array_map(fn ($groupUser) => $groupUser->getGroup()->getId(), $groupUsers);
