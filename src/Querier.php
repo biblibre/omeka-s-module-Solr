@@ -360,6 +360,8 @@ class Querier extends AbstractQuerier
                 throw new QuerierException(sprintf('Field %s does not exist', $q['field']));
             }
 
+            $term = trim($q['term']);
+
             switch ($q['operator']) {
                 case Adapter::OPERATOR_CONTAINS_ANY_WORD:
                     $solrFields = $searchField->textFields();
@@ -367,7 +369,7 @@ class Querier extends AbstractQuerier
                         throw new QuerierException(sprintf('Field %s cannot be used with "contains any word" operator', $searchField->name()));
                     }
 
-                    $term = $this->escape($q['term']);
+                    $term = $this->escape($term);
                     break;
 
                 case Adapter::OPERATOR_CONTAINS_ALL_WORDS:
@@ -376,7 +378,7 @@ class Querier extends AbstractQuerier
                         throw new QuerierException(sprintf('Field %s cannot be used with "contains all words" operator', $searchField->name()));
                     }
 
-                    $term = $this->escape($q['term']);
+                    $term = $this->escape($term);
                     if (isset($q['proximity']) && is_numeric($q['proximity'])) {
                         $term = sprintf('+"%s" ~%s', $term, $q['proximity']);
                     } else {
@@ -393,7 +395,7 @@ class Querier extends AbstractQuerier
                         throw new QuerierException(sprintf('Field %s cannot be used with "contains expression" operator', $searchField->name()));
                     }
 
-                    $term = sprintf('"%s"', $this->escape($q['term']));
+                    $term = sprintf('"%s"', $this->escape($term));
                     break;
 
                 case Adapter::OPERATOR_MATCHES_PATTERN:
@@ -404,7 +406,7 @@ class Querier extends AbstractQuerier
 
                     $charsToEscape = array_diff(self::SOLR_SPECIAL_CHARS, ['*', '?']);
                     $charsToEscape[] = ' ';
-                    $term = $this->escapeChars($charsToEscape, $q['term']);
+                    $term = $this->escapeChars($charsToEscape, $term);
                     break;
 
                 default:
