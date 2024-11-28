@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - Ignore leading and trailing whitespaces in query (#19)
+- Add default mappings and search fields at install
 
 ## [0.18.0] - 2024-10-25
 

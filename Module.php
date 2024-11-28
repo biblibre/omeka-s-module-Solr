@@ -198,6 +198,44 @@ class Module extends AbstractModule
             'is_public_field' => 'is_public_b',
         ];
         $connection->executeQuery($sql, ['http://127.0.0.1:8983/solr/default', json_encode($defaultSettings)]);
+        $solrNodeId = $connection->lastInsertId();
+
+        $sql = '
+            INSERT INTO `solr_mapping` (`solr_node_id`, `resource_name`, `field_name`, `source`, `settings`)
+            VALUES (?, ?, ?, ?, ?)
+        ';
+        $defaultMappingSettingsJson = json_encode([
+            'transformations' => [
+                'name' => Transformation\ConvertResourceToString::class,
+                'resource_field' => 'title',
+            ],
+        ]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_title_txt', 'dcterms:title', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_title_ss', 'dcterms:title', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_title_s', 'dcterms:title', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_creator_txt', 'dcterms:creator', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_creator_ss', 'dcterms:creator', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_subject_txt', 'dcterms:subject', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_subject_ss', 'dcterms:subject', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_description_txt', 'dcterms:description', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_description_ss', 'dcterms:description', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_date_txt', 'dcterms:date', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_date_ss', 'dcterms:date', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_date_s', 'dcterms:date', $defaultMappingSettingsJson]);
+        $connection->executeQuery($sql, [$solrNodeId, 'items', 'bibo_content_txt', 'bibo:content', $defaultMappingSettingsJson]);
+
+        $sql = '
+            INSERT INTO `solr_search_field` (`solr_node_id`, `name`, `label`, `text_fields`, `string_fields`, `facet_field`, `sort_field`)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ';
+        $connection->executeQuery($sql, [$solrNodeId, 'title', 'Title', 'dcterms_title_txt', 'dcterms_title_ss', '', 'dcterms_title_s']);
+        $connection->executeQuery($sql, [$solrNodeId, 'creator', 'Creator', 'dcterms_creator_txt', 'dcterms_creator_ss', 'dcterms_creator_ss', '']);
+        $connection->executeQuery($sql, [$solrNodeId, 'subject', 'Subject', 'dcterms_subject_txt', 'dcterms_subject_ss', 'dcterms_subject_ss', '']);
+        $connection->executeQuery($sql, [$solrNodeId, 'description', 'Description', 'dcterms_description_txt', '', '', '']);
+        $connection->executeQuery($sql, [$solrNodeId, 'date', 'Date', 'dcterms_date_txt', 'dcterms_date_ss', 'dcterms_date_ss', 'dcterms_date_s']);
+        $connection->executeQuery($sql, [$solrNodeId, 'ocr', 'OCR', 'bibo_content_txt', '', '', '']);
+        $connection->executeQuery($sql, [$solrNodeId, 'all_metadata_ocr', 'All metadata + OCR', 'dcterms_title_txt dcterms_creator_txt dcterms_subject_txt dcterms_description_txt dcterms_date_txt bibo_content_txt', '', '', '']);
+        $connection->executeQuery($sql, [$solrNodeId, 'all_metadata', 'All metadata', 'dcterms_title_txt dcterms_creator_txt dcterms_subject_txt dcterms_description_txt dcterms_date_txt', 'dcterms_title_ss dcterms_creator_ss dcterms_subject_ss dcterms_description_ss dcterms_date_ss', '', '']);
     }
 
     public function upgrade($oldVersion, $newVersion,
