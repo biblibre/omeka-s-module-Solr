@@ -10,6 +10,8 @@ return [
         ],
         'factories' => [
             'Solr\Controller\Admin\Mapping' => Service\Controller\MappingControllerFactory::class,
+            'Solr\Controller\Api' => Service\Controller\ApiControllerFactory::class,
+            'Solr\Controller\ApiLocal' => Service\Controller\ApiLocalControllerFactory::class,
         ],
     ],
     'entity_manager' => [
@@ -166,6 +168,38 @@ return [
                                         'controller' => 'Transformations',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'api' => [
+                'child_routes' => [
+                    'solr' => [
+                        'type' => \Laminas\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/:resource[/:id]',
+                            'defaults' => [
+                                'controller' => 'Solr\Controller\Api',
+                            ],
+                            'constraints' => [
+                                'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'api-local' => [
+                'child_routes' => [
+                    'solr' => [
+                        'type' => \Laminas\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/:resource[/:id]',
+                            'defaults' => [
+                                'controller' => 'Solr\Controller\ApiLocal',
+                            ],
+                            'constraints' => [
+                                'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
                             ],
                         ],
                     ],

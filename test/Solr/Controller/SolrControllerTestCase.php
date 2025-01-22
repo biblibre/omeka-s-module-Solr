@@ -75,6 +75,7 @@ abstract class SolrControllerTestCase extends TestCase
 
     public function tearDown(): void
     {
+        $this->loginAsAdmin();
         $this->api()->delete('search_pages', $this->searchPage->id());
         $this->api()->delete('search_indexes', $this->searchIndex->id());
         $this->api()->delete('solr_mappings', $this->solrMapping->id());
@@ -89,6 +90,13 @@ abstract class SolrControllerTestCase extends TestCase
         $adapter->setIdentity($email);
         $adapter->setCredential($password);
         return $auth->authenticate();
+    }
+
+    protected function logout()
+    {
+        $serviceLocator = $this->getServiceLocator();
+        $auth = $serviceLocator->get('Omeka\AuthenticationService');
+        $auth->clearIdentity();
     }
 
     protected function loginAsAdmin()
