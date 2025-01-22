@@ -206,8 +206,10 @@ class Module extends AbstractModule
         ';
         $defaultMappingSettingsJson = json_encode([
             'transformations' => [
-                'name' => Transformation\ConvertResourceToString::class,
-                'resource_field' => 'title',
+                [
+                    'name' => Transformation\ConvertResourceToString::class,
+                    'resource_field' => 'title',
+                ]
             ],
         ]);
         $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_title_txt', 'dcterms:title', $defaultMappingSettingsJson]);
