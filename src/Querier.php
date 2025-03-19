@@ -255,6 +255,13 @@ class Querier extends AbstractQuerier
             $solrQuery->setGroupOffset($offset);
         }
 
+        $facetSorts = $query->getFacetSorts();
+        foreach ($facetSorts as $field => $sort) {
+            $searchField = $this->getSearchField($field);
+            $facetField = $searchField->facetField();
+            $solrQuery->setParam("facet.sort.$facetField", $sort);
+        }
+
         $eventManager->setIdentifiers(['Solr\Querier']);
         $eventManager->trigger('solr.query', $solrQuery, ['query' => $query, 'solrNode' => $solrNode]);
 
