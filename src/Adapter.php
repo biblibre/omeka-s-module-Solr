@@ -191,4 +191,14 @@ class Adapter extends AbstractAdapter
 
         return $operators;
     }
+
+    public function getAvailableFacetSorts(SearchIndexRepresentation $index)
+    {
+        $sorts = [
+            'index asc' => $this->translator->translate('Index order asc'),
+            'index desc' => $this->translator->translate('Index order desc'),
+        ];
+
+        return $sorts;
+    }
 }
