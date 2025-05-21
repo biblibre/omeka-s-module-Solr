@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 11:07+0200\n"
+"POT-Creation-Date: 2025-05-21 16:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: src/Adapter.php:110
-msgid "Relevance"
-msgstr ""
 
 #: src/Adapter.php:115
 msgid "Asc"
@@ -43,6 +39,14 @@ msgstr ""
 
 #: src/Adapter.php:187
 msgid "matches pattern"
+msgstr ""
+
+#: src/Adapter.php:198
+msgid "Index order asc"
+msgstr ""
+
+#: src/Adapter.php:199
+msgid "Index order desc"
 msgstr ""
 
 #: src/Controller/Admin/MappingController.php:241
@@ -323,6 +327,68 @@ msgstr ""
 msgid "Restore transformation"
 msgstr ""
 
+#: src/Transformation/Filter/DataType.php:20
+msgid "Filter by data type"
+msgstr ""
+
+#: src/Transformation/Filter/DataType.php:29
+msgid ""
+"Only selected data types will be used. Selecting none is the same as "
+"selecting all. Only relevant when the source is a property."
+msgstr ""
+
+#: src/Transformation/Filter/ResourceClass.php:24
+msgid "Filter resources by class"
+msgstr ""
+
+#: src/Transformation/Filter/ResourceClass.php:35
+msgid "Resource classes"
+msgstr ""
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr ""
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr ""
+
+#: src/Transformation/Format.php:20
+msgid "Format (deprecated)"
+msgstr ""
+
+#: src/Transformation/Format.php:32
+msgid "Formatter"
+msgstr ""
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr ""
+
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
+msgstr ""
+
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr ""
+
+#: src/Api/Adapter/SolrNodeAdapter.php:105
+msgid "The URI cannot be empty"
+msgstr ""
+
+#: src/Api/Adapter/SolrNodeAdapter.php:109
+msgid "Another Solr node already uses this URI"
+msgstr ""
+
+#: src/Controller/Admin/NodeController.php:59
+msgid "Solr node created."
+msgstr ""
+
+#: src/Controller/Admin/NodeController.php:86
+msgid "Solr node updated."
+msgstr ""
+
 #: src/Form/Admin/SolrNodeForm.php:72
 msgid "Username"
 msgstr ""
@@ -369,66 +435,4 @@ msgstr ""
 
 #: src/Form/Admin/SolrMappingImportForm.php:57
 msgid "Delete all existing mappings for this Solr node before importing"
-msgstr ""
-
-#: src/Controller/Admin/NodeController.php:59
-msgid "Solr node created."
-msgstr ""
-
-#: src/Controller/Admin/NodeController.php:86
-msgid "Solr node updated."
-msgstr ""
-
-#: src/Transformation/Format.php:20
-msgid "Format (deprecated)"
-msgstr ""
-
-#: src/Transformation/Format.php:32
-msgid "Formatter"
-msgstr ""
-
-#: src/Transformation/StripHtmlTags.php:9
-msgid "Strip HTML tags"
-msgstr ""
-
-#: src/Transformation/ConvertResourceToString.php:14
-msgid "Convert resource to string"
-msgstr ""
-
-#: src/Transformation/ConvertResourceToString.php:20
-msgid "Resource field"
-msgstr ""
-
-#: src/Transformation/ConvertToSolrDateRange.php:11
-msgid "Convert to Solr date range"
-msgstr ""
-
-#: src/Transformation/ConvertToSolrDateRange.php:18
-msgid "Exclude unmatching values"
-msgstr ""
-
-#: src/Transformation/Filter/DataType.php:20
-msgid "Filter by data type"
-msgstr ""
-
-#: src/Transformation/Filter/DataType.php:29
-msgid ""
-"Only selected data types will be used. Selecting none is the same as "
-"selecting all. Only relevant when the source is a property."
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:24
-msgid "Filter resources by class"
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:35
-msgid "Resource classes"
-msgstr ""
-
-#: src/Api/Adapter/SolrNodeAdapter.php:105
-msgid "The URI cannot be empty"
-msgstr ""
-
-#: src/Api/Adapter/SolrNodeAdapter.php:109
-msgid "Another Solr node already uses this URI"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Solr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 11:07+0200\n"
+"POT-Creation-Date: 2025-05-21 16:17+0200\n"
 "PO-Revision-Date: 2024-10-25 11:09+0200\n"
 "Last-Translator: Julian Maurice <julian.maurice@biblibre.com>\n"
 "Language-Team: French\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.5\n"
-
-#: src/Adapter.php:110
-msgid "Relevance"
-msgstr "Pertinence"
 
 #: src/Adapter.php:115
 msgid "Asc"
@@ -45,6 +41,14 @@ msgstr "contient l'expression"
 #: src/Adapter.php:187
 msgid "matches pattern"
 msgstr "correspond au motif"
+
+#: src/Adapter.php:198
+msgid "Index order asc"
+msgstr "Ordre d'indexation asc"
+
+#: src/Adapter.php:199
+msgid "Index order desc"
+msgstr "Ordre d'indexation desc"
 
 #: src/Controller/Admin/MappingController.php:241
 #, php-format
@@ -353,6 +357,71 @@ msgstr "Supprimer la transformation"
 msgid "Restore transformation"
 msgstr "Restaurer la transformation"
 
+#: src/Transformation/Filter/DataType.php:20
+msgid "Filter by data type"
+msgstr "Filtrer par type de données"
+
+#: src/Transformation/Filter/DataType.php:29
+msgid ""
+"Only selected data types will be used. Selecting none is the same as "
+"selecting all. Only relevant when the source is a property."
+msgstr ""
+"Seuls les types de données sélectionnés seront utilisés. En sélectionner "
+"aucun équivaut à tout sélectionner. Uniquement pertinent lorsque la source "
+"est une propriété."
+
+#: src/Transformation/Filter/ResourceClass.php:24
+msgid "Filter resources by class"
+msgstr "Filtres par type de ressource"
+
+#: src/Transformation/Filter/ResourceClass.php:35
+msgid "Resource classes"
+msgstr "Type de ressource"
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr "Convertir en plage de dates Solr"
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr "Exclure les valeurs sans correspondance"
+
+#: src/Transformation/Format.php:20
+msgid "Format (deprecated)"
+msgstr "Format (obsolète)"
+
+#: src/Transformation/Format.php:32
+msgid "Formatter"
+msgstr "Formateur"
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr "Supprimer les balises HTML"
+
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
+msgstr "Convertir la ressource en chaîne"
+
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr "Champ de ressource"
+
+#: src/Api/Adapter/SolrNodeAdapter.php:105
+msgid "The URI cannot be empty"
+msgstr "L'URI ne peut pas être vide"
+
+#: src/Api/Adapter/SolrNodeAdapter.php:109
+msgid "Another Solr node already uses this URI"
+msgstr "Un autre nœud Solr utilise déjà cette URI"
+
+#: src/Controller/Admin/NodeController.php:59
+msgid "Solr node created."
+msgstr "Nœud Solr créé."
+
+#: src/Controller/Admin/NodeController.php:86
+msgid "Solr node updated."
+msgstr "Nœud Solr mis à jour."
+
 #: src/Form/Admin/SolrNodeForm.php:72
 msgid "Username"
 msgstr "Nom d'utilisateur"
@@ -413,67 +482,5 @@ msgstr ""
 "Supprimer toutes les correspondances existantes pour ce nœud Solr avant de "
 "démarrer l'import"
 
-#: src/Controller/Admin/NodeController.php:59
-msgid "Solr node created."
-msgstr "Nœud Solr créé."
-
-#: src/Controller/Admin/NodeController.php:86
-msgid "Solr node updated."
-msgstr "Nœud Solr mis à jour."
-
-#: src/Transformation/Format.php:20
-msgid "Format (deprecated)"
-msgstr "Format (obsolète)"
-
-#: src/Transformation/Format.php:32
-msgid "Formatter"
-msgstr "Formateur"
-
-#: src/Transformation/StripHtmlTags.php:9
-msgid "Strip HTML tags"
-msgstr "Supprimer les balises HTML"
-
-#: src/Transformation/ConvertResourceToString.php:14
-msgid "Convert resource to string"
-msgstr "Convertir la ressource en chaîne"
-
-#: src/Transformation/ConvertResourceToString.php:20
-msgid "Resource field"
-msgstr "Champ de ressource"
-
-#: src/Transformation/ConvertToSolrDateRange.php:11
-msgid "Convert to Solr date range"
-msgstr "Convertir en plage de dates Solr"
-
-#: src/Transformation/ConvertToSolrDateRange.php:18
-msgid "Exclude unmatching values"
-msgstr "Exclure les valeurs sans correspondance"
-
-#: src/Transformation/Filter/DataType.php:20
-msgid "Filter by data type"
-msgstr "Filtrer par type de données"
-
-#: src/Transformation/Filter/DataType.php:29
-msgid ""
-"Only selected data types will be used. Selecting none is the same as "
-"selecting all. Only relevant when the source is a property."
-msgstr ""
-"Seuls les types de données sélectionnés seront utilisés. En sélectionner "
-"aucun équivaut à tout sélectionner. Uniquement pertinent lorsque la source "
-"est une propriété."
-
-#: src/Transformation/Filter/ResourceClass.php:24
-msgid "Filter resources by class"
-msgstr "Filtres par type de ressource"
-
-#: src/Transformation/Filter/ResourceClass.php:35
-msgid "Resource classes"
-msgstr "Type de ressource"
-
-#: src/Api/Adapter/SolrNodeAdapter.php:105
-msgid "The URI cannot be empty"
-msgstr "L'URI ne peut pas être vide"
-
-#: src/Api/Adapter/SolrNodeAdapter.php:109
-msgid "Another Solr node already uses this URI"
-msgstr "Un autre nœud Solr utilise déjà cette URI"
+#~ msgid "Relevance"
+#~ msgstr "Pertinence"
