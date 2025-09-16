@@ -33,12 +33,14 @@ class SolrQuery implements JsonSerializable
             $data['facet'] = [];
             $limit = $params['facet.limit'] ?? null;
             foreach ($params['facet.field'] as $field) {
+                $data['facet'][$field] = ['type' => 'terms', 'field' => $field];
+
                 if (isset($params["facet.sort.$field"])) {
-                    $sort = $params["facet.sort.$field"] != '' ? $params["facet.sort.$field"] : 'count';
-                    $data['facet'][$field] = ['type' => 'terms', 'field' => $field, 'sort' => $sort];
-                } else {
+                    $sort = $params["facet.sort.$field"] ?: 'count';
+                    $data['facet'][$field]['sort'] = $sort;
                     unset($params["facet.sort.$field"]);
                 }
+
                 if (isset($limit)) {
                     $data['facet'][$field]['limit'] = (int) $limit;
                 }
