@@ -7,6 +7,15 @@ use Solr\Test\Controller\SolrControllerTestCase;
 
 class ApiLocalControllerTest extends SolrControllerTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (version_compare(\Omeka\Module::VERSION, '4.1.0') < 0) {
+            $this->markTestSkipped('Omeka S version < 4.1.0');
+        }
+    }
+
     public function testApiSolrNodesIsDeniedToAnonymousUsers()
     {
         $this->logout();

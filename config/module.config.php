@@ -1,6 +1,165 @@
 <?php
 namespace Solr;
 
+$routes = [
+    'admin' => [
+        'child_routes' => [
+            'solr' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/solr',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Solr\Controller\Admin',
+                        'controller' => 'Node',
+                        'action' => 'browse',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'node' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node[/:action]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Node',
+                                'action' => 'browse',
+                            ],
+                        ],
+                    ],
+                    'node-id' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:id[/:action]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Node',
+                                'action' => 'show',
+                            ],
+                            'constraints' => [
+                                'id' => '\d+',
+                            ],
+                        ],
+                    ],
+                    'node-id-mapping' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/mapping',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Mapping',
+                                'action' => 'browse',
+                            ],
+                        ],
+                    ],
+                    'node-id-mapping-resource' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/mapping/:resourceName[/:action]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Mapping',
+                                'action' => 'browseResource',
+                            ],
+                        ],
+                    ],
+                    'node-id-mapping-resource-id' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/mapping/:resourceName/:id[/:action]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Mapping',
+                                'action' => 'show',
+                            ],
+                            'constraints' => [
+                                'id' => '\d+',
+                            ],
+                        ],
+                    ],
+                    'node-id-mapping-import' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/mapping/import',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'Mapping',
+                                'action' => 'import',
+                            ],
+                        ],
+                    ],
+                    'node-id-fields' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/fields[/:action]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'SearchField',
+                                'action' => 'browse',
+                            ],
+                        ],
+                    ],
+                    'node-id-fields-id' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/node/:nodeId/fields/:id/:action',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Solr\Controller\Admin',
+                                'controller' => 'SearchField',
+                            ],
+                        ],
+                    ],
+                    'transformations' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/transformations/:action',
+                            'defaults' => [
+                                'controller' => 'Transformations',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'api' => [
+        'child_routes' => [
+            'solr' => [
+                'type' => \Laminas\Router\Http\Segment::class,
+                'options' => [
+                    'route' => '/:resource[/:id]',
+                    'defaults' => [
+                        'controller' => 'Solr\Controller\Api',
+                    ],
+                    'constraints' => [
+                        'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+
+// api-local route has been added in 4.1.0
+if (version_compare(\Omeka\Module::VERSION, '4.1.0') >= 0) {
+    $routes['api-local'] = [
+        'child_routes' => [
+            'solr' => [
+                'type' => \Laminas\Router\Http\Segment::class,
+                'options' => [
+                    'route' => '/:resource[/:id]',
+                    'defaults' => [
+                        'controller' => 'Solr\Controller\ApiLocal',
+                    ],
+                    'constraints' => [
+                        'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
+                    ],
+                ],
+            ],
+        ],
+    ];
+}
+
 return [
     'controllers' => [
         'invokables' => [
@@ -52,160 +211,7 @@ return [
         ],
     ],
     'router' => [
-        'routes' => [
-            'admin' => [
-                'child_routes' => [
-                    'solr' => [
-                        'type' => 'Segment',
-                        'options' => [
-                            'route' => '/solr',
-                            'defaults' => [
-                                '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                'controller' => 'Node',
-                                'action' => 'browse',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [
-                            'node' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node[/:action]',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Node',
-                                        'action' => 'browse',
-                                    ],
-                                ],
-                            ],
-                            'node-id' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:id[/:action]',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Node',
-                                        'action' => 'show',
-                                    ],
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                ],
-                            ],
-                            'node-id-mapping' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/mapping',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Mapping',
-                                        'action' => 'browse',
-                                    ],
-                                ],
-                            ],
-                            'node-id-mapping-resource' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/mapping/:resourceName[/:action]',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Mapping',
-                                        'action' => 'browseResource',
-                                    ],
-                                ],
-                            ],
-                            'node-id-mapping-resource-id' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/mapping/:resourceName/:id[/:action]',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Mapping',
-                                        'action' => 'show',
-                                    ],
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                ],
-                            ],
-                            'node-id-mapping-import' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/mapping/import',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'Mapping',
-                                        'action' => 'import',
-                                    ],
-                                ],
-                            ],
-                            'node-id-fields' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/fields[/:action]',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'SearchField',
-                                        'action' => 'browse',
-                                    ],
-                                ],
-                            ],
-                            'node-id-fields-id' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/node/:nodeId/fields/:id/:action',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Solr\Controller\Admin',
-                                        'controller' => 'SearchField',
-                                    ],
-                                ],
-                            ],
-                            'transformations' => [
-                                'type' => 'Segment',
-                                'options' => [
-                                    'route' => '/transformations/:action',
-                                    'defaults' => [
-                                        'controller' => 'Transformations',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'api' => [
-                'child_routes' => [
-                    'solr' => [
-                        'type' => \Laminas\Router\Http\Segment::class,
-                        'options' => [
-                            'route' => '/:resource[/:id]',
-                            'defaults' => [
-                                'controller' => 'Solr\Controller\Api',
-                            ],
-                            'constraints' => [
-                                'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'api-local' => [
-                'child_routes' => [
-                    'solr' => [
-                        'type' => \Laminas\Router\Http\Segment::class,
-                        'options' => [
-                            'route' => '/:resource[/:id]',
-                            'defaults' => [
-                                'controller' => 'Solr\Controller\ApiLocal',
-                            ],
-                            'constraints' => [
-                                'resource' => 'solr_nodes|solr_mappings|solr_search_fields',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+        'routes' => $routes,
     ],
     'service_manager' => [
         'factories' => [
