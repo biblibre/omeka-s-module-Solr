@@ -209,7 +209,7 @@ class Module extends AbstractModule
                 [
                     'name' => Transformation\ConvertResourceToString::class,
                     'resource_field' => 'title',
-                ]
+                ],
             ],
         ]);
         $connection->executeQuery($sql, [$solrNodeId, 'items', 'dcterms_title_txt', 'dcterms:title', $defaultMappingSettingsJson]);

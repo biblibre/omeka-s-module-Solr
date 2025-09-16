@@ -3,7 +3,6 @@
 namespace Solr\Test\Controller;
 
 use Omeka\Mvc\Exception\PermissionDeniedException;
-use Solr\Test\Controller\SolrControllerTestCase;
 
 class ApiLocalControllerTest extends SolrControllerTestCase
 {
