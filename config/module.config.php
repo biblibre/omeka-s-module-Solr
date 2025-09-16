@@ -241,6 +241,8 @@ return [
             'solr' => Service\AdapterFactory::class,
         ],
     ],
+    'solr_http_client' => [
+    ],
     'solr_transformations' => [
         'factories' => [
             'Solr\Transformation\Filter\DataType' => Service\Transformation\Filter\DataTypeFactory::class,
