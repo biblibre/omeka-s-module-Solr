@@ -203,6 +203,7 @@ services:
   name: solr
   commands:
   - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
+  - bash -c "cd / && ls -R"
   volumes:
   - name: solr-config
     path: /opt/solr/server/solr/configsets/biblibre/conf
