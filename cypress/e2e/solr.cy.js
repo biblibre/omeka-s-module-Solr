@@ -1,4 +1,5 @@
-function createItem(title: string, date: string, authors: string[], hidden: boolean = false): void {
+function createItem(title, date, authors, hidden = false)
+{
     cy.get('#menu .items').click();
     cy.get('#page-actions .button').click();
     cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').click();
@@ -34,7 +35,8 @@ function createItem(title: string, date: string, authors: string[], hidden: bool
     cy.get('#page-actions [name="add-item-submit"]').click();
 }
 
-function verifyItemsInOrder(itemNames: string[], strict: boolean = true, orderMatters: boolean = true): void {
+function verifyItemsInOrder(itemNames, strict, orderMatters)
+{
   for (let i = 0; i < itemNames.length; i++)
   {
     if (orderMatters)
@@ -52,7 +54,7 @@ function verifyItemsInOrder(itemNames: string[], strict: boolean = true, orderMa
   }
 }
 
-function registerAndLogin(): void
+function registerAndLogin()
 {
     cy.get('[name="user[email]"]').click();
     cy.get('[name="user[email]"]').clear();

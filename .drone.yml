@@ -207,7 +207,7 @@ services:
   volumes:
   - name: solr-config
     path: /opt/solr/server/solr/configsets/biblibre/conf
-  name: omekas
+- name: omekas
   environment:
     MYSQL_USER: root
     MYSQL_PASSWORD: root
