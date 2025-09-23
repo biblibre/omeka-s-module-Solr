@@ -191,6 +191,41 @@ type: docker
 workspace:
   path: omeka-s/modules/Solr
 ---
+kind: pipeline
+name: omeka:4.1.1 php:8.2 mariadb:10.5 cypress
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+    OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search
+  image: mariadb:10.5
+  name: db
+- image: solr:9.6.1
+  name: solr
+  commands:
+  - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
+  volumes:
+  - name: solr-config
+    path: /opt/solr/server/solr/configsets/biblibre/conf
+  name: omekas
+  environment:
+    MYSQL_USER: root
+    MYSQL_PASSWORD: root
+    MYSQL_DATABASE: omeka_test
+    MYSQL_HOST: db
+steps:
+- commands:
+  - bash -c "npx cypress run"
+  image: cypress/included
+  name: cypress
+- image: giocomai/omeka-s-docker:v4.1.1
+workspace:
+  path: /var/www/html/modules/Solr
+volumes:
+- name: solr-config
+  host:
+  path: /var/www/html/modules/Solr/cypress/SolrConfig
+---
 kind: signature
 hmac: e2427d86e045c3fcfd3a7a8022afe0921d0dbb114902468a25b329c273ad0bf6
 
