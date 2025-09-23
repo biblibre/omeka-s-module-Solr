@@ -202,8 +202,8 @@ services:
 - image: solr:9.6.1
   name: solr
   commands:
-  - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
   - bash -c "cd / && ls -R"
+  - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
   volumes:
   - name: solr-config
     path: /opt/solr/server/solr/configsets/biblibre/conf
