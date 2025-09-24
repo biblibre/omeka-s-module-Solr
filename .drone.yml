@@ -236,7 +236,7 @@ services:
   - ~/solr/bin/solr create_core -c default -d biblibre
 steps:
 - commands:
-  - bash -c "npx cypress run"
+  - bash -c "sleep 120 && npx cypress run"
   image: cypress/included
   name: cypress
 workspace:
