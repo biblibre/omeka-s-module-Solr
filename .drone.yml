@@ -202,8 +202,8 @@ services:
 - image: solr:9.6.1
   name: solr
   commands:
-  - bash -c "mkdir /opt/solr/server/solr/configsets/biblibre"
-  - bash -c "mv /var/www/html/modules/Solr/cypress/SolrConfig /opt/solr/server/solr/configsets/biblibre/conf"
+  - mkdir /opt/solr/server/solr/configsets/biblibre
+  - mv /var/www/html/modules/Solr/cypress/SolrConfig /opt/solr/server/solr/configsets/biblibre/conf
   - bash -c "cd /opt/solr && ls -R"
   - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
 - name: omekas
