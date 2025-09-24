@@ -202,6 +202,7 @@ services:
 - image: solr:9.6.1
   name: solr
   commands:
+  - cp -r /var/www/html/modules/Solr/default-solr-conf/* /opt/solr/server/solr/configsets/biblibre/conf
   - bash -c "cd /opt/solr && ls -R"
   - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
   volumes:
@@ -224,8 +225,7 @@ workspace:
   path: /var/www/html/modules/Solr
 volumes:
 - name: solr-config
-  host:
-    path: /var/www/html/modules/Solr/cypress/default-solr-conf
+  temp: {}
 ---
 kind: signature
 hmac: e2427d86e045c3fcfd3a7a8022afe0921d0dbb114902468a25b329c273ad0bf6
