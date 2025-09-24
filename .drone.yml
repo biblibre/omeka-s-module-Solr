@@ -202,7 +202,7 @@ services:
 - image: solr:9.6.1
   name: solr
   commands:
-  - cp -r /var/www/html/modules/Solr/default-solr-conf/* /opt/solr/server/solr/configsets/biblibre/conf
+  - cp -r /var/www/html/modules/Solr/cypress/default-solr-conf/* /opt/solr/server/solr/configsets/biblibre/conf
   - bash -c "cd /opt/solr && ls -R"
   - bash -c "/opt/solr/bin/solr create_core -c default -d biblibre"
   volumes:
