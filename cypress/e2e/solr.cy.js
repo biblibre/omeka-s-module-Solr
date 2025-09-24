@@ -115,6 +115,8 @@ describe('Solr', () =>
     cy.get('#content [name="o:settings[qf]"]').clear();
     cy.get('#content [name="o:settings[qf]"]').type('dcterms_title_txt dcterms_date_txt dcterms_creator_ss');
     cy.get('#page-actions button').click();
+    cy.wait(5000);
+    cy.reload(true);
     cy.contains('.tablesaw-cell-content', 'OK').should('exist');
     cy.get('[title="Configure indexation fields"]').click();
     cy.contains('.tablesaw-cell-content', 'Item').find('[title="Rules"]').click();
