@@ -199,6 +199,8 @@ services:
     MYSQL_ROOT_PASSWORD: root
   image: mariadb:10.5
   name: db
+- image: solr:9.6.1
+  name: solr
 - name: omekas
   environment:
     MYSQL_USER: root
@@ -207,36 +209,9 @@ services:
     MYSQL_HOST: db
     OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search
   image: giocomai/omeka-s-docker:v4.1.1
-  commands:
-  - wget -O solr.tgz 'https://www.apache.org/dyn/closer.lua/solr/solr/9.6.1/solr-9.6.1.tgz?action=download'
-  - tar -xf solr.tgz
-  - rm solr.tgz
-  - mv solr-9.6.1 solr
-
-  - mkdir -p ~/.config/systemd/user
-  - |
-    bash -c "cat > ~/.config/systemd/user/solr.service << 'EOF'
-    [Unit]
-    Description=Solr
-    After=network.target
-
-    [Service]
-    Type=forking
-    ExecStart=/home/omeka/solr/bin/solr start
-    ExecStop=/home/omeka/solr/bin/solr stop
-    Restart=on-failure
-
-    [Install]
-    WantedBy=default.target
-    EOF"
-  - systemctl --user daemon-reload
-  - systemctl --user enable --now solr
-
-  - git clone https://git.biblibre.com/omeka-s/default-solr-conf ~/solr/server/solr/configsets/biblibre/conf
-  - ~/solr/bin/solr create_core -c default -d biblibre
 steps:
 - commands:
-  - bash -c "sleep 120 && npx cypress run"
+  - bash -c "npx cypress run"
   image: cypress/included
   name: cypress
 workspace:
