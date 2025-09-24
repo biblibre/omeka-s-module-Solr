@@ -225,7 +225,7 @@ workspace:
 volumes:
 - name: solr-config
   host:
-    path: /var/www/html/modules/Solr/cypress/SolrConfig
+    path: /var/www/html/modules/Solr/cypress/default-solr-conf
 ---
 kind: signature
 hmac: e2427d86e045c3fcfd3a7a8022afe0921d0dbb114902468a25b329c273ad0bf6
