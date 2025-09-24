@@ -201,6 +201,7 @@ services:
   name: db
 - image: solr:9.6.1
   name: solr
+  user: root
   commands:
   - cp -r /var/www/html/modules/Solr/cypress/default-solr-conf/* /opt/solr/server/solr/configsets/biblibre/conf
   - bash -c "cd /opt/solr && ls -R"
