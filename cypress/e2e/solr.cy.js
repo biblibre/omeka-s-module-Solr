@@ -104,6 +104,8 @@ describe('Solr', () =>
     registerAndLogin();
 
     cy.get('#menu .modules').click();
+    cy.get('#modules [action="/admin/module/install?id=Search"] [name="id"]').click();
+    cy.get('#modules [action="/admin/module/deactivate?id=Search"] [name="id"]').should('exist');
     cy.get('#modules [action="/admin/module/install?id=Solr"] [name="id"]').click();
     cy.get('#modules [action="/admin/module/deactivate?id=Solr"] [name="id"]').should('exist');
     cy.get('#menu [href="/admin/solr"]').click();
