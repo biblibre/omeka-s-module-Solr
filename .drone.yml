@@ -199,8 +199,11 @@ services:
     MYSQL_ROOT_PASSWORD: root
   image: mariadb:10.5
   name: db
-- image: solr:9.6.1
+- image: bitnami/solr:9.6.1
   name: solr
+  environment:
+    SOLR_CORES: biblibre
+    SOLR_CORE_CONF_DIR: /var/www/html/modules/Solr/cypress/default-solr-conf
 - name: omekas
   environment:
     MYSQL_USER: root
