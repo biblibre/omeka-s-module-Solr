@@ -150,10 +150,10 @@ describe('Solr', () =>
     cy.get('#page-actions .button').click();
     cy.get('[name="o:title"]').click();
     cy.get('[name="o:title"]').clear();
-    cy.get('[name="o:title"]').type('test');
+    cy.get('[name="o:title"]').type('solr');
     cy.get('[name="o:slug"]').click();
     cy.get('[name="o:slug"]').clear();
-    cy.get('[name="o:slug"]').type('test');
+    cy.get('[name="o:slug"]').type('solr');
     cy.get('#page-actions button').click();
 
     cy.get('#menu [href="/admin/search"]').click();
