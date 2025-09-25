@@ -166,19 +166,27 @@ describe('Solr', () =>
     cy.get('#content [name="o:index_id"]').select('1');
     cy.get('#content [name="o:form"]').select('standard');
     cy.get('#page-actions button').click();
-    cy.get('#content [name="o:settings"] > div:nth-child(3) > .inputs').click();
-    cy.get('#content [data-field-list-url="/admin/search/facets/field-list?search_page_id=1"] [name="field_name_select"]').select('creator');
-    cy.get('#content [data-field-list-url="/admin/search/facets/field-list?search_page_id=1"] .fields-field-add-button').click();
+
+    cy.contains('.field', 'Facet limit').within(() => { cy.root().get('input').click() });
+    cy.contains('.field', 'Facet limit').within(() => { cy.root().get('input').clear() });
+    cy.contains('.field', 'Facet limit').within(() => { cy.root().get('input').type('2') });
+
+    cy.contains('.field', 'Facets').within(() => { cy.root().get('select').select('Creator') });
+    cy.contains('.field', 'Facets').within(() => { cy.root().get('button[title="Add"]').click() });
     cy.get('#fields-field-set-button').click();
-    cy.get('#content [data-field-list-url="/admin/search/sort-fields/field-list?search_page_id=1"] [name="field_name_select"]').select('date asc');
-    cy.get('#content [data-field-list-url="/admin/search/sort-fields/field-list?search_page_id=1"] .fields-field-add-button').click();
+
+    cy.contains('.field', 'Sort fields').within(() => { cy.root().get('select').select('Date Asc') });
+    cy.contains('.field', 'Sort fields').within(() => { cy.root().get('button[title="Add"]').click() });
     cy.get('#fields-field-set-button').click();
-    cy.get('#content [data-field-list-url="/admin/search/sort-fields/field-list?search_page_id=1"] [name="field_name_select"]').select('date desc');
-    cy.get('#content [data-field-list-url="/admin/search/sort-fields/field-list?search_page_id=1"] .fields-field-add-button').click();
+
+    cy.contains('.field', 'Sort fields').within(() => { cy.root().get('select').select('Date Desc') });
+    cy.contains('.field', 'Sort fields').within(() => { cy.root().get('button[title="Add"]').click() });
     cy.get('#fields-field-set-button').click();
-    cy.get('#content [data-field-list-url="/admin/search/search-fields/field-list?search_page_id=1"] [name="field_name_select"]').select('title');
-    cy.get('#content [data-field-list-url="/admin/search/search-fields/field-list?search_page_id=1"] .fields-field-add-button').click();
+
+    cy.contains('.field', 'Search fields').within(() => { cy.root().get('select').select('Title') });
+    cy.contains('.field', 'Search fields').within(() => { cy.root().get('button[title="Add"]').click() });
     cy.get('#fields-field-set-button').click();
+
     cy.get('#page-actions button').click();  
 
     createItem('Bonjour', '2001-01-02', ['A']);
@@ -190,7 +198,7 @@ describe('Solr', () =>
 
     cy.get('#menu [href="/admin/search"]').click();
     cy.get('.o-icon-[title="Rebuild index"]').click();
-    cy.contains('.field', 'Clear index').get('input[type="checkbox"]').click();
+    cy.contains('.field', 'Clear index').within(() => { cy.root().get('input[type="checkbox"]').click() });
     cy.get("#page-actions button").click();
     cy.wait(5000);
     cy.get('li.success a').click();
