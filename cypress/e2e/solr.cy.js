@@ -166,9 +166,6 @@ describe('Solr', () =>
     cy.get('#content [name="o:index_id"]').select('1');
     cy.get('#content [name="o:form"]').select('standard');
     cy.get('#page-actions button').click();
-    cy.get('#content [name="o:settings[facet_limit]"]').click();
-    cy.get('#content [name="o:settings[facet_limit]"]').clear();
-    cy.get('#content [name="o:settings[facet_limit]"]').type('2');
     cy.get('#content [name="o:settings"] > div:nth-child(3) > .inputs').click();
     cy.get('#content [data-field-list-url="/admin/search/facets/field-list?search_page_id=1"] [name="field_name_select"]').select('creator');
     cy.get('#content [data-field-list-url="/admin/search/facets/field-list?search_page_id=1"] .fields-field-add-button').click();
