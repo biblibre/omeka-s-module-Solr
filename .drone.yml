@@ -212,6 +212,7 @@ services:
     MYSQL_HOST: db
     OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search
     OMEKA_THEMES: https://github.com/omeka-s-themes/default/releases/download/v1.9.1/theme-default-v1.9.1.zip
+    APPLICATION_ENV: development
   image: giocomai/omeka-s-docker:v4.1.1
 steps:
 - commands:
