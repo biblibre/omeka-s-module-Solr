@@ -216,8 +216,7 @@ services:
   image: giocomai/omeka-s-docker:v4.1.1
 steps:
 - commands:
-  - bash -c "npx cypress run" || true
-  - base64 -w0 "$(find /var/www/html/modules/Solr/cypress/screenshots/solr.cy.js/ -maxdepth 1 -type f -name '*.png' | head -n1"
+  - bash -c "npx cypress run"
   image: cypress/included
   name: cypress
 workspace:
