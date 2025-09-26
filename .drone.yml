@@ -210,7 +210,7 @@ services:
     MYSQL_PASSWORD: root
     MYSQL_DATABASE: omeka_test
     MYSQL_HOST: db
-    OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search/archive/refs/tags/v0.17.5.zip
+    OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search/releases/download/v0.17.0/Search-0.17.0.zip
     OMEKA_THEMES: https://github.com/omeka-s-themes/default/releases/download/v1.9.1/theme-default-v1.9.1.zip
     APPLICATION_ENV: development
   image: giocomai/omeka-s-docker:v4.1.1
