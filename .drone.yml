@@ -211,6 +211,9 @@ services:
     MYSQL_DATABASE: omeka_test
     MYSQL_HOST: db
     OMEKA_MODULES: https://github.com/biblibre/omeka-s-module-Search
+    OMEKA_THEMES: https://github.com/omeka-s-themes/default.git
+  commands:
+  - bash -c "cd /var/www/html/themes/default && git reset --hard v1.9.1"
   image: giocomai/omeka-s-docker:v4.1.1
 steps:
 - commands:
