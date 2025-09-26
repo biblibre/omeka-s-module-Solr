@@ -155,6 +155,8 @@ describe('Solr', () =>
     cy.get('[name="o:slug"]').clear();
     cy.get('[name="o:slug"]').type('test');
     cy.get('#page-actions button').click();
+    cy.wait(100);
+    cy.get('.messages .success').should('exist');
 
     cy.get('#menu [href="/admin/search"]').click();
     cy.get('#page-actions [href="/admin/search/page/add"]').click();
