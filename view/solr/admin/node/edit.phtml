@@ -38,5 +38,42 @@
 <?php echo $this->formCollection($form); ?>
 <?php $this->trigger('view.edit.form.after'); ?>
 <?php echo $this->form()->closeTag(); ?>
+<script>
+(function ($) {
+  $(document).ready(function () {
+    // Find the input
+    const $input = $('input[name="o:settings[qf]"]');
+    const $inputsDiv = $input.closest('.inputs');
+
+    // Build the select element dynamically (PHP can fill the options)
+    const selectOptions = <?php echo json_encode($form->getOption('mapped_fields') ?? []); ?>;
+    let selectHtml = '<select id="qf_selector" data-placeholder="<?php echo $this->translate('Search and select...'); ?>"><option value=""></option>';
+    selectOptions.forEach(field => {
+      selectHtml += `<option value="${field}">${field}</option>`;
+    });
+    selectHtml += '</select>';
+
+    // Insert it above the text input
+    $inputsDiv.prepend(selectHtml);
+
+    // Activate Chosen
+    const $select = $('#qf_selector').chosen({
+      allow_single_deselect: true,
+      width: '100%',
+      search_contains: true,
+      placeholder_text_single: 'Search and select...'
+    });
+
+    // Handle selection
+    $select.on('change', function (e, params) {
+      if (!params || !params.selected) return;
+      const val = params.selected.trim();
+      const current = $input.val().trim();
+      $input.val(current ? current + ' ' + val + ' ': val + ' ');
+      $(this).val('').trigger('chosen:updated');
+    });
+  });
+})(jQuery);
+</script>
 
 <?php $this->trigger('view.edit.after'); ?>
