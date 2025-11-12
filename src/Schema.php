@@ -141,6 +141,11 @@ class Schema
         return $this->dynamicFieldsMap;
     }
 
+    public function getDynamicFields()
+    {
+        return $this->getSchema()['dynamicFields'];
+    }
+
     public function getType($name)
     {
         $typesByName = $this->getTypesByName();
