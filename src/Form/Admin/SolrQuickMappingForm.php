@@ -23,7 +23,7 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
             'name' => 'o:source',
             'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Source'),
+                'label' => $translator->translate('Sources'),
                 'value_options' => array_combine(
                                             $this->options['terms'],
                                             $this->options['terms']
