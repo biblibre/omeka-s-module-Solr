@@ -2,8 +2,23 @@ function createItem(title, date, authors, hidden = false)
 {
     cy.get('#menu .items').click();
     cy.get('#page-actions .button').click();
+
     cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').click();
-    cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').type(title);
+    if (!Array.isArray(title))
+    {
+      cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').type(title);
+    }
+
+    if (Array.isArray(title) && title.length > 0)
+    {
+      cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').type(title[0]);
+        for (let i = 1; i < title.length; i++)
+        {
+          cy.get('#properties [data-property-term="dcterms:title"] .button.add-value[data-type="literal"]').click();
+          cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').eq(i).click();
+          cy.get('#properties [data-property-term="dcterms:title"] .inputs textarea').eq(i).type(title[i])
+        }
+    }
     cy.get('#property-selector').contains('Dublin Core').click();
     if (date != '')
     {
@@ -116,6 +131,16 @@ describe('Solr', () =>
     cy.get('#content [name="o:settings[qf]"]').click();
     cy.get('#content [name="o:settings[qf]"]').clear();
     cy.get('#content [name="o:settings[qf]"]').type('dcterms_title_txt dcterms_date_txt dcterms_creator_ss');
+    cy.get('#content [name="o:settings[highlight][fields]"]').click();
+    cy.get('#content [name="o:settings[highlight][fields]"]').clear();
+    cy.get('#content [name="o:settings[highlight][fields]"]').type('dcterms_title_txt');
+    cy.get('#content [type="checkbox"][name="o:settings[highlight][highlighting]"]').click();
+    cy.get('#content [name="o:settings[highlight][fragsize]"]').click();
+    cy.get('#content [name="o:settings[highlight][fragsize]"]').clear();
+    cy.get('#content [name="o:settings[highlight][fragsize]"]').type('30');
+    cy.get('#content [name="o:settings[highlight][snippets]"]').click();
+    cy.get('#content [name="o:settings[highlight][snippets]"]').clear();
+    cy.get('#content [name="o:settings[highlight][snippets]"]').type('2');
     cy.get('#page-actions button').click();
     cy.wait(5000);
     cy.reload(true);
@@ -189,14 +214,24 @@ describe('Solr', () =>
     cy.contains('.field', 'Search fields').within(() => { cy.root().get('button[title="Add"]').click() });
     cy.get('#fields-field-set-button').click();
 
+    cy.contains('.field', 'Search fields').within(() => { cy.root().get('select').select('Creator') });
+    cy.contains('.field', 'Search fields').within(() => { cy.root().get('button[title="Add"]').click() });
+    cy.get('#fields-field-set-button').click();
+
+    cy.get('#content [type="checkbox"][name="o:settings[form][proximity]"]').click();
+
     cy.get('#page-actions button').click();  
 
+    var longName = 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey x-ray yankee zulu golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey x-ray yankee zulu  golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey x-ray yankee zulu';
+    createItem([longName, longName, longName], '', ['the creator 3'], true);
     createItem('Bonjour', '2001-01-02', ['A']);
     createItem('Bonjour2', '2001-01-01', []);
     createItem('Au Revoir', '2001-01-03', []);
     createItem('Au Revoir 2', '', ['B']);
     createItem('Auteurs', '', ['A', 'B']);
     createItem('Hidden', '', [], true);
+    createItem('charlie la chocolaterie', '', ['the creator 1'], true);
+    createItem('charlie la chocolaterie', '', ['the creator 2'], true);
 
     cy.get('#menu [href="/admin/search"]').click();
     cy.get('.o-icon-[title="Rebuild index"]').click();
@@ -212,7 +247,8 @@ describe('Solr', () =>
 
     // Date Asc by default, then alphabetical order
     verifyItemsInOrder(['Bonjour2', 'Bonjour', 'Au Revoir'], false);
-    verifyItemsInOrder(['Bonjour2', 'Bonjour', 'Au Revoir', 'Auteurs', 'Au Revoir 2', 'Hidden'], true, false);
+    verifyItemsInOrder(['Bonjour2', 'Bonjour', 'Au Revoir', longName, 'Auteurs', 'Au Revoir 2',
+      'charlie la chocolaterie', 'charlie la chocolaterie', 'Hidden'], true, false);
   
     cy.get('select[name="sort"]').select('Date Desc');
     verifyItemsInOrder(['Au Revoir', 'Bonjour', 'Bonjour2'], false);
@@ -269,6 +305,69 @@ describe('Solr', () =>
     cy.contains('li.search-facet-item', 'A').contains('A').click();
 
     verifyItemsInOrder(['Auteurs'], true, false);
+
+    cy.visit('http://omekas/s/test/solr');
+    cy.get('select.search-form-standard-filter-field').eq(0).select('Title');
+    cy.get('select.search-form-standard-filter-operator').eq(0).select('contains all words');
+    cy.get('input.search-form-standard-filter-proximity').eq(0).click();
+    cy.get('input.search-form-standard-filter-proximity').eq(0).clear();
+    cy.get('input.search-form-standard-filter-proximity').eq(0).type('3');
+    cy.get('input.search-form-standard-filter-term').eq(0).click();
+    cy.get('input.search-form-standard-filter-term').eq(0).clear();
+    cy.get('input.search-form-standard-filter-term').eq(0).type('alpha charlie');
+
+    cy.get('form[action="/s/test/solr"] button[type="submit"]').click();
+
+    verifyItemsInOrder([longName], true);
+
+    cy.get('.items.resource .search-highlight').eq(0).within(() => { cy.root().get('mark').eq(0).should('have.text', 'alpha bravo charlie').and('exist'); });
+    cy.get('.items.resource .search-highlight').eq(1).within(() => { cy.root().get('mark').eq(0).should('have.text', 'alpha bravo charlie').and('exist'); });
+    cy.get('.items.resource .search-highlight').should('have.length', 2);
+
+    cy.visit('http://omekas/s/test/solr');
+    cy.get('select.search-form-standard-filter-field').eq(0).select('Title');
+    cy.get('select.search-form-standard-filter-operator').eq(0).select('contains all words');
+    cy.get('input.search-form-standard-filter-proximity').eq(0).click();
+    cy.get('input.search-form-standard-filter-proximity').eq(0).clear();
+    cy.get('input.search-form-standard-filter-proximity').eq(0).type('3');
+    cy.get('input.search-form-standard-filter-term').eq(0).click();
+    cy.get('input.search-form-standard-filter-term').eq(0).clear();
+    cy.get('input.search-form-standard-filter-term').eq(0).type('alpha foxtrot');
+
+    cy.get('form[action="/s/test/solr"] button[type="submit"]').click();
+
+    verifyItemsInOrder([], true);
+
+    cy.visit('http://omekas/s/test/solr');
+    cy.get('input[name="q"]').click();
+    cy.get('input[name="q"]').clear();
+    cy.get('input[name="q"]').type('charlie');
+    cy.get('select.search-form-standard-filter-field').eq(0).select('Title');
+    cy.get('select.search-form-standard-filter-operator').eq(0).select('contains any word');
+    cy.get('input.search-form-standard-filter-term').eq(0).click();
+    cy.get('input.search-form-standard-filter-term').eq(0).clear();
+    cy.get('input.search-form-standard-filter-term').eq(0).type('chocolaterie x-ray');
+    cy.get('select.search-form-standard-filter-field').eq(1).select('Creator');
+    cy.get('select.search-form-standard-filter-operator').eq(1).select('contains all words');
+    cy.get('input.search-form-standard-filter-term').eq(1).click();
+    cy.get('input.search-form-standard-filter-term').eq(1).clear();
+    cy.get('input.search-form-standard-filter-term').eq(1).type('the creator');
+    cy.get('.button.search-add-group').click();
+    cy.get('select[name="filters[queries][2][match]"]').select('any');
+    cy.get('select.search-form-standard-filter-field').eq(2).select('Title');
+    cy.get('select.search-form-standard-filter-operator').eq(2).select('contains any word');
+    cy.get('input.search-form-standard-filter-term').eq(2).click();
+    cy.get('input.search-form-standard-filter-term').eq(2).clear();
+    cy.get('input.search-form-standard-filter-term').eq(2).type('foxtrot');
+    cy.get('select.search-form-standard-filter-field').eq(3).select('Creator');
+    cy.get('select.search-form-standard-filter-operator').eq(3).select('contains all words');
+    cy.get('input.search-form-standard-filter-term').eq(3).click();
+    cy.get('input.search-form-standard-filter-term').eq(3).clear();
+    cy.get('input.search-form-standard-filter-term').eq(3).type('the creator 2');
+
+    cy.get('form[action="/s/test/solr"] button[type="submit"]').click();
+
+    verifyItemsInOrder([longName, 'charlie la chocolaterie'], true, false);
 
     cy.get('[href="/logout"]').eq(0).click();
 
