@@ -11,13 +11,13 @@ class SolrNodeFormFactory implements FactoryInterface
     {
         $form = new SolrNodeForm;
         $form->setTranslator($services->get('MvcTranslator'));
+
         if (!empty($options['solr_node_id'])) {
             $mappedFields = [];
-            $mappings = $services->get('Omeka\ApiManager')->search('solr_mappings', ['solr_node_id' => $options['solr_node_id']]);
+            $mappings = $services->get('Omeka\ApiManager')->search('solr_mappings', ['solr_node_id' => $options['solr_node_id']])->getContent();
             if ($mappings) {
-                $mappings = $mappings->getContent();
                 foreach ($mappings as $mapping) {
-                    if (str_ends_with($mapping->fieldName(), '_txt'))
+                    if (str_ends_with($mapping->fieldName(), '_txt') || str_contains($mapping->fieldName(),'_txt_')) {
                     {
                         $mappedFields[] = $mapping->fieldName();
                     }
