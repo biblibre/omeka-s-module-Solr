@@ -140,7 +140,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
             'attributes' => [
                 'id' => 'qf_text',
-            ]
+            ],
         ]);
 
         $settingsFieldset->add([
