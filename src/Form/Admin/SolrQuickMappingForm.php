@@ -32,7 +32,7 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
             'attributes' => [
                 'multiple' => true,
                 'required' => true,
-            ]
+            ],
         ]);
 
         $this->add([
@@ -48,7 +48,7 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
             'attributes' => [
                 'multiple' => true,
                 'required' => true,
-            ]
+            ],
         ]);
 
         $settingsFieldset = new Fieldset('o:settings');

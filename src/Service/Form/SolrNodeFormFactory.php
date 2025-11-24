@@ -17,8 +17,7 @@ class SolrNodeFormFactory implements FactoryInterface
             $mappings = $services->get('Omeka\ApiManager')->search('solr_mappings', ['solr_node_id' => $options['solr_node_id']])->getContent();
             if ($mappings) {
                 foreach ($mappings as $mapping) {
-                    if (str_ends_with($mapping->fieldName(), '_txt') || str_contains($mapping->fieldName(),'_txt_'))
-                    {
+                    if (str_ends_with($mapping->fieldName(), '_txt') || str_contains($mapping->fieldName(), '_txt_')) {
                         $mappedFields[] = $mapping->fieldName();
                     }
                 }

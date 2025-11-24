@@ -173,8 +173,7 @@ class MappingController extends AbstractActionController
                     'nodeId' => $solrNodeId,
                     'resourceName' => $resourceName,
                 ]);
-            }
-            else {
+            } else {
                 $this->messenger()->addError('There was an error during validation');
             }
         }
