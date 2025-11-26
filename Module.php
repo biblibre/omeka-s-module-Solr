@@ -120,7 +120,7 @@ class Module extends AbstractModule
 
         if ($this->isModuleActive('Group')) {
             $solrNodeSettings = $solrNode->settings();
-            $groups_field = $solrNodeSettings['groups_field'];
+            $groups_field = $solrNodeSettings['groups_field'] ?? '';
             if ($groups_field) {
                 $groupResourceRepository = $entityManager->getRepository('Group\Entity\GroupResource');
                 $groupResources = $groupResourceRepository->findBy(['resource' => $resource->id()]);
