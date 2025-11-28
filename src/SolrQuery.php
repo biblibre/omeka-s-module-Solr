@@ -31,7 +31,6 @@ class SolrQuery implements JsonSerializable
 
         if (isset($params['facet.field'])) {
             $data['facet'] = [];
-            $limit = $params['facet.limit'] ?? null;
             foreach ($params['facet.field'] as $field) {
                 $data['facet'][$field] = ['type' => 'terms', 'field' => $field];
 
@@ -41,12 +40,13 @@ class SolrQuery implements JsonSerializable
                     unset($params["facet.sort.$field"]);
                 }
 
-                if (isset($limit)) {
+                if (isset($params["facet.limit.$field"])) {
+                    $limit = $params["facet.limit.$field"];
                     $data['facet'][$field]['limit'] = (int) $limit;
+                    unset($params["facet.limit.$field"]);
                 }
             }
             unset($params['facet.field']);
-            unset($params['facet.limit']);
         }
 
         $data['params'] = $params;
@@ -113,9 +113,9 @@ class SolrQuery implements JsonSerializable
         $this->addParam('facet.field', $field);
     }
 
-    public function setFacetLimit(string $facetLimit)
+    public function setFacetLimit(string $facetField, string $facetFieldLimit)
     {
-        $this->setParam('facet.limit', $facetLimit);
+        $this->setParam("facet.limit.$facetField", $facetFieldLimit);
     }
 
     public function setHighlight(bool $highlight)
