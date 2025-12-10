@@ -132,6 +132,16 @@ class Indexer extends AbstractIndexer
                     $document->addField($sites_field, $siteItemSet->getSite()->getId());
                 }
             }
+            elseif ($resourceName === 'media') {
+                $sites = $api->search('sites')->getContent();
+                foreach ($sites as $site) {
+                    $query = ['id' => $resource->item()->id(), 'site_id' => $site->id()];
+                    $res = $api->search('items', $query)->getContent();
+                    if (!empty($res)) {
+                        $document->addField($sites_field, $site->id());
+                    }
+                }
+            }
         }
 
         $is_public_field = $solrNodeSettings['is_public_field'];
