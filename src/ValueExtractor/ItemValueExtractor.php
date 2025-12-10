@@ -61,6 +61,9 @@ class ItemValueExtractor extends AbstractValueExtractor
             'is_public' => [
                 'label' => 'Is public',
             ],
+            'has_media' => [
+                'label' => 'Has a media',
+            ],
             'resource_class' => [
                 'label' => 'Resource class',
             ],
@@ -118,6 +121,10 @@ class ItemValueExtractor extends AbstractValueExtractor
 
         if ($field === 'is_public') {
             return $item->isPublic();
+        }
+
+        if ($field === 'has_media') {
+            return !empty($item->primaryMedia());
         }
 
         if ($field === 'resource_class') {
