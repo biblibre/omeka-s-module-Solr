@@ -264,6 +264,7 @@ return [
         'factories' => [
             'items' => Service\ValueExtractor\ItemValueExtractorFactory::class,
             'item_sets' => Service\ValueExtractor\ItemSetValueExtractorFactory::class,
+            'media' => Service\ValueExtractor\MediaValueExtractorFactory::class,
         ],
     ],
     'solr_value_formatters' => [
