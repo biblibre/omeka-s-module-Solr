@@ -208,6 +208,12 @@ return [
         'invokables' => [
             'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
             'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,
+            'Solr\Form\Element\OptionalMulticheckbox' => Form\Element\OptionalMulticheckbox::class,
+        ],
+    ],
+    'block_layouts' => [
+        'factories' => [
+            'glossr' => Service\Site\BlockLayout\GlossrFactory::class,
         ],
     ],
     'router' => [
