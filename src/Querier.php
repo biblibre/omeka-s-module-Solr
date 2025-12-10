@@ -52,6 +52,9 @@ class Querier extends AbstractQuerier
         $logger = $serviceLocator->get('Omeka\Logger');
         $eventManager = $serviceLocator->get('EventManager');
 
+        $logger->debug("Query from Search");
+        $logger->debug(json_encode($query['query_filters']));
+
         $client = $this->getClient();
 
         $solrNode = $this->getSolrNode();
@@ -321,6 +324,235 @@ class Querier extends AbstractQuerier
                 foreach ($highlightsByField as $solrFieldName => $highlights) {
                     foreach ($highlights as $highlight) {
                         $response->addHighlight($resource, $resourceId, $highlight);
+                    }
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    public function glossaire($indexId, $siteRep, $letter, $field, $perPage = 10, $offset = 0)
+    {
+        $serviceLocator = $this->getServiceLocator();
+        $settings = $serviceLocator->get('Omeka\Settings');
+        $api = $serviceLocator->get('Omeka\ApiManager');
+        $logger = $serviceLocator->get('Omeka\Logger');
+        $eventManager = $serviceLocator->get('EventManager');
+
+        $client = $this->getClient();
+
+        $solrNode = $this->getSolrNode();
+        $solrNodeSettings = $solrNode->settings();
+        $resource_name_field = $solrNodeSettings['resource_name_field'];
+        $sites_field = $solrNodeSettings['sites_field'];
+        $is_public_field = $solrNodeSettings['is_public_field'];
+        $has_media_field = $solrNodeSettings['has_media_field'];
+        $highlightSettings = $solrNodeSettings['highlight'] ?? [];
+        $highlighting = $highlightSettings['highlighting'] ?? false;
+        $highlightQueryParts = [];
+
+        $solrQuery = new SolrQuery;
+        $solrQuery->setParam('defType', 'edismax');
+
+        if (!empty($solrNodeSettings['qf'])) {
+            $solrQuery->setParam('qf', $solrNodeSettings['qf']);
+        }
+
+        if (!empty($solrNodeSettings['mm'])) {
+            $solrQuery->setParam('mm', $solrNodeSettings['mm']);
+        }
+
+        $uf = [];
+        $searchFields = $this->getSearchFields();
+        foreach ($searchFields as $name => $searchField) {
+            $textFields = $searchField->textFields();
+            if (!empty($textFields)) {
+                $paramName = sprintf('f.%s.qf', $name);
+                $solrQuery->setParam($paramName, $textFields);
+                $uf[] = $name;
+            }
+
+            $facetField = $searchField->facetField();
+            if (!empty($facetField)) {
+                $searchFieldMapByFacetField[$facetField] = $searchField;
+            }
+        }
+
+        $response = $api->read('search_indexes', $indexId);
+        $index = $response->getContent();
+
+        $query = new Query();
+
+        $indexSettings = $index->settings();
+        $query->setResources($indexSettings['resources']);
+
+        $query->setSite($siteRep);
+
+        $q = [
+            'match' => 'any',
+            'queries' => [
+                [
+                    'field' => $field,
+                    'operator' => Adapter::OPERATOR_MATCHES_PATTERN,
+                    'term' => mb_strtolower($letter) . '*',
+                ],
+                [
+                    'field' => $field,
+                    'operator' =>  Adapter::OPERATOR_MATCHES_PATTERN,
+                    'term' => mb_strtoupper($letter) . '*',
+                ],
+            ]
+        ];
+
+        $q = $this->getQueryStringFromSearchQuery($q);
+
+        if (empty($q)) {
+            $q = '*:*';
+        }
+
+        $solrQuery->setQuery($q);
+        $solrQuery->addField('id');
+
+        $solrQuery->setGroup(true);
+        $solrQuery->addGroupField($resource_name_field);
+
+        $resources = $query->getResources();
+        $fq = sprintf('%s:(%s)', $resource_name_field, implode(' OR ', $resources));
+        $solrQuery->addFilterQuery($fq);
+
+        $site = $query->getSite();
+        if (isset($site)) {
+            $fq = sprintf('%s:%d', $sites_field, $site->id());
+            $solrQuery->addFilterQuery($fq);
+        }
+
+        /* $isPublic = $query->getIsPublic();
+        if (isset($isPublic)) {
+            $fq = sprintf('%s:%s', $is_public_field, $isPublic ? 'true' : 'false');
+            $solrQuery->addFilterQuery($fq);
+        }*/
+
+        $query->setFacetLimit(-1);
+        $query->addFacetField($field);
+        $facetFields = $query->getFacetFields();
+        if (!empty($facetFields)) {
+            foreach ($facetFields as $facetField) {
+                $searchField = $this->getSearchField($facetField);
+                if (!$searchField) {
+                    throw new QuerierException(sprintf('Field %s does not exist', $facetField));
+                }
+                $solrFacetField = $searchField->facetField();
+                if (!$solrFacetField) {
+                    throw new QuerierException(sprintf('Field %s is not facetable', $facetField));
+                }
+
+                $solrQuery->addFacetField($solrFacetField);
+            }
+        }
+
+        $facetRegex = '^[' . mb_strtolower($letter) . mb_strtoupper($letter) . '].*$';
+        $solrQuery->setParam('facet.matches', $facetRegex);
+
+        /*$facetFilters = $query->getFacetFilters();
+        if (!empty($facetFilters)) {
+            foreach ($facetFilters as $name => $values) {
+                $values = array_filter($values);
+                foreach ($values as $value) {
+                    if (is_array($value)) {
+                        $value = array_filter($value);
+                        if (empty($value)) {
+                            continue;
+                        }
+
+                        $value = '(' . implode(' OR ', array_map([$this, 'enclose'], $value)) . ')';
+                    } else {
+                        $value = $this->enclose($value);
+                    }
+
+                    $searchField = $this->getSearchField($name);
+                    if (!$searchField) {
+                        throw new QuerierException(sprintf('Field %s does not exist', $name));
+                    }
+                    $solrFacetField = $searchField->facetField();
+                    if (!$solrFacetField) {
+                        throw new QuerierException(sprintf('Field %s is not facetable', $name));
+                    }
+
+                    $solrQuery->addFilterQuery(sprintf('%s:%s', $solrFacetField, $value));
+                }
+            }
+        }*/
+
+        /*$queryFilters = $query->getQueryFilters();
+        foreach ($queryFilters as $queryFilter) {
+            $fq = $this->getQueryStringFromSearchQuery($queryFilter);
+            if (!empty($fq)) {
+                $solrQuery->addFilterQuery($fq);
+                $highlightQueryParts[] = $fq;
+            }
+        }*/
+
+        /*$sort = $query->getSort();
+        if (isset($sort)) {
+            [$sortField, $sortOrder] = explode(' ', $sort);
+
+            if ($sortField !== 'score') {
+                $searchField = $this->getSearchField($sortField);
+                if (!$searchField) {
+                    throw new QuerierException(sprintf('Field %s does not exist', $sortField));
+                }
+                $solrSortField = $searchField->sortField();
+                if (!$solrSortField) {
+                    throw new QuerierException(sprintf('Field %s is not sortable', $sortField));
+                }
+                $sortField = $solrSortField;
+            }
+
+            $solrQuery->addSortField($sortField, $sortOrder);
+        }*/
+
+        $solrQuery->setGroupLimit($perPage);
+        $solrQuery->setGroupOffset($offset);
+
+        $facetSorts = $query->getFacetSorts();
+        foreach ($facetSorts as $field => $sort) {
+            $searchField = $this->getSearchField($field);
+            $facetField = $searchField->facetField();
+            $solrQuery->setParam("facet.sort.$facetField", $sort);
+        }
+
+        $eventManager->setIdentifiers(['Solr\Querier']);
+        $eventManager->trigger('solr.query', $solrQuery, ['query' => $query, 'solrNode' => $solrNode]);
+
+        try {
+            $logger->debug(sprintf('Solr query params: %s', json_encode($solrQuery)));
+            $solrQueryResponse = $client->query($solrQuery);
+        } catch (\Exception $e) {
+            throw new QuerierException($e->getMessage(), $e->getCode(), $e);
+        }
+        $solrResponse = $solrQueryResponse->getResponse();
+
+        $response = new Response;
+        $response->setTotalResults($solrResponse['grouped'][$resource_name_field]['matches']);
+        foreach ($solrResponse['grouped'][$resource_name_field]['groups'] as $group) {
+            $response->setResourceTotalResults($group['groupValue'], $group['doclist']['numFound']);
+            foreach ($group['doclist']['docs'] as $doc) {
+                [, $resourceId] = explode(':', $doc['id']);
+                $response->addResult($group['groupValue'], ['id' => $resourceId]);
+            }
+        }
+
+        if (!empty($solrResponse['facets'])) {
+            foreach ($solrResponse['facets'] as $name => $facetData) {
+                if ($name === 'count') {
+                    continue;
+                }
+
+                foreach ($facetData['buckets'] as $bucket) {
+                    if ($bucket['count'] > 0) {
+                        $searchField = $searchFieldMapByFacetField[$name];
+                        $response->addFacetCount($searchField->name(), $bucket['val'], $bucket['count']);
                     }
                 }
             }
