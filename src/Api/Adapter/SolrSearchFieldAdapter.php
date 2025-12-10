@@ -128,30 +128,51 @@ class SolrSearchFieldAdapter extends AbstractEntityAdapter
 
         if (isset($query['facetable'])) {
             if ($query['facetable']) {
-                $qb->andWhere($qb->expr()->isNotNull('omeka_root.facetField'));
+                $qb->andWhere($qb->expr()->andX(
+                    $qb->expr()->isNotNull('omeka_root.facetField'),
+                    $qb->expr()->not($qb->expr()->eq('omeka_root.facetField', '\'\''))));
             } else {
-                $qb->andWhere($qb->expr()->isNull('omeka_root.facetField'));
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->isNull('omeka_root.facetField'),
+                    $qb->expr()->eq('omeka_root.facetField', '\'\'')));
             }
         }
 
         if (isset($query['sortable'])) {
             if ($query['sortable']) {
-                $qb->andWhere($qb->expr()->isNotNull('omeka_root.sortField'));
+                $qb->andWhere($qb->expr()->andX(
+                    $qb->expr()->isNotNull('omeka_root.sortField'),
+                    $qb->expr()->not($qb->expr()->eq('omeka_root.sortField', '\'\''))
+                ));
             } else {
-                $qb->andWhere($qb->expr()->isNull('omeka_root.sortField'));
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->isNull('omeka_root.sortField'),
+                    $qb->expr()->eq('omeka_root.sortFields', '\'\''))
+                );
             }
         }
 
         if (isset($query['searchable'])) {
             if ($query['searchable']) {
                 $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->isNotNull('omeka_root.textFields'),
-                    $qb->expr()->isNotNull('omeka_root.stringFields')
+                    $qb->expr()->andX(
+                        $qb->expr()->isNotNull('omeka_root.textFields'),
+                        $qb->expr()->not($qb->expr()->eq('omeka_root.textFields', '\'\''))
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->isNotNull('omeka_root.stringFields'),
+                        $qb->expr()->not($qb->expr()->eq('omeka_root.stringFields', '\'\''))
+                    )
                 ));
             } else {
                 $qb->andWhere($qb->expr()->andX(
-                    $qb->expr()->isNull('omeka_root.textFields'),
-                    $qb->expr()->isNull('omeka_root.stringFields')
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull('omeka_root.textFields'),
+                        $qb->expr()->eq('omeka_root.textFields', '\'\'')),
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull('omeka_root.stringFields'),
+                        $qb->expr()->eq('omeka_root.stringFields', '\'\'')
+                    )
                 ));
             }
         }
