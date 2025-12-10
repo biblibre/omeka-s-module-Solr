@@ -149,6 +149,11 @@ class Indexer extends AbstractIndexer
             $document->addField($is_public_field, $resource->isPublic());
         }
 
+        $has_media_field = $solrNodeSettings['has_media_field'];
+        if ($has_media_field) {
+            $document->addField($has_media_field, !empty($resource->primaryMedia()));
+        }
+
         $solrMappings = $api->search('solr_mappings', [
             'resource_name' => $resourceName,
             'solr_node_id' => $solrNode->id(),
