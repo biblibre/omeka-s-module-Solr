@@ -241,6 +241,7 @@ return [
         ],
         'invokables' => [
             'solrFormTransformations' => Form\View\Helper\FormTransformations::class,
+            'glossrFacetLink' => View\Helper\GlossrFacetLink::class,
         ],
     ],
     'view_manager' => [
