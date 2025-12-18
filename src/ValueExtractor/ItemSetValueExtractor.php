@@ -111,12 +111,12 @@ class ItemSetValueExtractor extends AbstractValueExtractor
 
         if ($field === 'resource_class') {
             $resourceClass = $itemSet->resourceClass();
-            return $resourceClass ? $resourceClass->term() : null;
+            return $resourceClass ? $resourceClass->term() : [];
         }
 
         if ($field === 'resource_template') {
             $resourceTemplate = $itemSet->resourceTemplate();
-            return $resourceTemplate ? $resourceTemplate->label() : null;
+            return $resourceTemplate ? $resourceTemplate->label() : [];
         }
 
         return $itemSet->value($field, ['all' => true, 'default' => []]);
