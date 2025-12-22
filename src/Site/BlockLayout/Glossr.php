@@ -252,15 +252,25 @@ class Glossr extends AbstractBlockLayout
             $block->dataValue('display_total')
             : [$block->dataValue('display_total')];
 
+        // throw new \Exception(sprintf('%s', json_encode($facetLetter)));
+
         return $view->partial('solr/block-layout/glossaire', [
             'site' => $site,
-            'responses' => $responses,
+            'response' => $response,
             'letters' => $letters,
             'lettersListPosition' => $lettersPosition,
             'lettersBetweenResults' => $lettersBetweenResults,
             'totalBetweenResults' => $totalBetweenResults,
-            'facets' => $facets,
+            'facetLetter' => $facetLetter,
             // 'sortOptions' => $sortOptions,
+            'fieldName' => $fieldName,
+            'searchPage' => $page,
+            'siteSlug' => $site->slug(),
+            'customQuery' => $customQuery,
+            'languageField' => $languageFieldName,
+            'languages' => $languages,
+            'resourceClassField' => $resourceClassFieldName,
+            'resourceClasses' => $resourceClasses,
         ]);
     }
 

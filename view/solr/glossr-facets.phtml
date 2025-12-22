@@ -32,16 +32,13 @@
  */
 ?>
 
-<ul>
-    <?php foreach ($facets as $name => $facetValues): ?>
-        <li class="search-facet">
-            <ul class="search-facet-items">
-                <?php foreach ($facetValues as $facetValue): ?>
-                    <li class="search-facet-item">
-                        <?php echo $this->glossrFacetLink($name, $facetValue, []); ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </li>
-    <?php endforeach; ?>
-</ul>
+<div class="search-facet">
+    <div class="search-facet-items">
+        <?php foreach ($facetValues as $facetValue): ?>
+            <li class="search-facet-item">
+                <?php echo $this->glossrFacetLink($fieldName, $facetValue, $searchPage, $siteSlug, $customQuery,
+                                                    $resourceClassField, $resourceClasses, $languageField, $languages); ?>
+            </li>
+        <?php endforeach; ?>
+    </div>
+</div>
