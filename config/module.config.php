@@ -204,6 +204,7 @@ return [
             'Solr\Form\Admin\SolrNodeForm' => Service\Form\SolrNodeFormFactory::class,
             'Solr\Form\Admin\SolrMappingForm' => Service\Form\SolrMappingFormFactory::class,
             'Solr\Form\Admin\SolrSearchFieldForm' => Service\Form\SolrSearchFieldFormFactory::class,
+            'Solr\Form\Admin\GlossrForm' => Service\Form\GlossrFormFactory::class,
         ],
         'invokables' => [
             'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
