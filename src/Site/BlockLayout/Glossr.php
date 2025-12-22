@@ -12,16 +12,21 @@ use Omeka\Api\Representation\SitePageBlockRepresentation;
 use Solr\Form\Element\OptionalMultiCheckbox;
 use Search\Querier\Exception\QuerierException;
 use Search\Query;
+use Solr\Form\Admin\GlossrForm;
+
 class Glossr extends AbstractBlockLayout
 {
     protected $formElementManager;
 
     protected $apiManager;
 
-    public function __construct(FormElementManager $formElementManager, \Omeka\Api\Manager $apiManager)
+    protected $logger;
+
+    public function __construct(FormElementManager $formElementManager, \Omeka\Api\Manager $apiManager, $logger)
     {
         $this->formElementManager = $formElementManager;
         $this->setApiManager($apiManager);
+        $this->logger = $logger;
     }
 
     public function getLabel()
@@ -33,274 +38,44 @@ class Glossr extends AbstractBlockLayout
     {
         $defaults = [
             'o:index_id' => '',
+            'search_page' => '',
             'search_field' => '',
             'resource_class_field' => '',
             'resource_class' => '',
+            'language_field' => '',
+            'language' => '',
+            'custom_query' => '',
             'letters_list_position' => ['before', 'after'],
             'sort_by' => 'alphabetic',
             'sort_order' => 'asc',
             'display_letters' => [],
             'display_total' => [],
-            'per_page' => 10,
+            'date_field' => '',
         ];
 
         $data = $block ? $block->data() + $defaults : $defaults;
 
-        $form = new Form();
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][o:index_id]',
-            'type' => 'Select',
-            'options' => [
-                'label' => 'Index', // @translate
-                'value_options' => $this->getIndexesOptions(),
-            ],
-            'attributes' => [
-                'required' => true,
-            ],
-        ]);
-
-        $indexesAux = $this->getApiManager()->search('search_indexes')->getContent();
-        $allowed = [];
-        $valueOptions = [];
-
-        foreach ($indexesAux as $index)
-        {
-            $searchFields = $index->adapter()->getAvailableFacetFields($index);
-            $allowed[($index->id())] = array_column($searchFields,  'name');
-
-            if (!empty($data['o:index_id']) && is_numeric($data['o:index_id']) && ($index->id() == intval($data['o:index_id'])))
-            {
-                $valueOptions = array_column($searchFields, 'label', 'name');
-            }
-        } 
-
-        if ($valueOptions) {
-            $form->add([
-                'name' => 'o:block[__blockIndex__][o:data][search_field]',
-                'required' => true,
-                'type' => \Laminas\Form\Element\Select::class,
-                'options' => [
-                    'label' => 'Search fields', // @translate
-                    'value_options' => $valueOptions,
-                ],
-                'validators' => [
-                    [
-                        'name' => \Laminas\Validator\Callback::class,
-                        'options' => [
-                            'callback' => function ($value, $context) use ($allowed) {
-
-                                $type = $context['o:index_id'] ?? null;
-
-                                return $type
-                                    && isset($allowed[$type])
-                                    && in_array($value, $allowed[$type]);
-                            },
-                            'message' => 'Incompatible field with selected index.', // @translate
-                        ],
-                    ],
-                ],
-            ]);
-
-            $form->add([
-                'name' => 'o:block[__blockIndex__][o:data][resource_class_field]',
-                'required' => true,
-                'type' => \Laminas\Form\Element\Select::class,
-                'options' => [
-                    'label' => 'Search fields', // @translate
-                    'empty_option' => 'Add a resource class field', // @translate
-                    'value_options' => $valueOptions,
-                ],
-                'validators' => [
-                    [
-                        'name' => \Laminas\Validator\Callback::class,
-                        'options' => [
-                            'callback' => function ($value, $context) use ($allowed) {
-
-                                $type = $context['o:index_id'] ?? null;
-
-                                return $type
-                                    && isset($allowed[$type])
-                                    && in_array($value, $allowed[$type]);
-                            },
-                            'message' => 'Incompatible field with selected index.', // @translate
-                        ],
-                    ],
-                ],
-            ]);
-        }
-        else {
-            $form->add([
-                'name' => 'o:block[__blockIndex__][o:data][search_field]',
-                'required' => true,
-                'type' => \Laminas\Form\Element\Select::class,
-                'options' => [
-                    'label' => 'Search fields', // @translate
-                    'empty_option' => 'Add a search field', // @translate
-                    'value_options' => $valueOptions,
-                ],
-                'validators' => [
-                    [
-                        'name' => \Laminas\Validator\Callback::class,
-                        'options' => [
-                            'callback' => function ($value, $context) use ($allowed) {
-
-                                $type = $context['o:index_id'] ?? null;
-
-                                return $type
-                                    && isset($allowed[$type])
-                                    && in_array($value, $allowed[$type]);
-                            },
-                            'message' => 'Incompatible field with selected index.', // @translate
-                        ],
-                    ],
-                ],
-            ]);
-            $form->add([
-                'name' => 'o:block[__blockIndex__][o:data][resource_class_field]',
-                'required' => false,
-                'type' => \Laminas\Form\Element\Select::class,
-                'options' => [
-                    'label' => 'Resource class field', // @translate
-                    'empty_option' => 'Add a resource class field', // @translate
-                    'value_options' => $valueOptions,
-                ],
-                'validators' => [
-                    [
-                        'name' => \Laminas\Validator\Callback::class,
-                        'options' => [
-                            'callback' => function ($value, $context) use ($allowed) {
-
-                                $type = $context['o:index_id'] ?? null;
-
-                                return $type
-                                    && isset($allowed[$type])
-                                    && in_array($value, $allowed[$type]);
-                            },
-                            'message' => 'Incompatible field with selected index.', // @translate
-                        ],
-                    ],
-                ],
-            ]);
-        }
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][resource_class]',
-            'type' => \Omeka\Form\Element\ResourceClassSelect::class,
-            'options' => [
-                    'label' => 'Resource classes', // @translate
-                    'empty_option' => '',
-                    'term_as_value' => true,
-                ],
-                'attributes' => [
-                    'required' => false,
-                    'class' => 'chosen-select',
-                    'multiple' => 'multiple',
-                    'data-placeholder' => 'Select resource classes…', // @translate
-                    'data-fieldset' => 'args',
-                ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][letters_list_position]',
-            'type' => OptionalMultiCheckbox::class,
-            'options' => [
-                'label' => 'Position of index of letters', // @translate
-                'value_options' => [
-                    'before' => 'Before', // @translate
-                    'after' => 'After', // @translate
-                ],
-            ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][display_letters]',
-            'type' => OptionalMultiCheckbox::class,
-            'options' => [
-                'label' => 'Display letters between results?', // @translate
-                'value_options' => [
-                    'yes' => 'Display letters', // @translate
-                ],
-            ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][display_total]',
-            'type' => OptionalMultiCheckbox::class,
-            'options' => [
-                'label' => 'Display total between results?', // @translate
-                'value_options' => [
-                    'yes' => 'Display total', // @translate
-                ],
-            ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][sort_order]',
-            'type' => \Laminas\Form\Element\Select::class,
-            'options' => [
-                'label' => 'In what order to display the letters of the Glossr', // @translate
-                'value_options' => [
-                    'alphabetic' => 'Alphabetic', // @translate
-                    'total' => 'Total', // @translate
-                    'chronological' => 'Chronological' // @translate
-                ],
-            ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][sort_by]',
-            'type' => \Laminas\Form\Element\Select::class,
-            'options' => [
-                'label' => 'Ascending or descending order for order of letters of the Glossr', // @translate
-                'value_options' => [
-                    'asc' => 'Ascending', // @translate
-                    'desc' => 'Descending', // @translate
-                ],
-            ],
-        ]);
-
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][per_page]',
-            'type' => \Laminas\Form\Element\Range::class,
-            'options' => [
-                'label' => 'Number of max results per letter', // @translate
-            ],
-            'attributes' => [
-                'min' => 1,
-                'max' => 50,
-            ],
-        ]);
+        $form = $this->formElementManager->get(GlossrForm::class, ['o:index_id' => $data['o:index_id'], 
+                                                                                'site-slug' => $block->page()->site()->slug()]);
 
         $form->setData([
             'o:block[__blockIndex__][o:data][o:index_id]' => $data['o:index_id'],
+            'o:block[__blockIndex__][o:data][search_page]' => $data['search_page'],
             'o:block[__blockIndex__][o:data][search_field]' => $data['search_field'],
             'o:block[__blockIndex__][o:data][resource_class_field]' => $data['resource_class_field'],
             'o:block[__blockIndex__][o:data][resource_class]' => $data['resource_class'],
+            'o:block[__blockIndex__][o:data][language_field]' => $data['language_field'],
+            'o:block[__blockIndex__][o:data][language]' => $data['language'],
             'o:block[__blockIndex__][o:data][letters_list_position]' => $data['letters_list_position'],
             'o:block[__blockIndex__][o:data][sort_order]' => $data['sort_order'],
             'o:block[__blockIndex__][o:data][sort_by]' => $data['sort_by'],
             'o:block[__blockIndex__][o:data][display_letters]' => $data['display_letters'],
             'o:block[__blockIndex__][o:data][display_total]' => $data['display_total'],
-            'o:block[__blockIndex__][o:data][per_page]' => $data['per_page'],
+            'o:block[__blockIndex__][o:data][custom_query]' => $data['custom_query'],
+            'o:block[__blockIndex__][o:data][date_field]' => $data['date_field'],
         ]);
 
         return $view->formCollection($form);
-    }
-
-    protected function getIndexesOptions()
-    {
-        $api = $this->getApiManager();
-
-        $indexes = $api->search('search_indexes')->getContent();
-        $options = [
-            '' => 'None', // @translate
-        ];
-        foreach ($indexes as $index) {
-            $options[$index->id()] =
-                sprintf('%s (%s)', $index->name(), $index->adapterLabel());
-        }
-
-        return $options;
     }
 
     public function setApiManager($apiManager)
