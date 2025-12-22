@@ -30,7 +30,6 @@
 namespace Solr\Form\Admin;
 
 use Laminas\Form\Form;
-use Omeka\Site\Navigation\Link\Page;
 use Solr\Form\Element\OptionalMultiCheckbox;
 
 class GlossrForm extends Form
@@ -54,7 +53,7 @@ class GlossrForm extends Form
         $pagesAux = $this->getApiManager()->search('search_pages')->getContent();
         $pagesValueOptions = [];
         foreach ($pagesAux as $page) {
-            $pagesValueOptions[strval($page->id())] = sprintf('%s (%s)' , $page->name(), $page->siteUrl($this->getOption('site-slug')));
+            $pagesValueOptions[strval($page->id())] = sprintf('%s (%s)', $page->name(), $page->siteUrl($this->getOption('site-slug')));
         }
 
         $this->add([
@@ -69,8 +68,6 @@ class GlossrForm extends Form
                 ],
         ]);
 
-
-
         $indexesAux = $this->getApiManager()->search('search_indexes')->getContent();
         $allowedFacetable = [];
         $allowedSearchable = [];
@@ -79,24 +76,22 @@ class GlossrForm extends Form
         $valueOptionsSearchable = [];
         $valueOptionsSortable = [];
 
-        foreach ($indexesAux as $index)
-        {
+        foreach ($indexesAux as $index) {
             $facetFields = $index->adapter()->getAvailableFacetFields($index);
             $searchFields = $index->adapter()->getAvailableSearchFields($index);
             $sortFields = $index->adapter()->getAvailableSortFields($index);
-            $allowedFacetable[($index->id())] = array_column($facetFields,  'name');
+            $allowedFacetable[($index->id())] = array_column($facetFields, 'name');
             $allowedSearchable[($index->id())] = array_column($searchFields, 'name');
             $allowedSearchable[($index->id())] = array_column($sortFields, 'name');
 
             if (!empty($this->getOption('o:index_id'))
                 && is_numeric($this->getOption('o:index_id'))
-                && ($index->id() == intval($this->getOption('o:index_id'))))
-            {
+                && ($index->id() == intval($this->getOption('o:index_id')))) {
                 $valueOptionsFacetable = array_column($facetFields, 'label', 'name');
                 $valueOptionsSearchable = array_column($searchFields, 'label', 'name');
                 $valueOptionsSortable = array_column($sortFields, 'label', 'name');
             }
-        } 
+        }
 
         if ($valueOptionsFacetable) {
             $this->add([
@@ -112,7 +107,6 @@ class GlossrForm extends Form
                         'name' => \Laminas\Validator\Callback::class,
                         'options' => [
                             'callback' => function ($value, $context) use ($allowedFacetable) {
-
                                 $type = $context['o:index_id'] ?? null;
 
                                 return $type
@@ -124,8 +118,7 @@ class GlossrForm extends Form
                     ],
                 ],
             ]);
-        }
-        else {
+        } else {
             $this->add([
                 'name' => 'o:block[__blockIndex__][o:data][search_field]',
                 'required' => true,
@@ -140,7 +133,6 @@ class GlossrForm extends Form
                         'name' => \Laminas\Validator\Callback::class,
                         'options' => [
                             'callback' => function ($value, $context) use ($allowedFacetable) {
-
                                 $type = $context['o:index_id'] ?? null;
 
                                 return $type
@@ -168,7 +160,6 @@ class GlossrForm extends Form
                     'name' => \Laminas\Validator\Callback::class,
                     'options' => [
                         'callback' => function ($value, $context) use ($allowedFacetable) {
-
                             $type = $context['o:index_id'] ?? null;
 
                             return $type
@@ -211,7 +202,6 @@ class GlossrForm extends Form
                     'name' => \Laminas\Validator\Callback::class,
                     'options' => [
                         'callback' => function ($value, $context) use ($allowedFacetable) {
-
                             $type = $context['o:index_id'] ?? null;
 
                             return $type
@@ -236,8 +226,8 @@ class GlossrForm extends Form
             'name' => 'o:block[__blockIndex__][o:data][custom_query]',
             'type' => 'text',
             'options' => [
-                'label' => 'Custom query parameters' // @translate
-            ]
+                'label' => 'Custom query parameters', // @translate
+            ],
             ]);
 
         $this->add([
@@ -282,7 +272,7 @@ class GlossrForm extends Form
                 'value_options' => [
                     'alphabetic' => 'Alphabetic', // @translate
                     'total' => 'Total', // @translate
-                    'chronological' => 'Chronological' // @translate
+                    'chronological' => 'Chronological', // @translate
                 ],
             ],
         ]);
@@ -313,7 +303,6 @@ class GlossrForm extends Form
                     'name' => \Laminas\Validator\Callback::class,
                     'options' => [
                         'callback' => function ($value, $context) use ($allowedSortable) {
-
                             $type = $context['o:index_id'] ?? null;
 
                             return $type

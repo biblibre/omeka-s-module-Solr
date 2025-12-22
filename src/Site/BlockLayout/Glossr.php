@@ -3,15 +3,12 @@
 namespace Solr\Site\BlockLayout;
 
 use Laminas\Form\FormElementManager;
-use Laminas\Form\Form;
 use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Site\BlockLayout\AbstractBlockLayout;
 use Omeka\Api\Representation\SiteRepresentation;
 use Omeka\Api\Representation\SitePageRepresentation;
 use Omeka\Api\Representation\SitePageBlockRepresentation;
-use Solr\Form\Element\OptionalMultiCheckbox;
 use Search\Querier\Exception\QuerierException;
-use Search\Query;
 use Solr\Form\Admin\GlossrForm;
 
 class Glossr extends AbstractBlockLayout
@@ -55,8 +52,8 @@ class Glossr extends AbstractBlockLayout
 
         $data = $block ? $block->data() + $defaults : $defaults;
 
-        $form = $this->formElementManager->get(GlossrForm::class, ['o:index_id' => $data['o:index_id'], 
-                                                                                'site-slug' => $block->page()->site()->slug()]);
+        $form = $this->formElementManager->get(GlossrForm::class, ['o:index_id' => $data['o:index_id'],
+                                                                                'site-slug' => $block->page()->site()->slug(), ]);
 
         $form->setData([
             'o:block[__blockIndex__][o:data][o:index_id]' => $data['o:index_id'],
@@ -95,8 +92,7 @@ class Glossr extends AbstractBlockLayout
         $indexesSearch = [];
         $indexesFacet = [];
         $indexesSort = [];
-        foreach ($indexesAux as $index)
-        {
+        foreach ($indexesAux as $index) {
             $searchFields = $index->adapter()->getAvailableSearchFields($index);
             $facetFields = $index->adapter()->getAvailableFacetFields($index);
             $sortFields = $index->adapter()->getAvailableSortFields($index);
@@ -104,7 +100,7 @@ class Glossr extends AbstractBlockLayout
             $indexesFacet[($index->id())] = array_column($facetFields, 'label', 'name');
             $indexesSort[($index->id())] = array_column($sortFields, 'label', 'name');
         }
-         
+
         $view->headScript()->appendScript(
         'window.availableSearchFields = ' . json_encode($indexesSearch, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
         );
@@ -121,7 +117,7 @@ class Glossr extends AbstractBlockLayout
     }
 
     public function render(PhpRenderer $view, SitePageBlockRepresentation $block)
-    {   
+    {
         $indexId = $block->dataValue('o:index_id');
         $pageId = $block->dataValue('search_page');
         $customQueryInput = $block->dataValue('custom_query');
@@ -178,8 +174,9 @@ class Glossr extends AbstractBlockLayout
         try {
             $response = $querier->glossaire($indexId, $site, $fieldName, $resourceClassFieldName,
             $resourceClasses, $languageFieldName, $languages, $query);
-            if (array_key_exists($fieldName, $response->getFacetCounts()))
+            if (array_key_exists($fieldName, $response->getFacetCounts())) {
                 $facets[$fieldName] = $response->getFacetCounts()[$fieldName];
+            }
         } catch (QuerierException $e) {
             throw $e;
         }
@@ -197,48 +194,23 @@ class Glossr extends AbstractBlockLayout
                 }
                 if ($sortOrder == 'alphabetic') {
                     if ($sortBy == 'asc') {
-                        usort($facetLetter[$letter], function ($a, $b) { return $a['value'] < $b['value']; });
+                        usort($facetLetter[$letter], function ($a, $b) {
+                            return $a['value'] < $b['value'];
+                        });
+                    } else {
+                        usort($facetLetter[$letter], function ($a, $b) {
+                            return $a['value'] > $b['value'];
+                        });
                     }
-                    else {
-                        usort($facetLetter[$letter], function ($a, $b) { return $a['value'] > $b['value']; });
-                    }
-                }
-                else if ($sortOrder == 'total') {
+                } elseif ($sortOrder == 'total') {
                     if ($sortBy == 'asc') {
                         $facetLetter[$letter] = array_reverse($facetLetter[$letter]);
-                    }
-                    else {
+                    } else {
                         // nothing to do!
                     }
                 }
             }
         }
-
-        /*foreach ($responses as $index => $response) {
-            $results = $response->getResults($resourceName);
-            if (!empty($results)) {
-                foreach () {
-                    foreach ($results as $result) {
-                        $resource = $this->api()->read($resourceName, $result['id'])->getContent();
-
-                    }
-                }
-            }
-        }*/
-
-    /*<div class="resource-list">
-        <?php foreach ($results as $result): ?>
-            <?php  ?>
-            <?php $highlights = $response->getHighlights($resourceName, $result['id']); ?>
-            <?php echo $this->partial('search/resource', [
-                'resource' => $resource,
-                'site' => $site,
-                'tag' => 'div',
-                'highlights' => $highlights,
-            ]); ?>
-        <?php endforeach; ?>
-    </div>
-            $response->getHighlights(); */
 
         $lettersPosition = is_array($block->dataValue('letters_list_position')) ?
             $block->dataValue('letters_list_position')
@@ -252,8 +224,6 @@ class Glossr extends AbstractBlockLayout
             $block->dataValue('display_total')
             : [$block->dataValue('display_total')];
 
-        // throw new \Exception(sprintf('%s', json_encode($facetLetter)));
-
         return $view->partial('solr/block-layout/glossaire', [
             'site' => $site,
             'response' => $response,
@@ -262,7 +232,6 @@ class Glossr extends AbstractBlockLayout
             'lettersBetweenResults' => $lettersBetweenResults,
             'totalBetweenResults' => $totalBetweenResults,
             'facetLetter' => $facetLetter,
-            // 'sortOptions' => $sortOptions,
             'fieldName' => $fieldName,
             'searchPage' => $page,
             'siteSlug' => $site->slug(),
