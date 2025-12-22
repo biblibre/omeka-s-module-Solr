@@ -4,7 +4,8 @@ namespace Solr\Form\Element;
 
 use Laminas\Form\Element\MultiCheckbox;
 
-class OptionalMultiCheckbox extends MultiCheckbox {
+class OptionalMultiCheckbox extends MultiCheckbox
+{
     /**
      * @see https://github.com/zendframework/zendframework/issues/2761#issuecomment-14488216
      *

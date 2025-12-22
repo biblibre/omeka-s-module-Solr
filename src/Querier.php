@@ -405,7 +405,7 @@ class Querier extends AbstractQuerier
 
         $response = $api->read('search_indexes', $indexId);
         $index = $response->getContent();
-        
+
         $query = new Query();
         if (empty($customQuery)) {
             $q = [];
@@ -507,8 +507,7 @@ class Querier extends AbstractQuerier
                     }
                 }
             }
-        }
-        else {
+        } else {
             $q = $customQuery->getQuery();
 
             if (!empty($languageField) && !empty($languages)) {
