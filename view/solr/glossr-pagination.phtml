@@ -37,7 +37,7 @@
 <div id="glossr-pagination" class="pagination solr-pagination pagination-top">
     <ul class="pagination-list">
         <?php foreach ($letters as $index => $letter): ?>
-            <?php if ($responses[$index]->getTotalResults() > 0): ?>
+            <?php if (count($facetLetter[$letter]) > 0): ?>
             <li class="pagination-range">
                 <a href="#glossr-<?php echo strtoupper($letter) ?>"><?php echo strtoupper($letter) ?></a>
             </li>
