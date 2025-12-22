@@ -45,6 +45,12 @@ class SolrQuery implements JsonSerializable
                     $data['facet'][$field]['limit'] = (int) $limit;
                     unset($params["facet.limit.$field"]);
                 }
+
+                if (isset($params["facet.prefix.$field"])) {
+                    $prefix = $params["facet.prefix.$field"];
+                    $data['facet'][$field]['prefix'] = $prefix;
+                    unset($params["facet.prefix.$field"]);
+                }
             }
             unset($params['facet.field']);
         }
