@@ -92,55 +92,127 @@ class Glossr extends AbstractBlockLayout
     {
         $indexesAux = $this->getApiManager()->search('search_indexes')->getContent();
 
-        $indexes = [];
+        $indexesSearch = [];
+        $indexesFacet = [];
+        $indexesSort = [];
         foreach ($indexesAux as $index)
         {
             $searchFields = $index->adapter()->getAvailableSearchFields($index);
-            $indexes[($index->id())] = array_column($searchFields, 'label', 'name');
+            $facetFields = $index->adapter()->getAvailableFacetFields($index);
+            $sortFields = $index->adapter()->getAvailableSortFields($index);
+            $indexesSearch[($index->id())] = array_column($searchFields, 'label', 'name');
+            $indexesFacet[($index->id())] = array_column($facetFields, 'label', 'name');
+            $indexesSort[($index->id())] = array_column($sortFields, 'label', 'name');
         }
          
         $view->headScript()->appendScript(
-        'window.availableFields = ' . json_encode($indexes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+        'window.availableSearchFields = ' . json_encode($indexesSearch, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
         );
 
-        $view->headScript()->appendFile($view->assetUrl('js/glossaire-form.js', 'Search'));
+        $view->headScript()->appendScript(
+        'window.availableFacetFields = ' . json_encode($indexesFacet, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+        );
+
+        $view->headScript()->appendScript(
+        'window.availableSortFields = ' . json_encode($indexesSort, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+        );
+
+        $view->headScript()->appendFile($view->assetUrl('js/glossaire-form.js', 'Solr'));
     }
 
     public function render(PhpRenderer $view, SitePageBlockRepresentation $block)
     {   
         $indexId = $block->dataValue('o:index_id');
+        $pageId = $block->dataValue('search_page');
+        $customQueryInput = $block->dataValue('custom_query');
         $fieldName = $block->dataValue('search_field');
+        $resourceClassFieldName = $block->dataValue('resource_class_field');
+        $resourceClasses = $block->dataValue('resource_class');
+        $languageFieldName = $block->dataValue('languages_field');
+        $languages = $block->dataValue('language_class');
         $indexResponse = $this->apiManager->read('search_indexes', $indexId)->getContent();
+        $sortBy = $block->dataValue('sort_by');
+        $sortOrder = $block->dataValue('sort_order');
+        $dateField = $block->dataValue('date_field');
 
-        if (empty($indexResponse))
-        {
+        if (empty($indexResponse)) {
             $view->messenger()->addError(sprintf('Index with id %s not found.', $indexId));
-            return $view;
+            return null;
+        }
+
+        $page = $this->apiManager->read('search_pages', $pageId)->getContent();
+        if (empty($page)) {
+            $view->messenger()->addError(sprintf('Page with id %s not found.', $pageId));
+            return null;
         }
 
         $site = $view->currentSite();
 
+        $customQuery = [];
+        parse_str($customQueryInput, $customQuery);
+
+        $formAdapter = $page->formAdapter();
+        if (!isset($formAdapter)) {
+            $formAdapterName = $page->formAdapterName();
+            $msg = sprintf("Form adapter '%s' not found", $formAdapterName);
+            throw new RuntimeException($msg);
+        }
+
+        $searchPageSettings = $page->settings();
+        $searchFormSettings = [];
+        if (isset($searchPageSettings['form'])) {
+            $searchFormSettings = $searchPageSettings['form'];
+        }
+
+        $query = $formAdapter->toQuery($customQuery, $searchFormSettings);
+
+        $this->logger->debug("Custom query after toQuery()");
+        $this->logger->debug(json_encode($query));
+
         $querier = $indexResponse->querier();
 
-        $responses = null;
+        $response = null;
         $facets = [];
 
         $letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
         try {
-            foreach($letters as $letter)
-            {
-                $responses[] = $querier->glossaire($indexId, $site, $letter, $fieldName);
-                if (array_key_exists($fieldName, end($responses)->getFacetCounts()))
-                    $facets[][$fieldName] = end($responses)->getFacetCounts()[$fieldName];
-                else
-                    $facets[] = null;
-            }
+            $response = $querier->glossaire($indexId, $site, $fieldName, $resourceClassFieldName,
+            $resourceClasses, $languageFieldName, $languages, $query);
+            if (array_key_exists($fieldName, $response->getFacetCounts()))
+                $facets[$fieldName] = $response->getFacetCounts()[$fieldName];
         } catch (QuerierException $e) {
-            /*$view->messenger()->addError('Query error: ' . $e->getMessage());
-            return $view;*/
             throw $e;
         }
 
+        $facetLetter = [];
+        if (array_key_exists($fieldName, $response->getFacetCounts())) {
+            foreach ($letters as $letter) {
+                // $this->logger->debug(sprintf('[Glossr] processing letter "%s"', $letter));
+                $facetLetter[$letter] = []; // init
+                foreach ($facets[$fieldName] as $facetValue) {
+                    // $this->logger->debug(sprintf('[Glossr] facet value:' . PHP_EOL . '%s', json_encode($facetValue)));
+                    if (str_starts_with(strtolower($facetValue['value']), $letter)) {
+                        $facetLetter[$letter][] = $facetValue;
+                    }
+                }
+                if ($sortOrder == 'alphabetic') {
+                    if ($sortBy == 'asc') {
+                        usort($facetLetter[$letter], function ($a, $b) { return $a['value'] < $b['value']; });
+                    }
+                    else {
+                        usort($facetLetter[$letter], function ($a, $b) { return $a['value'] > $b['value']; });
+                    }
+                }
+                else if ($sortOrder == 'total') {
+                    if ($sortBy == 'asc') {
+                        $facetLetter[$letter] = array_reverse($facetLetter[$letter]);
+                    }
+                    else {
+                        // nothing to do!
+                    }
+                }
+            }
+        }
 
         /*foreach ($responses as $index => $response) {
             $results = $response->getResults($resourceName);
