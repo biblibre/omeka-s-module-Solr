@@ -6,7 +6,8 @@ use Laminas\View\Helper\AbstractHelper;
 
 class GlossrFacetLink extends AbstractHelper
 {
-    public function __invoke($name, $facet, $query)
+    public function __invoke($name, $facet, $searchPage, $siteSlug, $query,
+                                $resourceClassField = null, $resourceClasses = [], $languageField = null, $languages = "")
     {
         $view = $this->getView();
 
@@ -22,9 +23,17 @@ class GlossrFacetLink extends AbstractHelper
             $query['limit'][$name][] = $facet['value'];
         }
 
+        if (!empty($resourceClassField) && !empty($resourceClasses)) {
+            $query['limit'][$resourceClassField] = $resourceClasses;
+        }
+
+        if (!empty($langueField) && !empty($languages)) {
+            $query['limit'][$languageField] = explode('|', $languages);
+        }
+
         unset($query['page']);
 
-        $url = $view->url(null, [], ['query' => $query], true);
+        $url = $view->url('search-page-' . $searchPage->id(), ['site-slug' => $siteSlug], ['query' => $query]);
 
         return $view->partial('solr/glossr-facet-link', [
             'url' => $url,
