@@ -131,6 +131,15 @@ class Indexer extends AbstractIndexer
                 foreach ($siteItemSets as $siteItemSet) {
                     $document->addField($sites_field, $siteItemSet->getSite()->getId());
                 }
+            } elseif ($resourceName === 'media') {
+                $sites = $api->search('sites')->getContent();
+                foreach ($sites as $site) {
+                    $query = ['id' => $resource->item()->id(), 'site_id' => $site->id()];
+                    $res = $api->search('items', $query)->getContent();
+                    if (!empty($res)) {
+                        $document->addField($sites_field, $site->id());
+                    }
+                }
             }
             elseif ($resourceName === 'media') {
                 $sites = $api->search('sites')->getContent();
