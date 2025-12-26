@@ -150,9 +150,19 @@ class Querier extends AbstractQuerier
             }
         }
 
-        $facetLimit = $query->getFacetLimit();
-        if ($facetLimit) {
-            $solrQuery->setFacetLimit($facetLimit);
+        $facetLimits = $query->getFacetLimit();
+        if (!empty($facetLimits)) {
+            foreach ($facetLimits as $facetField => $facetLimit) {
+                $searchField = $this->getSearchField($facetField);
+                if (!$searchField) {
+                    throw new QuerierException(sprintf('Field %s does not exist', $facetField));
+                }
+                $solrFacetField = $searchField->facetField();
+                if (!$solrFacetField) {
+                    throw new QuerierException(sprintf('Field %s is not facetable', $facetField));
+                }
+                $solrQuery->setFacetLimit($solrFacetField, $facetLimit);
+            }
         }
 
         $facetFilters = $query->getFacetFilters();
