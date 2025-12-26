@@ -67,9 +67,6 @@ class MediaValueExtractor extends AbstractValueExtractor
             'resource_template' => [
                 'label' => 'Resource template',
             ],
-            'content' => [
-                'label' => 'HTML Content',
-            ],
         ];
 
         $properties = $this->api->search('properties')->getContent();
