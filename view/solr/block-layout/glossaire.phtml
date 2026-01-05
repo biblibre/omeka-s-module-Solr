@@ -1,0 +1,107 @@
+<?php
+/*
+ * Copyright BibLibre, 2025
+ * Copyright Daniel Berthereau, 2017-2018
+ *
+ * This software is governed by the CeCILL license under French law and abiding
+ * by the rules of distribution of free software.  You can use, modify and/ or
+ * redistribute the software under the terms of the CeCILL license as circulated
+ * by CEA, CNRS and INRIA at the following URL "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
+?>
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Search\Query $query
+ * @var \Omeka\Api\Representation\SiteRepresentation $site
+ * @var array $facetLetter
+ * @var string[] $lettersListPosition
+ * @var string[] $lettersBetweenResults
+ * @var string[] $letters
+ * @var string $fieldName
+ * @var string $siteSlug
+ * @var array $customQuery
+ * @var string $resourceClassField
+ * @var string[] $resourceClasses
+ * @var string $languageField
+ * @var string $languages
+ */
+?>
+
+<?php
+    $escape = $this->plugin('escapeHtml');
+    $user = $this->identity();
+?>
+
+<h2><?php echo $this->translate('Glossaire'); ?></h2> 
+
+<?php echo $this->messages(); ?>
+
+<?php if (!empty($facetLetter)): ?>
+<?php if (in_array('before', $lettersListPosition)): ?>
+    <?php echo $this->partial('solr/glossr-pagination', ['letters' => $letters, 'facetLetter' => $facetLetter]); ?>
+<?php endif; ?>
+<?php foreach ($letters as $index => $letter): ?>
+    <?php $facets = $facetLetter[$letter]; ?>
+    <?php if (count($facets) > 0): ?>
+        <?php if (in_array('yes', $lettersBetweenResults)): ?>
+            <h3 id="glossr-<?php echo strtoupper($letter); ?>">
+                <?php echo strtoupper($letter); ?>
+            </h3>
+        <?php endif; ?>
+        <div class="search-results-wrapper">
+            <div class="search-results">
+
+                    <?php echo $this->partial('solr/glossr-facets', 
+                        [
+                                'facetValues' => $facets,
+                                'fieldName' => $fieldName,
+                                'searchPage' => $searchPage,
+                                'siteSlug' => $siteSlug,
+                                'customQuery' => $customQuery,
+                                'resourceClassField' => $resourceClassField,
+                                'resourceClasses' => $resourceClasses,
+                                'languageField' => $languageField,
+                                'languages' => $languages,
+                            ]); ?>
+                   
+
+                    <?php if (false): ?>
+                        <?php $itemsCount = $response->getResourceTotalResults('items'); ?>
+                        <?php echo $this->partial('solr/glossr-resource-list', [
+                            'title' => sprintf($this->translatePlural('%s item', '%s items', $itemsCount), $itemsCount),
+                            'response' => $response,
+                            'resourceName' => 'items',
+                            'site' => $site,
+                            'letter' => $letter,
+                            'totalBetweenResults' => $totalBetweenResults, 
+                        ]); ?>
+                    <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endforeach; ?>
+<?php if (in_array('after', $lettersListPosition)): ?>
+    <?php echo $this->partial('solr/glossr-pagination', ['letters' => $letters, 'facetLetter' => $facetLetter]); ?>
+<?php endif; ?>
+<?php else: ?>
+    <h4><?php echo $this->translate('Glossr is empty!'); ?></h4>
+<?php endif; ?>

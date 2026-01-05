@@ -1,0 +1,126 @@
+/* Reference pages */
+.solr-list {
+    padding-left: 0;
+}
+
+.solr-pagination.pagination {
+    display: inline-block;
+    float: none;
+    margin: 12px 0;
+    padding: 0 0 1em;
+    height: auto;
+    width: auto;
+}
+.solr-pagination ul.pagination-list {
+    height: auto;
+    margin: auto;
+    padding: 0;
+    list-style: none;
+    cursor: default;
+}
+.solr-pagination li.pagination-range {
+    height: auto;
+    line-height: initial;
+    display: initial;
+    margin-right: 2px;
+}
+.solr-pagination li.pagination-range a,
+.solr-pagination li.pagination-range span {
+    display: inline-block;
+    margin-right: 0px;
+    padding: 0.375em 9px;
+    vertical-align: top;
+}
+.solr-pagination li.pagination-range a {
+    border: 1px solid #000000;
+    text-decoration: none;
+}
+.solr-pagination li.pagination-range span {
+    border: 1px solid transparent;
+}
+.solr-pagination li.pagination-range a:hover {
+    background-color: #CCCCCC;
+    color: #000;
+    text-decoration: none;
+}
+.solr-pagination li.pagination-range.active a {
+    background-color: #DDDDDD;
+}
+
+ul.solr {
+    list-style: inside none disc;
+}
+ol.solr {
+    list-style: inside none decimal;
+}
+ul.solr ul,
+ol.solr ul {
+    list-style: inside none circle;
+    margin-left: 15px;
+}
+ol.solr ol,
+ul.solr ol {
+    list-style: inside none lower-latin;
+    margin-left: 15px;
+}
+ul.solr li {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Use flexbox when there is a thumbnail. */
+.solr-record {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.solr-record a {
+    display: inline-flex;
+    align-items: center;
+}
+.solr-record a img {
+    height: auto;
+    width: 36px;
+    margin-right: 6px;
+}
+
+/* Recursive list */
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+.recursive-list .resource-link {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    min-width: 0;
+}
+.recursive-list .resource-link img {
+    height: 36px;
+    margin-right: 6px;
+}
+.recursive-list .resource-link .resource-name {
+    flex: 1;
+    min-width: 0;
+}
+.recursive-list .see-all {
+    font-style: italic;
+    list-style: none;
+}
+
+/* Grid */
+.solr-grid {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 12px;
+}
+.solr-grid .reference-record a {
+    display: flex;
+    flex-direction: column;
+    align-items: initial;
+}
+.solr-grid .reference-record a img {
+    height: auto;
+    width: 200px;
+}

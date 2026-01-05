@@ -204,10 +204,17 @@ return [
             'Solr\Form\Admin\SolrNodeForm' => Service\Form\SolrNodeFormFactory::class,
             'Solr\Form\Admin\SolrMappingForm' => Service\Form\SolrMappingFormFactory::class,
             'Solr\Form\Admin\SolrSearchFieldForm' => Service\Form\SolrSearchFieldFormFactory::class,
+            'Solr\Form\Admin\GlossrForm' => Service\Form\GlossrFormFactory::class,
         ],
         'invokables' => [
             'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
             'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,
+            'Solr\Form\Element\OptionalMulticheckbox' => Form\Element\OptionalMulticheckbox::class,
+        ],
+    ],
+    'block_layouts' => [
+        'factories' => [
+            'glossr' => Service\Site\BlockLayout\GlossrFactory::class,
         ],
     ],
     'router' => [
@@ -235,6 +242,7 @@ return [
         ],
         'invokables' => [
             'solrFormTransformations' => Form\View\Helper\FormTransformations::class,
+            'glossrFacetLink' => View\Helper\GlossrFacetLink::class,
         ],
     ],
     'view_manager' => [
