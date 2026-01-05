@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright BibLibre, 2016
+ * Copyright BibLibre, 2025
  * Copyright Daniel Berthereau, 2017-2018
  *
  * This software is governed by the CeCILL license under French law and abiding
@@ -32,6 +32,17 @@
  * @var \Laminas\View\Renderer\PhpRenderer $this
  * @var \Search\Query $query
  * @var \Omeka\Api\Representation\SiteRepresentation $site
+ * @var array $facetLetter
+ * @var string[] $lettersListPosition
+ * @var string[] $lettersBetweenResults
+ * @var string[] $letters
+ * @var string $fieldName
+ * @var string $siteSlug
+ * @var array $customQuery
+ * @var string $resourceClassField
+ * @var string[] $resourceClasses
+ * @var string $languageField
+ * @var string $languages
  */
 ?>
 
@@ -44,7 +55,7 @@
 
 <?php echo $this->messages(); ?>
 
-<?php if (count($facetLetter) > 0): // @todo change this condition?>
+<?php if (!empty($facetLetter)): ?>
 <?php if (in_array('before', $lettersListPosition)): ?>
     <?php echo $this->partial('solr/glossr-pagination', ['letters' => $letters, 'facetLetter' => $facetLetter]); ?>
 <?php endif; ?>
