@@ -30,12 +30,12 @@
 namespace Solr\ValueExtractor;
 
 use Omeka\Api\Manager as ApiManager;
-use Omeka\Api\Representation\ItemRepresentation;
+use Omeka\Api\Representation\MediaRepresentation;
 use Omeka\Api\Representation\AbstractResourceRepresentation;
 use Solr\Value\DateTimeValue;
 use Stringable;
 
-class ItemValueExtractor extends AbstractValueExtractor
+class MediaValueExtractor extends AbstractValueExtractor
 {
     protected $api;
 
@@ -46,7 +46,7 @@ class ItemValueExtractor extends AbstractValueExtractor
 
     public function getLabel()
     {
-        return 'Item';
+        return 'Media';
     }
 
     public function getAvailableFields()
@@ -61,14 +61,14 @@ class ItemValueExtractor extends AbstractValueExtractor
             'is_public' => [
                 'label' => 'Is public',
             ],
-            'has_media' => [
-                'label' => 'Has a media',
-            ],
             'resource_class' => [
                 'label' => 'Resource class',
             ],
             'resource_template' => [
                 'label' => 'Resource template',
+            ],
+            'content' => [
+                'label' => 'HTML Content',
             ],
         ];
 
@@ -78,21 +78,18 @@ class ItemValueExtractor extends AbstractValueExtractor
             $fields[$term]['label'] = $term;
         }
 
-        $fields['item_set'] = [
-            'label' => 'Item set',
+        $fields['item'] = [
+            'label' => 'Item',
             'children' => [
                 'id' => [
                     'label' => 'Internal identifier',
                 ],
             ],
         ];
-        $fields['media']['label'] = 'Media';
-        $fields['media']['children']['content']['label'] = 'HTML Content';
 
         foreach ($properties as $property) {
             $term = $property->term();
-            $fields['item_set']['children'][$term]['label'] = $term;
-            $fields['media']['children'][$term]['label'] = $term;
+            $fields['item']['children'][$term]['label'] = $term;
         }
 
         $params = ['fields' => $fields];
@@ -102,76 +99,71 @@ class ItemValueExtractor extends AbstractValueExtractor
         return $fields;
     }
 
-    public function extractValue(AbstractResourceRepresentation $item, $field, $settings): Stringable | array | string | int | float | bool
+    public function extractValue(AbstractResourceRepresentation $media, $field, $settings): Stringable | array | string | int | float | bool
     {
         $params = ['field' => $field, 'settings' => $settings, 'value' => null];
-        $params = $this->triggerEvent('solr.value_extractor.extract_value', $item, $params);
+        $params = $this->triggerEvent('solr.value_extractor.extract_value', $media, $params);
         if (isset($params['value'])) {
             return $params['value'];
         }
 
         if ($field === 'created') {
-            return DateTimeValue::createFromInterface($item->created());
+            return DateTimeValue::createFromInterface($media->created());
         }
 
         if ($field === 'modified') {
-            $modified = $item->modified();
+            $modified = $media->modified();
             return $modified ? DateTimeValue::createFromInterface($modified) : [];
         }
 
         if ($field === 'is_public') {
-            return $item->isPublic();
-        }
-
-        if ($field === 'has_media') {
-            return !empty($item->primaryMedia());
+            return $media->isPublic();
         }
 
         if ($field === 'resource_class') {
-            $resourceClass = $item->resourceClass();
+            $resourceClass = $media->resourceClass();
             return $resourceClass ? $resourceClass->term() : [];
         }
 
         if ($field === 'resource_template') {
-            $resourceTemplate = $item->resourceTemplate();
+            $resourceTemplate = $media->resourceTemplate();
             return $resourceTemplate ? $resourceTemplate->label() : [];
         }
 
-        if (preg_match('/^media\/(.*)/', $field, $matches)) {
+        if (preg_match('/^item\/(.*)/', $field, $matches)) {
             $mediaField = $matches[1];
-            return $this->extractMediaValue($item, $mediaField, $settings);
+            return $this->extractItemValue($media, $mediaField, $settings);
         }
 
         if (preg_match('/^item_set\/(.*)/', $field, $matches)) {
             $itemSetField = $matches[1];
-            return $this->extractItemSetValue($item, $itemSetField, $settings);
+            return $this->extractItemSetValue($media, $itemSetField, $settings);
         }
 
-        return $item->value($field, ['all' => true, 'default' => []]);
+        return $media->value($field, ['all' => true, 'default' => []]);
     }
 
-    protected function extractMediaValue(ItemRepresentation $item, $field, array $settings)
+    protected function extractItemValue(MediaRepresentation $media, $field, array $settings)
     {
         $extractedValue = [];
 
-        foreach ($item->media() as $media) {
-            if ($field === 'content') {
-                if ($media->ingester() !== 'html') {
-                    continue;
-                }
-                $mediaExtractedValue = [$media->mediaData()['html']];
-            } else {
-                $mediaExtractedValue = $media->value($field, ['all' => true, 'default' => []]);
-            }
-            $extractedValue = array_merge($extractedValue, $mediaExtractedValue);
+        $item = $media->item();
+
+        if ($field == 'id') {
+            $extractedValue[] = $item->id();
+        } else {
+            $itemExtractedValue = $item->value($field, ['all' => true, 'default' => []]);
+            $extractedValue = array_merge($extractedValue, $itemExtractedValue);
         }
 
         return $extractedValue;
     }
 
-    protected function extractItemSetValue(ItemRepresentation $item, $field, array $settings)
+    protected function extractItemSetValue(MediaRepresentation $media, $field, array $settings)
     {
         $extractedValue = [];
+
+        $item = $media->item();
 
         foreach ($item->itemSets() as $itemSet) {
             if ($field == 'id') {
