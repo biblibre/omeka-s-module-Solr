@@ -150,6 +150,9 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
                 'label' => $translator->translate('Query fields') . ' (qf)',
                 'info' => $translator->translate('qf parameter that will be added to the query'),
             ],
+            'attributes' => [
+                'id' => 'qf_text',
+            ],
         ]);
 
         $settingsFieldset->add([

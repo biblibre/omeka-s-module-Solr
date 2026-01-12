@@ -75,12 +75,13 @@ class NodeController extends AbstractActionController
         $id = $this->params('id');
         $node = $this->api()->read('solr_nodes', $id)->getContent();
 
-        $form = $this->getForm(SolrNodeForm::class);
+        $form = $this->getForm(SolrNodeForm::class, ['solr_node_id' => $id]);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
+
                 $response = $this->api($form)->update('solr_nodes', $id, $data);
                 if ($response) {
                     $this->messenger()->addSuccess('Solr node updated.'); // @translate
