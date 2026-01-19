@@ -195,11 +195,11 @@ class Glossr extends AbstractBlockLayout
                 if ($sortOrder == 'alphabetic') {
                     if ($sortBy == 'asc') {
                         usort($facetLetter[$letter], function ($a, $b) {
-                            return $a['value'] < $b['value'];
+                            return $b['value'] <=> $a['value'];
                         });
                     } else {
                         usort($facetLetter[$letter], function ($a, $b) {
-                            return $a['value'] > $b['value'];
+                            return $a['value'] <=> $b['value'];
                         });
                     }
                 } elseif ($sortOrder == 'total') {
