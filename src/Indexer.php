@@ -186,7 +186,7 @@ class Indexer extends AbstractIndexer
             }
 
             foreach ($values as $value) {
-                $document->addField($solrField, (string) $value);
+                $document->addField($solrField, trim((string) $value));
             }
         }
 
