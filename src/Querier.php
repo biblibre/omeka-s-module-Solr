@@ -59,6 +59,7 @@ class Querier extends AbstractQuerier
         $resource_name_field = $solrNodeSettings['resource_name_field'];
         $sites_field = $solrNodeSettings['sites_field'];
         $is_public_field = $solrNodeSettings['is_public_field'];
+        $has_media_field = $solrNodeSettings['has_media_field'];
         $highlightSettings = $solrNodeSettings['highlight'] ?? [];
         $highlighting = $highlightSettings['highlighting'] ?? false;
         $highlightQueryParts = [];
@@ -124,6 +125,12 @@ class Querier extends AbstractQuerier
         $isPublic = $query->getIsPublic();
         if (isset($isPublic)) {
             $fq = sprintf('%s:%s', $is_public_field, $isPublic ? 'true' : 'false');
+            $solrQuery->addFilterQuery($fq);
+        }
+
+        $hasMedia = $query->getHasMedia();
+        if (isset($hasMedia)) {
+            $fq = sprintf('%s:%s', $has_media_field, $hasMedia ? 'true' : 'false');
             $solrQuery->addFilterQuery($fq);
         }
 

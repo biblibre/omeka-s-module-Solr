@@ -196,6 +196,7 @@ class Module extends AbstractModule
             'resource_name_field' => 'resource_name_s',
             'sites_field' => 'sites_id_is',
             'is_public_field' => 'is_public_b',
+            'has_media_field' => 'has_media_b',
         ];
         $connection->executeQuery($sql, ['http://127.0.0.1:8983/solr/default', json_encode($defaultSettings)]);
         $solrNodeId = $connection->lastInsertId();

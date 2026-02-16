@@ -122,6 +122,18 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
         ]);
 
         $settingsFieldset->add([
+            'name' => 'has_media_field',
+            'type' => 'Text',
+            'options' => [
+                'label' => $translator->translate('Has media field'),
+                'info' => $translator->translate('Name of the Solr field that will contain the hasMedia flag. It must be a single-valued, boolean-based field. WARNING: Changing this will require a complete reindexation.'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
+
+        $settingsFieldset->add([
             'name' => 'groups_field',
             'type' => 'Text',
             'options' => [
