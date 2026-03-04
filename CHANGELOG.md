@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.1] - 2026-03-04
+
+- Set nodes `has_media_field` to `has_media_b` if empty
+- Add e2e test with cypress
+- Update documentation dependencies
+
 ## [0.22.0] - 2026-02-16
 
 - Reapply media indexing feature : add `has_media` field to index media presence on items
@@ -271,6 +277,11 @@ The minimum Omeka S version required is 3.0.0
 
 First release
 
+[0.22.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.1
+[0.22.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.0
+[0.21.2]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.21.2
+[0.21.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.21.1
+[0.21.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.21.0
 [0.20.2]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.20.2
 [0.20.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.20.1
 [0.20.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.20.0

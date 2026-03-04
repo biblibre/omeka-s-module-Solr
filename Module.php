@@ -522,6 +522,23 @@ class Module extends AbstractModule
                 $connection->update('solr_node', $data, ['id' => $id]);
             }
         }
+
+        if (version_compare($oldVersion, '0.22.1', '<')) {
+            $nodes = $connection->executeQuery('SELECT id, settings FROM solr_node')->fetchAll();
+            foreach ($nodes as $node) {
+                $id = $node['id'];
+                $settings = json_decode($node['settings'], true);
+
+                if (empty($settings['has_media_field'])) {
+                    $settings['has_media_field'] = 'has_media_b';
+
+                    $data = [
+                        'settings' => json_encode($settings),
+                    ];
+                    $connection->update('solr_node', $data, ['id' => $id]);
+                }
+            }
+        }
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)
