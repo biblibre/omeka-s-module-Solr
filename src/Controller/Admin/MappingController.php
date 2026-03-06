@@ -36,6 +36,7 @@ use Omeka\Form\ConfirmForm;
 use Solr\Api\Representation\SolrNodeRepresentation;
 use Solr\Form\Admin\SolrMappingForm;
 use Solr\Form\Admin\SolrMappingImportForm;
+use Solr\Form\Admin\SolrQuickMappingForm;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;
 
 class MappingController extends AbstractActionController
@@ -118,6 +119,55 @@ class MappingController extends AbstractActionController
                 $this->api()->create('solr_mappings', $data);
 
                 $this->messenger()->addSuccess('Solr mapping created.');
+
+                return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
+                    'nodeId' => $solrNodeId,
+                    'resourceName' => $resourceName,
+                ]);
+            } else {
+                $this->messenger()->addError('There was an error during validation');
+            }
+        }
+
+        return $view;
+    }
+
+    public function quickAddAction()
+    {
+        $solrNodeId = $this->params('nodeId');
+        $resourceName = $this->params('resourceName');
+
+        /*$form = $this->getForm(SolrQuickMappingForm::class, [
+            'solr_node_id' => $solrNodeId,
+            'resource_name' => $resourceName,
+        ]);*/
+        $form = $this->getForm(SolrQuickMappingForm::class, ['solr_node_id' => $solrNodeId]);
+
+        $view = new ViewModel;
+        $view->setVariable('form', $form);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                $this->logger()->debug('[Solr] data received:');
+                $this->logger()->debug(json_encode($data));
+
+                foreach ($data["o:source"] as $source) {
+                    foreach ($data["o:field_name"] as $field_name) {
+                        $this->api()->create('solr_mappings',
+                        [
+                            'o:solr_node' => ['o:id' => $solrNodeId],
+                            'o:resource_name' => $resourceName,
+                            'o:field_name' => str_replace('*', str_replace(':', '_', $source), $field_name),
+                            'o:source' => $source,
+                            'o:settings' => $data['o:settings'],
+                        ]);
+                    }
+                }
+
+                $this->messenger()->addSuccess('Solr mapping modified.');
 
                 return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
                     'nodeId' => $solrNodeId,
@@ -263,6 +313,17 @@ class MappingController extends AbstractActionController
         try {
             $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
             $schema = $solrNode->schema()->getSchema();
+            return $schema;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    protected function getSolrSchemaClass($solrNodeId)
+    {
+        try {
+            $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
+            $schema = $solrNode->schema();
             return $schema;
         } catch (\Exception $e) {
             return null;

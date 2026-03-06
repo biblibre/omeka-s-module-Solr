@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 16:17+0200\n"
+"POT-Creation-Date: 2025-11-13 10:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Index order desc"
 msgstr ""
 
-#: src/Controller/Admin/MappingController.php:241
+#: src/Controller/Admin/MappingController.php:292
 #, php-format
 msgid "%d mappings were found and imported"
 msgstr ""
@@ -95,48 +95,56 @@ msgstr ""
 msgid "qf parameter that will be added to the query"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:147
+#: src/Form/Admin/SolrNodeForm.php:150
 msgid "Minimum should match"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:148
+#: src/Form/Admin/SolrNodeForm.php:151
 msgid "mm parameter that will be added to the query"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:165
+#: src/Form/Admin/SolrNodeForm.php:168
 msgid "Highlighting"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:166
+#: src/Form/Admin/SolrNodeForm.php:169
 msgid "Enable extract retrieval in relation to search terms"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:174
+#: src/Form/Admin/SolrNodeForm.php:177
 msgid "Highlight fields"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:175
+#: src/Form/Admin/SolrNodeForm.php:178
 msgid "Fields used for highligthing feature (use \"*\" for all fields)."
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:183
+#: src/Form/Admin/SolrNodeForm.php:186
 msgid "Highlight fragment size"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:184
+#: src/Form/Admin/SolrNodeForm.php:187
 msgid ""
 "Define number of caracters for the fragment size of highlight, 0 will show "
 "the entire field value."
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:192
+#: src/Form/Admin/SolrNodeForm.php:195
 msgid "Highlight snippets"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:193
+#: src/Form/Admin/SolrNodeForm.php:196
 msgid ""
 "Define the number of fragments where the search terms were found in the same "
 "field."
+msgstr ""
+
+#: src/Form/Admin/SolrQuickMappingForm.php:26
+msgid "Sources"
+msgstr ""
+
+#: src/Form/Admin/SolrQuickMappingForm.php:42
+msgid "Solr fields"
 msgstr ""
 
 #: src/Form/Admin/SolrSearchFieldForm.php:51
@@ -210,21 +218,21 @@ msgstr ""
 msgid "Solr mapping for %s"
 msgstr ""
 
-#: view/solr/admin/mapping/browse-resource.phtml:44
+#: view/solr/admin/mapping/browse-resource.phtml:50
 msgid "Add new mapping"
 msgstr ""
 
-#: view/solr/admin/mapping/browse-resource.phtml:49
+#: view/solr/admin/mapping/browse-resource.phtml:55
 msgid "Back to resources list"
 msgstr ""
 
-#: view/solr/admin/mapping/browse-resource.phtml:61
-#: view/solr/admin/mapping/browse-resource.phtml:70
+#: view/solr/admin/mapping/browse-resource.phtml:67
+#: view/solr/admin/mapping/browse-resource.phtml:76
 #: view/solr/admin/mapping/show-details.phtml:4
 msgid "Solr field"
 msgstr ""
 
-#: view/solr/admin/mapping/browse-resource.phtml:111
+#: view/solr/admin/mapping/browse-resource.phtml:117
 msgid "There is no mappings defined yet."
 msgstr ""
 
@@ -251,6 +259,16 @@ msgstr ""
 
 #: view/solr/admin/mapping/import.phtml:2
 msgid "Solr mapping import"
+msgstr ""
+
+#: view/solr/admin/mapping/quick-add.phtml:30
+msgid "Quickly add Solr mappings"
+msgstr ""
+
+#: view/solr/admin/mapping/quick-add.phtml:42
+#: view/solr/admin/mapping/quick-add.phtml:43
+#: view/solr/admin/node/edit.phtml:50
+msgid "Search and select..."
 msgstr ""
 
 #: view/solr/admin/mapping/show-details.phtml:1
@@ -327,52 +345,6 @@ msgstr ""
 msgid "Restore transformation"
 msgstr ""
 
-#: src/Transformation/Filter/DataType.php:20
-msgid "Filter by data type"
-msgstr ""
-
-#: src/Transformation/Filter/DataType.php:29
-msgid ""
-"Only selected data types will be used. Selecting none is the same as "
-"selecting all. Only relevant when the source is a property."
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:24
-msgid "Filter resources by class"
-msgstr ""
-
-#: src/Transformation/Filter/ResourceClass.php:35
-msgid "Resource classes"
-msgstr ""
-
-#: src/Transformation/ConvertToSolrDateRange.php:11
-msgid "Convert to Solr date range"
-msgstr ""
-
-#: src/Transformation/ConvertToSolrDateRange.php:18
-msgid "Exclude unmatching values"
-msgstr ""
-
-#: src/Transformation/Format.php:20
-msgid "Format (deprecated)"
-msgstr ""
-
-#: src/Transformation/Format.php:32
-msgid "Formatter"
-msgstr ""
-
-#: src/Transformation/StripHtmlTags.php:9
-msgid "Strip HTML tags"
-msgstr ""
-
-#: src/Transformation/ConvertResourceToString.php:14
-msgid "Convert resource to string"
-msgstr ""
-
-#: src/Transformation/ConvertResourceToString.php:20
-msgid "Resource field"
-msgstr ""
-
 #: src/Api/Adapter/SolrNodeAdapter.php:105
 msgid "The URI cannot be empty"
 msgstr ""
@@ -381,12 +353,18 @@ msgstr ""
 msgid "Another Solr node already uses this URI"
 msgstr ""
 
-#: src/Controller/Admin/NodeController.php:59
-msgid "Solr node created."
+#: src/Form/Admin/SolrMappingImportForm.php:45
+msgid ""
+"URL of a JSON-LD representation of Solr mappings, like returned by Omeka S "
+"REST API (eg. https://omeka-s/api/solr_mappings?solr_node_id=1)"
 msgstr ""
 
-#: src/Controller/Admin/NodeController.php:86
-msgid "Solr node updated."
+#: src/Form/Admin/SolrMappingImportForm.php:56
+msgid "Delete existing mappings"
+msgstr ""
+
+#: src/Form/Admin/SolrMappingImportForm.php:57
+msgid "Delete all existing mappings for this Solr node before importing"
 msgstr ""
 
 #: src/Form/Admin/SolrNodeForm.php:72
@@ -413,26 +391,66 @@ msgid ""
 "reindexation</strong>"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:201
+#: src/Form/Admin/SolrNodeForm.php:204
 msgid "Maximum characters analyzed"
 msgstr ""
 
-#: src/Form/Admin/SolrNodeForm.php:202
+#: src/Form/Admin/SolrNodeForm.php:205
 msgid ""
 "Set the value of hl.maxAnalyzedChars parameter. Great values can have impact "
 "on performance"
 msgstr ""
 
-#: src/Form/Admin/SolrMappingImportForm.php:45
+#: src/Transformation/Filter/ResourceClass.php:24
+msgid "Filter resources by class"
+msgstr ""
+
+#: src/Transformation/Filter/ResourceClass.php:35
+msgid "Resource classes"
+msgstr ""
+
+#: src/Transformation/Filter/DataType.php:20
+msgid "Filter by data type"
+msgstr ""
+
+#: src/Transformation/Filter/DataType.php:29
 msgid ""
-"URL of a JSON-LD representation of Solr mappings, like returned by Omeka S "
-"REST API (eg. https://omeka-s/api/solr_mappings?solr_node_id=1)"
+"Only selected data types will be used. Selecting none is the same as "
+"selecting all. Only relevant when the source is a property."
 msgstr ""
 
-#: src/Form/Admin/SolrMappingImportForm.php:56
-msgid "Delete existing mappings"
+#: src/Transformation/ConvertResourceToString.php:14
+msgid "Convert resource to string"
 msgstr ""
 
-#: src/Form/Admin/SolrMappingImportForm.php:57
-msgid "Delete all existing mappings for this Solr node before importing"
+#: src/Transformation/ConvertResourceToString.php:20
+msgid "Resource field"
+msgstr ""
+
+#: src/Transformation/StripHtmlTags.php:9
+msgid "Strip HTML tags"
+msgstr ""
+
+#: src/Transformation/Format.php:20
+msgid "Format (deprecated)"
+msgstr ""
+
+#: src/Transformation/Format.php:32
+msgid "Formatter"
+msgstr ""
+
+#: src/Transformation/ConvertToSolrDateRange.php:11
+msgid "Convert to Solr date range"
+msgstr ""
+
+#: src/Transformation/ConvertToSolrDateRange.php:18
+msgid "Exclude unmatching values"
+msgstr ""
+
+#: src/Controller/Admin/NodeController.php:59
+msgid "Solr node created."
+msgstr ""
+
+#: src/Controller/Admin/NodeController.php:87
+msgid "Solr node updated."
 msgstr ""
