@@ -147,9 +147,6 @@ class MappingController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $this->logger()->debug('[Solr] data received:');
-                $this->logger()->debug(json_encode($data));
-
                 foreach ($data["o:source"] as $source) {
                     foreach ($data["o:field_name"] as $field_name) {
                         $this->api()->create('solr_mappings',

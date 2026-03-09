@@ -15,9 +15,6 @@ class SolrQuickMappingFormFactory implements FactoryInterface
         $solrNode = $services->get('Omeka\ApiManager')->read('solr_nodes', $options['solr_node_id'])->getContent();
         $dynamicFieldsAux = $solrNode->schema()->getDynamicFields();
 
-        $services->get('Omeka\Logger')->debug('[Solr] Dynamic fields:');
-        $services->get('Omeka\Logger')->debug(json_encode($dynamicFieldsAux));
-
         $dynamicFields = [];
         foreach ($dynamicFieldsAux as  $dynamicField) {
             $dynamicFields[] = $dynamicField['name'];
