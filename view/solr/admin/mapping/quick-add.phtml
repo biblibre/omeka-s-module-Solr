@@ -35,7 +35,7 @@
 (function ($) {
   $(document).ready(function () {
     // Activate Chosen
-    const $select = $('select').chosen({
+    $('select#source, select#field-name').chosen({
       allow_single_deselect: true,
       width: '100%',
       search_contains: true,

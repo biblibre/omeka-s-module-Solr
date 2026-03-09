@@ -30,6 +30,7 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
                                         ),
             ],
             'attributes' => [
+                'id' => 'source',
                 'multiple' => true,
                 'required' => true,
             ],
@@ -46,6 +47,7 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
                                         ),
             ],
             'attributes' => [
+                'id' => 'field-name',
                 'multiple' => true,
                 'required' => true,
             ],
