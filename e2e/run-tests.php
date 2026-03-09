@@ -28,8 +28,8 @@ $connectionParams = $connection->getParams();
 
 $pid = pcntl_fork();
 if ($pid == -1) {
-     die('could not fork');
-} else if ($pid) {
+    die('could not fork');
+} elseif ($pid) {
     sleep(1);
     chdir($originalDir);
     if (isset($opts['gui'])) {
