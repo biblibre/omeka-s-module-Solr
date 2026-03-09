@@ -34,13 +34,14 @@
 <script>
 (function ($) {
   $(document).ready(function () {
+    const placeholder = <?= json_encode($this->translate('Search and select...')) ?>;
     // Activate Chosen
     $('select#source, select#field-name').chosen({
       allow_single_deselect: true,
       width: '100%',
       search_contains: true,
-      placeholder_text_multiple: '<?php echo $this->translate('Search and select...'); ?>',
-      placeholder_text_single: '<?php echo $this->translate('Search and select...'); ?>'
+      placeholder_text_multiple: placeholder,
+      placeholder_text_single: placeholder,
     });
   });
 })(jQuery);
