@@ -208,7 +208,8 @@ return [
         ],
         'invokables' => [
             'Solr\Form\Admin\SolrMappingImportForm' => Form\Admin\SolrMappingImportForm::class,
-            'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,        ],
+            'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,
+        ],
     ],
     'router' => [
         'routes' => $routes,
