@@ -147,19 +147,33 @@ class MappingController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
 
+                $new_mappings = [];
                 foreach ($data["o:source"] as $source) {
                     foreach ($data["o:field_name"] as $field_name) {
-                        $this->api()->create('solr_mappings',
-                        [
+                        $field_name = str_replace('*', preg_replace('/[^a-zA-Z0-9]/', '_', $source), $field_name);
+                        $solr_mapping = $this->api()->searchOne('solr_mappings', [
+                            'solr_node_id' => $solrNodeId,
+                            'resource_name' => $resourceName,
+                            'field_name' => $field_name,
+                            'source' => $source,
+                        ])->getContent();
+
+                        if ($solr_mapping) {
+                            // Do not prevent creation, the new mapping may have different settings
+                            $this->messenger()->addWarning(sprintf('A mapping with the name "%s" and the source "%s" already exists. This may be a duplicate.', $field_name, $source));
+                        }
+
+                        $new_mappings[] = [
                             'o:solr_node' => ['o:id' => $solrNodeId],
                             'o:resource_name' => $resourceName,
-                            'o:field_name' => str_replace('*', str_replace(':', '_', $source), $field_name),
+                            'o:field_name' => $field_name,
                             'o:source' => $source,
                             'o:settings' => $data['o:settings'],
-                        ]);
+                        ];
                     }
                 }
 
+                $this->api()->batchCreate('solr_mappings', $new_mappings);
                 $this->messenger()->addSuccess('Solr mapping modified.');
 
                 return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
