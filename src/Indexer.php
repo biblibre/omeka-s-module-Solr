@@ -181,7 +181,11 @@ class Indexer extends AbstractIndexer
 
             $schemaField = $schema->getField($solrField);
             if (!$schemaField->isMultivalued()) {
-                $values = array_slice($values, 0, 1);
+                if (!$document->hasField($solrField)) {
+                    $values = array_slice($values, 0, 1);
+                } else {
+                    $values = [];
+                }
             }
 
             foreach ($values as $value) {

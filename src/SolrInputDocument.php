@@ -20,6 +20,11 @@ class SolrInputDocument
         }
     }
 
+    public function hasField(string $name): bool
+    {
+        return array_key_exists($name, $this->fields);
+    }
+
     public function toArray(): array
     {
         return $this->fields;
