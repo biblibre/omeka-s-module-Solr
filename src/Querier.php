@@ -553,7 +553,6 @@ class Querier extends AbstractQuerier
                 $solrQuery->addFilterQuery($fq);
             }
 
-            $query->setFacetLimit(-1);
             $query->addFacetField($field);
             $facetFields = $query->getFacetFields();
             if (!empty($facetFields)) {

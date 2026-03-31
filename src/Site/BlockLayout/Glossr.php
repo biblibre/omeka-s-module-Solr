@@ -52,8 +52,8 @@ class Glossr extends AbstractBlockLayout
 
         $data = $block ? $block->data() + $defaults : $defaults;
 
-        $form = $this->formElementManager->get(GlossrForm::class, ['o:index_id' => $data['o:index_id'],
-                                                                                'site-slug' => $block->page()->site()->slug(), ]);
+        $siteSlug = $block ? $block->page()->site()->slug() : $site->slug();
+        $form = $this->formElementManager->get(GlossrForm::class, ['o:index_id' => $data['o:index_id'], 'site-slug' => $siteSlug]);
 
         $form->setData([
             'o:block[__blockIndex__][o:data][o:index_id]' => $data['o:index_id'],
@@ -102,15 +102,15 @@ class Glossr extends AbstractBlockLayout
         }
 
         $view->headScript()->appendScript(
-        'window.availableSearchFields = ' . json_encode($indexesSearch, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+            'window.availableSearchFields = ' . json_encode($indexesSearch, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
         );
 
         $view->headScript()->appendScript(
-        'window.availableFacetFields = ' . json_encode($indexesFacet, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+            'window.availableFacetFields = ' . json_encode($indexesFacet, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
         );
 
         $view->headScript()->appendScript(
-        'window.availableSortFields = ' . json_encode($indexesSort, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
+            'window.availableSortFields = ' . json_encode($indexesSort, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ';'
         );
 
         $view->headScript()->appendFile($view->assetUrl('js/glossaire-form.js', 'Solr'));
@@ -124,34 +124,37 @@ class Glossr extends AbstractBlockLayout
         $fieldName = $block->dataValue('search_field');
         $resourceClassFieldName = $block->dataValue('resource_class_field');
         $resourceClasses = $block->dataValue('resource_class');
-        $languageFieldName = $block->dataValue('languages_field');
-        $languages = $block->dataValue('language_class');
-        $indexResponse = $this->apiManager->read('search_indexes', $indexId)->getContent();
-        $sortBy = $block->dataValue('sort_by');
-        $sortOrder = $block->dataValue('sort_order');
-        $dateField = $block->dataValue('date_field');
+        $languageFieldName = $block->dataValue('language_field');
+        $languages = $block->dataValue('language');
+        $sortBy = $block->dataValue('sort_order');  // 'alphabetic', 'total', 'chronological'
+        $sortOrder = $block->dataValue('sort_by');  // 'asc', 'desc'
 
-        if (empty($indexResponse)) {
+        try {
+            $indexResponse = $this->apiManager->read('search_indexes', $indexId)->getContent();
+        } catch (\Exception $e) {
             $view->messenger()->addError(sprintf('Index with id %s not found.', $indexId));
-            return null;
+            return '';
         }
 
-        $page = $this->apiManager->read('search_pages', $pageId)->getContent();
-        if (empty($page)) {
+        try {
+            $page = $this->apiManager->read('search_pages', $pageId)->getContent();
+        } catch (\Exception $e) {
             $view->messenger()->addError(sprintf('Page with id %s not found.', $pageId));
-            return null;
+            return '';
         }
 
         $site = $view->currentSite();
 
         $customQuery = [];
-        parse_str($customQueryInput, $customQuery);
+        if (!empty($customQueryInput)) {
+            parse_str($customQueryInput, $customQuery);
+        }
 
         $formAdapter = $page->formAdapter();
-        if (!isset($formAdapter)) {
+        if (!$formAdapter) {
             $formAdapterName = $page->formAdapterName();
-            $msg = sprintf("Form adapter '%s' not found", $formAdapterName);
-            throw new RuntimeException($msg);
+            $view->messenger()->addError(sprintf("Form adapter '%s' not found", $formAdapterName));
+            return '';
         }
 
         $searchPageSettings = $page->settings();
@@ -161,53 +164,43 @@ class Glossr extends AbstractBlockLayout
         }
 
         $query = $formAdapter->toQuery($customQuery, $searchFormSettings);
-
-        $this->logger->debug("Custom query after toQuery()");
-        $this->logger->debug(json_encode($query));
-
         $querier = $indexResponse->querier();
 
         $response = null;
         $facets = [];
 
-        $letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+        $letters = range('a', 'z');
         try {
-            $response = $querier->glossaire($indexId, $site, $fieldName, $resourceClassFieldName,
-            $resourceClasses, $languageFieldName, $languages, $query);
+            $response = $querier->glossaire(
+                $indexId,
+                $site,
+                $fieldName,
+                $resourceClassFieldName,
+                $resourceClasses,
+                $languageFieldName,
+                $languages,
+                $query
+            );
             if (array_key_exists($fieldName, $response->getFacetCounts())) {
                 $facets[$fieldName] = $response->getFacetCounts()[$fieldName];
             }
         } catch (QuerierException $e) {
-            throw $e;
+            $view->messenger()->addError('An error occurred while executing the search query.');
+            return '';
         }
 
         $facetLetter = [];
         if (array_key_exists($fieldName, $response->getFacetCounts())) {
             foreach ($letters as $letter) {
-                // $this->logger->debug(sprintf('[Glossr] processing letter "%s"', $letter));
-                $facetLetter[$letter] = []; // init
+                $facetLetter[$letter] = [];
                 foreach ($facets[$fieldName] as $facetValue) {
-                    // $this->logger->debug(sprintf('[Glossr] facet value:' . PHP_EOL . '%s', json_encode($facetValue)));
                     if (str_starts_with(strtolower($facetValue['value']), $letter)) {
                         $facetLetter[$letter][] = $facetValue;
                     }
                 }
-                if ($sortOrder == 'alphabetic') {
-                    if ($sortBy == 'asc') {
-                        usort($facetLetter[$letter], function ($a, $b) {
-                            return $b['value'] <=> $a['value'];
-                        });
-                    } else {
-                        usort($facetLetter[$letter], function ($a, $b) {
-                            return $a['value'] <=> $b['value'];
-                        });
-                    }
-                } elseif ($sortOrder == 'total') {
-                    if ($sortBy == 'asc') {
-                        $facetLetter[$letter] = array_reverse($facetLetter[$letter]);
-                    } else {
-                        // nothing to do!
-                    }
+                
+                if (!empty($facetLetter[$letter])) {
+                    $this->sortFacetsForLetter($facetLetter[$letter], $sortBy, $sortOrder);
                 }
             }
         }
@@ -247,5 +240,40 @@ class Glossr extends AbstractBlockLayout
     {
         $view->headLink()
             ->appendStylesheet($view->assetUrl('css/reference.css', 'Solr'));
+    }
+
+    protected function sortFacetsForLetter(array &$facets, string $sortBy, string $sortOrder): void
+    {
+        if (empty($facets)) {
+            return;
+        }
+        
+        switch ($sortBy) {
+            case 'alphabetic':
+                usort($facets, function ($a, $b) use ($sortOrder) {
+                    $result = strcasecmp($a['value'], $b['value']);
+                    return $sortOrder === 'desc' ? -$result : $result;
+                });
+                break;
+
+            case 'total':
+                usort($facets, function ($a, $b) use ($sortOrder) {
+                    $countA = $a['count'] ?? 0;
+                    $countB = $b['count'] ?? 0;
+                    $result = $countB <=> $countA;
+                    return $sortOrder === 'asc' ? -$result : $result;
+                });
+                break;
+
+            case 'chronological':
+                usort($facets, function ($a, $b) use ($sortOrder) {
+                    $result = $a['value'] <=> $b['value'];
+                    return $sortOrder === 'desc' ? -$result : $result;
+                });
+                break;
+
+            default:
+                break;
+        }
     }
 }
