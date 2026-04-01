@@ -60,12 +60,12 @@ class GlossrForm extends Form
             'name' => 'o:block[__blockIndex__][o:data][search_page]',
             'type' => \Laminas\Form\Element\Select::class,
             'options' => [
-                    'label' => 'Search page to use', // @translate
-                    'value_options' => $pagesValueOptions,
-                ],
-                'attributes' => [
-                    'required' => false,
-                ],
+                'label' => 'Search page to use', // @translate
+                'value_options' => $pagesValueOptions,
+            ],
+            'attributes' => [
+                'required' => false,
+            ],
         ]);
 
         $indexesAux = $this->getApiManager()->search('search_indexes')->getContent();
@@ -84,9 +84,11 @@ class GlossrForm extends Form
             $allowedSearchable[($index->id())] = array_column($searchFields, 'name');
             $allowedSearchable[($index->id())] = array_column($sortFields, 'name');
 
-            if (!empty($this->getOption('o:index_id'))
+            if (
+                !empty($this->getOption('o:index_id'))
                 && is_numeric($this->getOption('o:index_id'))
-                && ($index->id() == intval($this->getOption('o:index_id')))) {
+                && ($index->id() == intval($this->getOption('o:index_id')))
+            ) {
                 $valueOptionsFacetable = array_column($facetFields, 'label', 'name');
                 $valueOptionsSearchable = array_column($searchFields, 'label', 'name');
                 $valueOptionsSortable = array_column($sortFields, 'label', 'name');
@@ -176,16 +178,16 @@ class GlossrForm extends Form
             'name' => 'o:block[__blockIndex__][o:data][resource_class]',
             'type' => \Omeka\Form\Element\ResourceClassSelect::class,
             'options' => [
-                    'label' => 'Resource classes', // @translate
-                    'term_as_value' => true,
-                ],
-                'attributes' => [
-                    'required' => false,
-                    'class' => 'chosen-select',
-                    'multiple' => 'multiple',
-                    'data-placeholder' => 'Select resource classes…', // @translate
-                    'data-fieldset' => 'args',
-                ],
+                'label' => 'Resource classes', // @translate
+                'term_as_value' => true,
+            ],
+            'attributes' => [
+                'required' => false,
+                'class' => 'chosen-select',
+                'multiple' => 'multiple',
+                'data-placeholder' => 'Select resource classes…', // @translate
+                'data-fieldset' => 'args',
+            ],
         ]);
 
         $this->add([
@@ -218,8 +220,8 @@ class GlossrForm extends Form
             'name' => 'o:block[__blockIndex__][o:data][language]',
             'type' => 'text',
             'options' => [
-                    'label' => 'Language', // @translate
-                ],
+                'label' => 'Language', // @translate
+            ],
         ]);
 
         $this->add([
@@ -228,7 +230,7 @@ class GlossrForm extends Form
             'options' => [
                 'label' => 'Custom query parameters', // @translate
             ],
-            ]);
+        ]);
 
         $this->add([
             'name' => 'o:block[__blockIndex__][o:data][letters_list_position]',
@@ -265,19 +267,6 @@ class GlossrForm extends Form
         ]);
 
         $this->add([
-            'name' => 'o:block[__blockIndex__][o:data][sort_order]',
-            'type' => \Laminas\Form\Element\Select::class,
-            'options' => [
-                'label' => 'In what order to display the letters of the Glossr', // @translate
-                'value_options' => [
-                    'alphabetic' => 'Alphabetic', // @translate
-                    'total' => 'Total', // @translate
-                    'chronological' => 'Chronological', // @translate
-                ],
-            ],
-        ]);
-
-        $this->add([
             'name' => 'o:block[__blockIndex__][o:data][sort_by]',
             'type' => \Laminas\Form\Element\Select::class,
             'options' => [
@@ -285,32 +274,6 @@ class GlossrForm extends Form
                 'value_options' => [
                     'asc' => 'Ascending', // @translate
                     'desc' => 'Descending', // @translate
-                ],
-            ],
-        ]);
-
-        $this->add([
-            'name' => 'o:block[__blockIndex__][o:data][date_field]',
-            'required' => true,
-            'type' => \Laminas\Form\Element\Select::class,
-            'options' => [
-                'label' => 'Date field for sorting chronologically', // @translate
-                'empty_option' => 'None', // @translate
-                'value_options' => $valueOptionsSortable,
-            ],
-            'validators' => [
-                [
-                    'name' => \Laminas\Validator\Callback::class,
-                    'options' => [
-                        'callback' => function ($value, $context) use ($allowedSortable) {
-                            $type = $context['o:index_id'] ?? null;
-
-                            return $type
-                                && isset($allowedSortable[$type])
-                                && in_array($value, $allowedSortable[$type]);
-                        },
-                        'message' => 'Incompatible field with selected index.', // @translate
-                    ],
                 ],
             ],
         ]);

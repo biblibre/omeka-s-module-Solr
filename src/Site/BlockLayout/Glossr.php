@@ -47,7 +47,7 @@ class Glossr extends AbstractBlockLayout
             'sort_order' => 'asc',
             'display_letters' => [],
             'display_total' => [],
-            'date_field' => '',
+
         ];
 
         $data = $block ? $block->data() + $defaults : $defaults;
@@ -69,7 +69,7 @@ class Glossr extends AbstractBlockLayout
             'o:block[__blockIndex__][o:data][display_letters]' => $data['display_letters'],
             'o:block[__blockIndex__][o:data][display_total]' => $data['display_total'],
             'o:block[__blockIndex__][o:data][custom_query]' => $data['custom_query'],
-            'o:block[__blockIndex__][o:data][date_field]' => $data['date_field'],
+
         ]);
 
         return $view->formCollection($form);
@@ -126,8 +126,9 @@ class Glossr extends AbstractBlockLayout
         $resourceClasses = $block->dataValue('resource_class');
         $languageFieldName = $block->dataValue('language_field');
         $languages = $block->dataValue('language');
-        $sortBy = $block->dataValue('sort_order');  // 'alphabetic', 'total', 'chronological'
-        $sortOrder = $block->dataValue('sort_by');  // 'asc', 'desc'
+
+        $sortBy = $block->dataValue('sort_order') ?: 'alphabetic';  // 'alphabetic', 'total'
+        $sortOrder = $block->dataValue('sort_by') ?: 'asc';  // 'asc', 'desc'
 
         try {
             $indexResponse = $this->apiManager->read('search_indexes', $indexId)->getContent();
@@ -198,7 +199,7 @@ class Glossr extends AbstractBlockLayout
                         $facetLetter[$letter][] = $facetValue;
                     }
                 }
-                
+
                 if (!empty($facetLetter[$letter])) {
                     $this->sortFacetsForLetter($facetLetter[$letter], $sortBy, $sortOrder);
                 }
@@ -247,7 +248,11 @@ class Glossr extends AbstractBlockLayout
         if (empty($facets)) {
             return;
         }
-        
+
+        // Ensure we have valid sort parameters
+        $sortBy = $sortBy ?: 'alphabetic';
+        $sortOrder = $sortOrder ?: 'asc';
+
         switch ($sortBy) {
             case 'alphabetic':
                 usort($facets, function ($a, $b) use ($sortOrder) {
@@ -262,13 +267,6 @@ class Glossr extends AbstractBlockLayout
                     $countB = $b['count'] ?? 0;
                     $result = $countB <=> $countA;
                     return $sortOrder === 'asc' ? -$result : $result;
-                });
-                break;
-
-            case 'chronological':
-                usort($facets, function ($a, $b) use ($sortOrder) {
-                    $result = $a['value'] <=> $b['value'];
-                    return $sortOrder === 'desc' ? -$result : $result;
                 });
                 break;
 

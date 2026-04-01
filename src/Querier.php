@@ -356,7 +356,8 @@ class Querier extends AbstractQuerier
     }
 
     public function glossaire($indexId, $siteRep, $field,
-        $resourceClassField = null, $resourceClasses = null, $languageField = null, $languages = null, $customQuery = null)
+        $resourceClassField = null, $resourceClasses = null, $languageField = null, $languages = null, $customQuery = null,
+        $sortBy = null, $sortOrder = null, $dateField = null)
     {
         $serviceLocator = $this->getServiceLocator();
         $settings = $serviceLocator->get('Omeka\Settings');
