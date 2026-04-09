@@ -150,7 +150,7 @@ class GlossrForm extends Form
 
         $this->add([
             'name' => 'o:block[__blockIndex__][o:data][resource_class_field]',
-            'required' => true,
+            'required' => false,
             'type' => \Laminas\Form\Element\Select::class,
             'options' => [
                 'label' => 'Resource class field', // @translate
@@ -162,6 +162,9 @@ class GlossrForm extends Form
                     'name' => \Laminas\Validator\Callback::class,
                     'options' => [
                         'callback' => function ($value, $context) use ($allowedFacetable) {
+                            if (empty($value)) {
+                                return true;
+                            }
                             $type = $context['o:index_id'] ?? null;
 
                             return $type
@@ -192,7 +195,7 @@ class GlossrForm extends Form
 
         $this->add([
             'name' => 'o:block[__blockIndex__][o:data][language_field]',
-            'required' => true,
+            'required' => false,
             'type' => \Laminas\Form\Element\Select::class,
             'options' => [
                 'label' => 'Language field', // @translate
@@ -204,6 +207,9 @@ class GlossrForm extends Form
                     'name' => \Laminas\Validator\Callback::class,
                     'options' => [
                         'callback' => function ($value, $context) use ($allowedFacetable) {
+                            if (empty($value)) {
+                                return true;
+                            }
                             $type = $context['o:index_id'] ?? null;
 
                             return $type

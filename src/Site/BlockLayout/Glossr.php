@@ -133,14 +133,14 @@ class Glossr extends AbstractBlockLayout
         try {
             $indexResponse = $this->apiManager->read('search_indexes', $indexId)->getContent();
         } catch (\Exception $e) {
-            $view->messenger()->addError(sprintf('Index with id %s not found.', $indexId));
+            $this->logger->err(sprintf('Glossr block: Index with id %s not found.', $indexId));
             return '';
         }
 
         try {
             $page = $this->apiManager->read('search_pages', $pageId)->getContent();
         } catch (\Exception $e) {
-            $view->messenger()->addError(sprintf('Page with id %s not found.', $pageId));
+            $this->logger->err(sprintf('Glossr block: Search page with id %s not found.', $pageId));
             return '';
         }
 
@@ -154,7 +154,7 @@ class Glossr extends AbstractBlockLayout
         $formAdapter = $page->formAdapter();
         if (!$formAdapter) {
             $formAdapterName = $page->formAdapterName();
-            $view->messenger()->addError(sprintf("Form adapter '%s' not found", $formAdapterName));
+            $this->logger->err(sprintf("Glossr block: Form adapter '%s' not found", $formAdapterName));
             return '';
         }
 
@@ -186,7 +186,7 @@ class Glossr extends AbstractBlockLayout
                 $facets[$fieldName] = $response->getFacetCounts()[$fieldName];
             }
         } catch (QuerierException $e) {
-            $view->messenger()->addError('An error occurred while executing the search query.');
+            $this->logger->err(sprintf('Glossr block: An error occurred while executing the search query: %s', $e->getMessage()));
             return '';
         }
 

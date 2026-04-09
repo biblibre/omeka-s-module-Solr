@@ -411,19 +411,7 @@ class Querier extends AbstractQuerier
         if (empty($customQuery)) {
             $q = [];
 
-            if (!empty($languageField) && !empty($languages)) {
-                $languagesArray = explode('|', $languages);
 
-                foreach ($languagesArray as $language) {
-                    $query->addFacetFilter($languageField, $languages);
-                }
-            }
-
-            if (!empty($resourceClassField) && !empty($resourceClasses)) {
-                foreach ($resourceClasses as $resourceClass) {
-                    $query->addFacetFilter($resourceClassField, $resourceClass);
-                }
-            }
 
             $indexSettings = $index->settings();
             $query->setResources($indexSettings['resources']);
@@ -452,7 +440,41 @@ class Querier extends AbstractQuerier
                 $solrQuery->addFilterQuery($fq);
             }
 
-            $query->setFacetLimit(-1);
+            if (!empty($languageField) && !empty($languages)) {
+                $solrLanguageField = null;
+                $searchField = $this->getSearchField($languageField);
+                if ($searchField) {
+                    $solrLanguageField = $searchField->facetField();
+                }
+                if ($solrLanguageField) {
+                    $languagesArray = explode('|', $languages);
+                    foreach ($languagesArray as $language) {
+                        $language = trim($language);
+                        if (!empty($language)) {
+                            $solrQuery->addFilterQuery(sprintf('%s:%s', $solrLanguageField, $this->enclose($language)));
+                        }
+                    }
+                }
+            }
+
+            if (!empty($resourceClassField) && !empty($resourceClasses)) {
+                $solrResourceClassField = null;
+                $searchField = $this->getSearchField($resourceClassField);
+                if ($searchField) {
+                    $solrResourceClassField = $searchField->facetField();
+                }
+                if ($solrResourceClassField) {
+                    $resourceClassesArray = is_array($resourceClasses) ? $resourceClasses : explode('|', $resourceClasses);
+                    foreach ($resourceClassesArray as $resourceClass) {
+                        $resourceClass = trim($resourceClass);
+                        if (!empty($resourceClass)) {
+                            $solrQuery->addFilterQuery(sprintf('%s:%s', $solrResourceClassField, $this->enclose($resourceClass)));
+                        }
+                    }
+                }
+            }
+
+            $query->setFacetLimit($field, -1);
             $query->addFacetField($field);
             $facetFields = $query->getFacetFields();
             if (!empty($facetFields)) {
@@ -467,6 +489,7 @@ class Querier extends AbstractQuerier
                     }
 
                     $solrQuery->addFacetField($solrFacetField);
+                    $solrQuery->setFacetLimit($solrFacetField, '-1');
                 }
             }
 
@@ -511,19 +534,7 @@ class Querier extends AbstractQuerier
         } else {
             $q = $customQuery->getQuery();
 
-            if (!empty($languageField) && !empty($languages)) {
-                $languagesArray = explode('|', $languages);
 
-                foreach ($languagesArray as $language) {
-                    $customQuery->addFacetFilter($languageField, $languages);
-                }
-            }
-
-            if (!empty($resourceClassField) && !empty($resourceClasses)) {
-                foreach ($resourceClasses as $resourceClass) {
-                    $customQuery->addFacetFilter($resourceClassField, $resourceClass);
-                }
-            }
 
             $q = $this->getQueryStringFromSearchQuery($q);
 
@@ -554,6 +565,40 @@ class Querier extends AbstractQuerier
                 $solrQuery->addFilterQuery($fq);
             }
 
+            if (!empty($languageField) && !empty($languages)) {
+                $solrLanguageField = null;
+                $searchField = $this->getSearchField($languageField);
+                if ($searchField) {
+                    $solrLanguageField = $searchField->facetField();
+                }
+                if ($solrLanguageField) {
+                    $languagesArray = explode('|', $languages);
+                    foreach ($languagesArray as $language) {
+                        $language = trim($language);
+                        if (!empty($language)) {
+                            $solrQuery->addFilterQuery(sprintf('%s:%s', $solrLanguageField, $this->enclose($language)));
+                        }
+                    }
+                }
+            }
+
+            if (!empty($resourceClassField) && !empty($resourceClasses)) {
+                $solrResourceClassField = null;
+                $searchField = $this->getSearchField($resourceClassField);
+                if ($searchField) {
+                    $solrResourceClassField = $searchField->facetField();
+                }
+                if ($solrResourceClassField) {
+                    $resourceClassesArray = is_array($resourceClasses) ? $resourceClasses : explode('|', $resourceClasses);
+                    foreach ($resourceClassesArray as $resourceClass) {
+                        $resourceClass = trim($resourceClass);
+                        if (!empty($resourceClass)) {
+                            $solrQuery->addFilterQuery(sprintf('%s:%s', $solrResourceClassField, $this->enclose($resourceClass)));
+                        }
+                    }
+                }
+            }
+
             $query->addFacetField($field);
             $facetFields = $query->getFacetFields();
             if (!empty($facetFields)) {
@@ -568,6 +613,7 @@ class Querier extends AbstractQuerier
                     }
 
                     $solrQuery->addFacetField($solrFacetField);
+                    $solrQuery->setFacetLimit($solrFacetField, '-1');
                 }
             }
 

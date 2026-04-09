@@ -124,6 +124,8 @@ class SolrQuery implements JsonSerializable
         $this->setParam("facet.limit.$facetField", $facetFieldLimit);
     }
 
+
+
     public function setHighlight(bool $highlight)
     {
         $this->setBoolParam('hl', $highlight);
