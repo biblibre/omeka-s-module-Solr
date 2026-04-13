@@ -64,13 +64,28 @@
       placeholder_text_single: 'Search and select...'
     });
 
+    // Disable options already present in the input
+    function updateDisabledOptions() {
+      const current = $input.val().trim().split(/\s+/).filter(Boolean);
+      $('#qf_selector option').each(function () {
+        const val = $(this).val();
+        $(this).prop('disabled', val && current.includes(val));
+      });
+      $select.trigger('chosen:updated');
+    }
+
+    // Initial state + live update when input is edited manually
+    updateDisabledOptions();
+    $input.on('input', updateDisabledOptions);
+
     // Handle selection
     $select.on('change', function (e, params) {
       if (!params || !params.selected) return;
       const val = params.selected.trim();
       const current = $input.val().trim();
-      $input.val(current ? current + ' ' + val + ' ': val + ' ');
-      $(this).val('').trigger('chosen:updated');
+      $input.val(current ? current + ' ' + val + ' ' : val + ' ');
+      $(this).val('');
+      updateDisabledOptions();
     });
   });
 })(jQuery);
