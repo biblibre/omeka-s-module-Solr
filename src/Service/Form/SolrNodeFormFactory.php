@@ -14,10 +14,16 @@ class SolrNodeFormFactory implements FactoryInterface
 
         if (!empty($options['solr_node_id'])) {
             $mappedFields = [];
-            $mappings = $services->get('Omeka\ApiManager')->search('solr_mappings', ['solr_node_id' => $options['solr_node_id']])->getContent();
-            foreach ($mappings as $mapping) {
-                if (str_ends_with($mapping->fieldName(), '_txt') || str_contains($mapping->fieldName(), '_txt_')) {
-                    $mappedFields[] = $mapping->fieldName();
+            $searchFields = $services->get('Omeka\ApiManager')->search('solr_search_fields', ['solr_node_id' => $options['solr_node_id']])->getContent();
+            foreach ($searchFields as $searchField) {
+                $textFields = $searchField->textFields();
+                if (!empty($textFields)) {
+                    foreach (explode(' ', $textFields) as $field) {
+                        $field = trim($field);
+                        if ($field !== '' && !in_array($field, $mappedFields)) {
+                            $mappedFields[] = $field;
+                        }
+                    }
                 }
             }
             $form->setOption('mapped_fields', $mappedFields);
