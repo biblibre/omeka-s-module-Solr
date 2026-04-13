@@ -147,33 +147,33 @@ class MappingController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $new_mappings = [];
-                foreach ($data["o:source"] as $source) {
-                    foreach ($data["o:field_name"] as $field_name) {
-                        $field_name = str_replace('*', preg_replace('/[^a-zA-Z0-9]/', '_', $source), $field_name);
-                        $solr_mapping = $this->api()->searchOne('solr_mappings', [
+                $newMappings = [];
+                foreach ($data['o:source'] as $source) {
+                    foreach ($data['o:field_name'] as $fieldName) {
+                        $fieldName = str_replace('*', preg_replace('/[^a-zA-Z0-9]/', '_', $source), $fieldName);
+                        $solrMapping = $this->api()->searchOne('solr_mappings', [
                             'solr_node_id' => $solrNodeId,
                             'resource_name' => $resourceName,
-                            'field_name' => $field_name,
+                            'field_name' => $fieldName,
                             'source' => $source,
                         ])->getContent();
 
-                        if ($solr_mapping) {
+                        if ($solrMapping) {
                             // Do not prevent creation, the new mapping may have different settings
-                            $this->messenger()->addWarning(sprintf('A mapping with the name "%s" and the source "%s" already exists. This may be a duplicate.', $field_name, $source));
+                            $this->messenger()->addWarning(sprintf('A mapping with the name "%s" and the source "%s" already exists. This may be a duplicate.', $fieldName, $source));
                         }
 
-                        $new_mappings[] = [
+                        $newMappings[] = [
                             'o:solr_node' => ['o:id' => $solrNodeId],
                             'o:resource_name' => $resourceName,
-                            'o:field_name' => $field_name,
+                            'o:field_name' => $fieldName,
                             'o:source' => $source,
                             'o:settings' => $data['o:settings'],
                         ];
                     }
                 }
 
-                $this->api()->batchCreate('solr_mappings', $new_mappings);
+                $this->api()->batchCreate('solr_mappings', $newMappings);
                 $this->messenger()->addSuccess('Solr mapping modified.');
 
                 return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
@@ -320,17 +320,6 @@ class MappingController extends AbstractActionController
         try {
             $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
             $schema = $solrNode->schema()->getSchema();
-            return $schema;
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
-    protected function getSolrSchemaClass($solrNodeId)
-    {
-        try {
-            $solrNode = $this->api()->read('solr_nodes', $solrNodeId)->getContent();
-            $schema = $solrNode->schema();
             return $schema;
         } catch (\Exception $e) {
             return null;

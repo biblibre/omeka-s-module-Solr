@@ -12,11 +12,15 @@ class SolrQuickMappingFormFactory implements FactoryInterface
         $form = new SolrQuickMappingForm;
         $form->setTranslator($services->get('MvcTranslator'));
 
+        if (empty($options['solr_node_id'])) {
+            return $form;
+        }
+
         $solrNode = $services->get('Omeka\ApiManager')->read('solr_nodes', $options['solr_node_id'])->getContent();
-        $dynamicFieldsAux = $solrNode->schema()->getDynamicFields();
+        $rawDynamicFields = $solrNode->schema()->getDynamicFields();
 
         $dynamicFields = [];
-        foreach ($dynamicFieldsAux as  $dynamicField) {
+        foreach ($rawDynamicFields as $dynamicField) {
             $dynamicFields[] = $dynamicField['name'];
         }
 

@@ -25,9 +25,9 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
             'options' => [
                 'label' => $translator->translate('Sources'),
                 'value_options' => array_combine(
-                                            $this->options['terms'],
-                                            $this->options['terms']
-                                        ),
+                    $this->options['terms'],
+                    $this->options['terms']
+                ),
             ],
             'attributes' => [
                 'id' => 'source',
@@ -42,9 +42,9 @@ class SolrQuickMappingForm extends Form implements TranslatorAwareInterface
             'options' => [
                 'label' => $translator->translate('Solr fields'),
                 'value_options' => array_combine(
-                                            $this->options['dynamic_fields'],
-                                            $this->options['dynamic_fields']
-                                        ),
+                    $this->options['dynamic_fields'],
+                    $this->options['dynamic_fields']
+                ),
             ],
             'attributes' => [
                 'id' => 'field-name',

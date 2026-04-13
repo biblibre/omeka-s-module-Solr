@@ -34,7 +34,7 @@
 <script>
 (function ($) {
   $(document).ready(function () {
-    const placeholder = <?= json_encode($this->translate('Search and select...')) ?>;
+    const placeholder = <?php echo json_encode($this->translate('Search and select...')); ?>;
     // Activate Chosen
     $('select#source, select#field-name').chosen({
       allow_single_deselect: true,
