@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - Prevent multiple values to be indexed in a non multiValued field
+- Make it easier way to configure the 'qf' parameter, by adding a list of
+  configured fields next to the parameter input
 
 ## [0.22.1] - 2026-03-04
 

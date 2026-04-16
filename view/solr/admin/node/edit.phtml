@@ -27,6 +27,8 @@
  */
 ?>
 
+<?php $this->headScript()->appendFile($this->assetUrl('js/solr-node-edit.js', 'Solr')); ?>
+
 <?php $form->prepare(); ?>
 
 <?php echo $this->pageTitle($this->translate('Edit Solr node')); ?>

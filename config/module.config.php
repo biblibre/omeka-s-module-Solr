@@ -210,6 +210,9 @@ return [
             'Solr\Form\Element\Transformations' => Form\Element\Transformations::class,
         ],
     ],
+    'js_translate_strings' => [
+        'Search and select...', // @translate
+    ],
     'router' => [
         'routes' => $routes,
     ],
