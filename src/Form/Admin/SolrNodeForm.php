@@ -161,6 +161,7 @@ class SolrNodeForm extends Form implements TranslatorAwareInterface
             ],
             'attributes' => [
                 'id' => 'qf_text',
+                'data-mapped-fields' => implode(' ', $this->getOption('mapped_fields', [])),
             ]
         ]);
 
