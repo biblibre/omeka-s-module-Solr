@@ -166,7 +166,7 @@ class Querier extends AbstractQuerier
                 if (!$solrFacetField) {
                     throw new QuerierException(sprintf('Field %s is not facetable', $facetField));
                 }
-                $solrQuery->setFacetLimit($solrFacetField, $facetLimit);
+                $solrQuery->setFacetLimit($solrFacetField, $facetLimit ?? -1);
             }
         }
 
