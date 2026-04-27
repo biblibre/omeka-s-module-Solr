@@ -39,9 +39,10 @@
     <?php $quickAddUrl = $this->url('admin/solr/node-id-mapping-resource', [
         'nodeId' => $solrNode->id(),
         'resourceName' => $resourceName,
-        'action' => 'quickAdd',
+        'action' => 'quick-add',
     ]); ?>
-    <a class="button" href="<?php echo $quickAddUrl; ?>"><?php echo $this->translate('Quick add'); ?></a>
+    <?= $this->hyperlink($this->translate('Quick add'), $quickAddUrl, ['class' => 'button']) ?>
+
     <?php $addUrl = $this->url('admin/solr/node-id-mapping-resource', [
         'nodeId' => $solrNode->id(),
         'resourceName' => $resourceName,
