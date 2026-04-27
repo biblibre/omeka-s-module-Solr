@@ -27,14 +27,27 @@
  */
 ?>
 
-<?php echo $this->pageTitle($this->translate('Quickly add Solr mappings')); ?>
+<?= $this->pageTitle($this->translate('Quickly add Solr mappings')) ?>
 
-<?php echo $this->partial('solr/admin/mapping/form'); ?>
+<?php $form->prepare(); ?>
+<?= $this->form()->openTag($form) ?>
+
+<div id="page-actions">
+    <button><?= $this->escapeHtml($this->translate('Save')) ?></button>
+</div>
+
+<?= $this->formCollection($form, false) ?>
+
+<?php $this->trigger('view.quick-add.form.after'); ?>
+
+<?= $this->form()->closeTag() ?>
+
+<?php $this->trigger('view.quick-add.after'); ?>
 
 <script>
 (function ($) {
   $(document).ready(function () {
-    const placeholder = <?php echo json_encode($this->translate('Search and select...')); ?>;
+    const placeholder = Omeka.jsTranslate('Search and select...');
     // Activate Chosen
     $('select#source, select#field-name').chosen({
       allow_single_deselect: true,
