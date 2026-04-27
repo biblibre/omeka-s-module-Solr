@@ -137,7 +137,7 @@ class MappingController extends AbstractActionController
         $solrNodeId = $this->params('nodeId');
         $resourceName = $this->params('resourceName');
 
-        $form = $this->getForm(SolrQuickMappingForm::class, ['solr_node_id' => $solrNodeId]);
+        $form = $this->getForm(SolrQuickMappingForm::class, ['solr_node_id' => $solrNodeId, 'resource_name' => $resourceName]);
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
