@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.24.0] - 2026-04-28
 
 - Add "quick mapping" feature to easily map multiple sources with multiple Solr
   fields instead of having to create mapping one by one
@@ -290,6 +290,7 @@ The minimum Omeka S version required is 3.0.0
 
 First release
 
+[0.24.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.24.0
 [0.23.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.23.0
 [0.22.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.1
 [0.22.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.0
