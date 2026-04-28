@@ -36,6 +36,7 @@ use Omeka\Form\ConfirmForm;
 use Solr\Api\Representation\SolrNodeRepresentation;
 use Solr\Form\Admin\SolrMappingForm;
 use Solr\Form\Admin\SolrMappingImportForm;
+use Solr\Form\Admin\SolrQuickMappingForm;
 use Solr\ValueExtractor\Manager as ValueExtractorManager;
 
 class MappingController extends AbstractActionController
@@ -118,6 +119,62 @@ class MappingController extends AbstractActionController
                 $this->api()->create('solr_mappings', $data);
 
                 $this->messenger()->addSuccess('Solr mapping created.');
+
+                return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
+                    'nodeId' => $solrNodeId,
+                    'resourceName' => $resourceName,
+                ]);
+            } else {
+                $this->messenger()->addError('There was an error during validation');
+            }
+        }
+
+        return $view;
+    }
+
+    public function quickAddAction()
+    {
+        $solrNodeId = $this->params('nodeId');
+        $resourceName = $this->params('resourceName');
+
+        $form = $this->getForm(SolrQuickMappingForm::class, ['solr_node_id' => $solrNodeId, 'resource_name' => $resourceName]);
+
+        $view = new ViewModel;
+        $view->setVariable('form', $form);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                $newMappings = [];
+                foreach ($data['o:source'] as $source) {
+                    foreach ($data['o:field_name'] as $fieldName) {
+                        $fieldName = str_replace('*', preg_replace('/[^a-zA-Z0-9]/', '_', $source), $fieldName);
+                        $solrMapping = $this->api()->searchOne('solr_mappings', [
+                            'solr_node_id' => $solrNodeId,
+                            'resource_name' => $resourceName,
+                            'field_name' => $fieldName,
+                            'source' => $source,
+                        ])->getContent();
+
+                        if ($solrMapping) {
+                            // Do not prevent creation, the new mapping may have different settings
+                            $this->messenger()->addWarning(sprintf('A mapping with the name "%s" and the source "%s" already exists. This may be a duplicate.', $fieldName, $source));
+                        }
+
+                        $newMappings[] = [
+                            'o:solr_node' => ['o:id' => $solrNodeId],
+                            'o:resource_name' => $resourceName,
+                            'o:field_name' => $fieldName,
+                            'o:source' => $source,
+                            'o:settings' => $data['o:settings'],
+                        ];
+                    }
+                }
+
+                $this->api()->batchCreate('solr_mappings', $newMappings);
+                $this->messenger()->addSuccess('Solr mapping modified.');
 
                 return $this->redirect()->toRoute('admin/solr/node-id-mapping-resource', [
                     'nodeId' => $solrNodeId,
