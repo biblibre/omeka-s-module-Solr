@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.23.0] - 2026-04-28
 
 - Prevent multiple values to be indexed in a non multiValued field
 - Make it easier way to configure the 'qf' parameter, by adding a list of
   configured fields next to the parameter input
+- Add an option to embed filters in query. This allows filters to affect the
+  score of each result.
 
 ## [0.22.1] - 2026-03-04
 
@@ -283,6 +285,7 @@ The minimum Omeka S version required is 3.0.0
 
 First release
 
+[0.23.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.23.0
 [0.22.1]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.1
 [0.22.0]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.22.0
 [0.21.2]: https://github.com/biblibre/omeka-s-module-Solr/releases/tag/v0.21.2
