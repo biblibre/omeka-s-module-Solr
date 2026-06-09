@@ -2,6 +2,6 @@
   "name": "formularium-documentation",
   "version": "0.1.0",
   "devDependencies": {
-    "cypress": "^15.10.0"
+    "cypress": "^15.16.0"
   }
 }
