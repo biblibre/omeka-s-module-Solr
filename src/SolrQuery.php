@@ -7,6 +7,7 @@ use JsonSerializable;
 class SolrQuery implements JsonSerializable
 {
     protected array $params = [];
+    protected array $facetExcludeTags = [];
 
     const PARAMS_MAP = [
         'q' => 'query',
@@ -44,6 +45,13 @@ class SolrQuery implements JsonSerializable
                     $limit = $params["facet.limit.$field"];
                     $data['facet'][$field]['limit'] = (int) $limit;
                     unset($params["facet.limit.$field"]);
+                }
+
+                if (isset($this->facetExcludeTags[$field])) {
+                    $data['facet'][$field]['domain'] = [
+                        'excludeTags' => [$this->facetExcludeTags[$field]],
+                    ];
+                    $data['facet'][$field]['mincount'] = 0;
                 }
             }
             unset($params['facet.field']);
@@ -111,6 +119,11 @@ class SolrQuery implements JsonSerializable
     public function addFacetField(string $field)
     {
         $this->addParam('facet.field', $field);
+    }
+
+    public function setFacetExcludeTag(string $field, string $tag): void
+    {
+        $this->facetExcludeTags[$field] = $tag;
     }
 
     public function setFacetLimit(string $facetField, string $facetFieldLimit)

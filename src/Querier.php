@@ -152,6 +152,10 @@ class Querier extends AbstractQuerier
                 }
 
                 $solrQuery->addFacetField($solrFacetField);
+
+                if ($query->getFacetFilterOperator($facetField) === 'OR') {
+                    $solrQuery->setFacetExcludeTag($solrFacetField, $solrFacetField . '_tag');
+                }
             }
         }
 
@@ -174,28 +178,48 @@ class Querier extends AbstractQuerier
         if (!empty($facetFilters)) {
             foreach ($facetFilters as $name => $values) {
                 $values = array_filter($values);
-                foreach ($values as $value) {
-                    if (is_array($value)) {
-                        $value = array_filter($value);
-                        if (empty($value)) {
-                            continue;
+                if (empty($values)) {
+                    continue;
+                }
+
+                $searchField = $this->getSearchField($name);
+                if (!$searchField) {
+                    throw new QuerierException(sprintf('Field %s does not exist', $name));
+                }
+                $solrFacetField = $searchField->facetField();
+                if (!$solrFacetField) {
+                    throw new QuerierException(sprintf('Field %s is not facetable', $name));
+                }
+
+                if ($query->getFacetFilterOperator($name) === 'OR') {
+                    $tag = $solrFacetField . '_tag';
+                    $flatValues = [];
+                    foreach ($values as $value) {
+                        if (is_array($value)) {
+                            $flatValues = array_merge($flatValues, array_filter($value));
+                        } else {
+                            $flatValues[] = $value;
                         }
-
-                        $value = '(' . implode(' OR ', array_map([$this, 'enclose'], $value)) . ')';
-                    } else {
-                        $value = $this->enclose($value);
                     }
-
-                    $searchField = $this->getSearchField($name);
-                    if (!$searchField) {
-                        throw new QuerierException(sprintf('Field %s does not exist', $name));
+                    if (!empty($flatValues)) {
+                        $enclosedValues = implode(' OR ', array_map([$this, 'enclose'], $flatValues));
+                        $solrQuery->addFilterQuery(
+                            sprintf('{!tag=%s}%s:(%s)', $tag, $solrFacetField, $enclosedValues)
+                        );
                     }
-                    $solrFacetField = $searchField->facetField();
-                    if (!$solrFacetField) {
-                        throw new QuerierException(sprintf('Field %s is not facetable', $name));
+                } else {
+                    foreach ($values as $value) {
+                        if (is_array($value)) {
+                            $value = array_filter($value);
+                            if (empty($value)) {
+                                continue;
+                            }
+                            $value = '(' . implode(' OR ', array_map([$this, 'enclose'], $value)) . ')';
+                        } else {
+                            $value = $this->enclose($value);
+                        }
+                        $solrQuery->addFilterQuery(sprintf('%s:%s', $solrFacetField, $value));
                     }
-
-                    $solrQuery->addFilterQuery(sprintf('%s:%s', $solrFacetField, $value));
                 }
             }
         }
@@ -333,10 +357,8 @@ class Querier extends AbstractQuerier
                 }
 
                 foreach ($facetData['buckets'] as $bucket) {
-                    if ($bucket['count'] > 0) {
-                        $searchField = $searchFieldMapByFacetField[$name];
-                        $response->addFacetCount($searchField->name(), $bucket['val'], $bucket['count']);
-                    }
+                    $searchField = $searchFieldMapByFacetField[$name];
+                    $response->addFacetCount($searchField->name(), $bucket['val'], $bucket['count']);
                 }
             }
         }
