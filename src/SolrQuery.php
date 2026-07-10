@@ -51,7 +51,6 @@ class SolrQuery implements JsonSerializable
                     $data['facet'][$field]['domain'] = [
                         'excludeTags' => [$this->facetExcludeTags[$field]],
                     ];
-                    $data['facet'][$field]['mincount'] = 0;
                 }
             }
             unset($params['facet.field']);
