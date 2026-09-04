@@ -467,8 +467,8 @@ class Querier extends AbstractQuerier
             $parts = array_filter($parts, fn ($part) => !empty($part['q']));
 
             if (!empty($parts)) {
-                $qs = sprintf('(%s)', implode($joiner, array_map(fn($part) => $part['q'], $parts)));
-                $params = array_merge(...array_map(fn($part) => $part['params'], $parts));
+                $qs = sprintf('(%s)', implode($joiner, array_map(fn ($part) => $part['q'], $parts)));
+                $params = array_merge(...array_map(fn ($part) => $part['params'], $parts));
 
                 return ['q' => $qs, 'params' => $params];
             }

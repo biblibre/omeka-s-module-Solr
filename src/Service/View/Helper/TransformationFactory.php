@@ -8,7 +8,7 @@ use Solr\View\Helper\Transformation;
 
 class TransformationFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $services, $requestedName, ?array $options = null)
     {
         $transformationManager = $services->get('Solr\TransformationManager');
 
