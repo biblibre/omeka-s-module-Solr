@@ -35,6 +35,7 @@ class NodeControllerTest extends SolrControllerTestCase
             'o:password' => '',
             'o:settings' => [
                 'resource_name_field' => 'resource_name_s',
+                'embed_filters_in_query' => '0',
             ],
             'csrf' => $form->get('csrf')->getValue(),
         ]);
