@@ -1,107 +1,11 @@
 ---
 kind: pipeline
-name: omeka:3.1.2 php:8.0 mariadb:10.6
+name: omeka:4.0.4 php:8.2 mariadb:11.8
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
     MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:3.1.2-php8.0
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:3.2.3 php:8.0 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:3.2.3-php8.0
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.0.4 php:8.0 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.0
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.0.4 php:8.1 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.1
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.0.4 php:8.2 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
+  image: mariadb:11.8
   name: db
 steps:
 - commands:
@@ -120,60 +24,12 @@ workspace:
   path: omeka-s/modules/Solr
 ---
 kind: pipeline
-name: omeka:4.1.1 php:8.0 mariadb:10.6
+name: omeka:4.1.1 php:8.2 mariadb:11.8
 services:
 - environment:
     MYSQL_DATABASE: omeka_test
     MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.0
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.1.1 php:8.1 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
-  name: db
-steps:
-- commands:
-  - cp -rT /usr/src/omeka-s ../..
-  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
-  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
-    > ../../application/test/config/database.ini
-  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
-  - ../../vendor/bin/phpunit
-  - ../../node_modules/.bin/gulp test:module:cs
-  image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.1
-  name: test
-  pull: always
-type: docker
-workspace:
-  path: omeka-s/modules/Solr
----
-kind: pipeline
-name: omeka:4.1.1 php:8.2 mariadb:10.6
-services:
-- environment:
-    MYSQL_DATABASE: omeka_test
-    MYSQL_ROOT_PASSWORD: root
-  image: mariadb:10.6
+  image: mariadb:11.8
   name: db
 steps:
 - commands:
@@ -185,6 +41,102 @@ steps:
   - ../../vendor/bin/phpunit
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.2
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.2.1 php:8.2 mariadb:11.8
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:11.8
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.2
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.2.1 php:8.3 mariadb:11.8
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:11.8
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.3
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.2.1 php:8.4 mariadb:11.8
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:11.8
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.4
+  name: test
+  pull: always
+type: docker
+workspace:
+  path: omeka-s/modules/Solr
+---
+kind: pipeline
+name: omeka:4.2.1 php:8.5 mariadb:11.8
+services:
+- environment:
+    MYSQL_DATABASE: omeka_test
+    MYSQL_ROOT_PASSWORD: root
+  image: mariadb:11.8
+  name: db
+steps:
+- commands:
+  - cp -rT /usr/src/omeka-s ../..
+  - git clone --depth 1 https://github.com/biblibre/omeka-s-module-Search.git ../Search
+  - echo 'host = "db"\nuser = "root"\npassword = "root"\ndbname = "omeka_test"\n'
+    > ../../application/test/config/database.ini
+  - bash -c "cd ../.. && php /usr/local/libexec/wait-for-db.php"
+  - ../../vendor/bin/phpunit
+  - ../../node_modules/.bin/gulp test:module:cs
+  image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.5
   name: test
   pull: always
 type: docker
@@ -214,6 +166,6 @@ trigger:
 type: docker
 ---
 kind: signature
-hmac: 9de697124f448a367d73c8dd311f09f14765d44e3add030c4a9e3343da33c079
+hmac: dfc4923370bcfc53759d02c154f15efd069046d6508f90f3d2778d94fa85beef
 
 ...
