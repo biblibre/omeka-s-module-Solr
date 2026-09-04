@@ -191,7 +191,29 @@ type: docker
 workspace:
   path: omeka-s/modules/Solr
 ---
+kind: pipeline
+name: documentation
+steps:
+- commands:
+  - sh .drone/documentation-build.sh
+  image: python:3
+  name: build
+- commands:
+  - apk add git openssh
+  - sh .drone/documentation-push.sh
+  environment:
+    GH_DEPLOY_KEY:
+      from_secret: GH_DEPLOY_KEY
+  image: alpine
+  name: push
+trigger:
+  branch:
+  - master
+  event:
+  - push
+type: docker
+---
 kind: signature
-hmac: e2427d86e045c3fcfd3a7a8022afe0921d0dbb114902468a25b329c273ad0bf6
+hmac: 9de697124f448a367d73c8dd311f09f14765d44e3add030c4a9e3343da33c079
 
 ...
