@@ -61,11 +61,11 @@
             <?php foreach ($valueExtractors as $name => $valueExtractor): ?>
                 <tr>
                     <td>
-                        <span><?php echo $valueExtractor->getLabel(); ?></span>
+                        <?php $href = $this->url('admin/solr/node-id-mapping-resource', ['resourceName' => $name, 'nodeId' => $solrNode->id()]); ?>
+                        <span><?= $this->hyperlink($valueExtractor->getLabel(), $href) ?></span>
                         <ul class="actions">
                             <li>
                                 <?php
-                                    $href = $this->url('admin/solr/node-id-mapping-resource', ['resourceName' => $name, 'nodeId' => $solrNode->id()]);
                                     echo $this->hyperlink('', $href, [
                                         'class' => 'o-icon-settings',
                                         'title' => $this->translate('Rules'),

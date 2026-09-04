@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- In Solr mapping page, make the resource name clickable
 - Fix the 'Add new node' page
 
 ## [0.26.0] - 2026-07-10
