@@ -18,7 +18,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.0.4-php8.2
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -42,7 +41,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.1.1-php8.2
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -66,7 +64,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.2
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -90,7 +87,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.3
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -114,7 +110,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.4
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -138,7 +133,6 @@ steps:
   - ../../node_modules/.bin/gulp test:module:cs
   image: git.biblibre.com/omeka-s/omeka-s-ci:4.2.1-php8.5
   name: test
-  pull: always
 type: docker
 workspace:
   path: omeka-s/modules/Solr
@@ -166,6 +160,6 @@ trigger:
 type: docker
 ---
 kind: signature
-hmac: dfc4923370bcfc53759d02c154f15efd069046d6508f90f3d2778d94fa85beef
+hmac: 312920719ae6ad882c0b27ef4df83dc9e5d97d826b808beb165ad7e5752543cd
 
 ...
