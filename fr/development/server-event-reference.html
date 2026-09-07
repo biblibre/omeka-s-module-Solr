@@ -113,12 +113,12 @@
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Lien vers cette rubrique"></a></h4>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$sharedEventManager</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="s1">&#39;Solr\Indexer&#39;</span><span class="p">,</span> <span class="s1">&#39;solr.indexDocument&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$sharedEventManager</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="s1">'Solr\Indexer'</span><span class="p">,</span> <span class="s1">'solr.indexDocument'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$document</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getTarget</span><span class="p">();</span>
-    <span class="nv">$resource</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">&#39;resource&#39;</span><span class="p">);</span>
-    <span class="nv">$solrNode</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">&#39;solrNode&#39;</span><span class="p">);</span>
+    <span class="nv">$resource</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">'resource'</span><span class="p">);</span>
+    <span class="nv">$solrNode</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">'solrNode'</span><span class="p">);</span>
 
-    <span class="nv">$document</span><span class="o">-&gt;</span><span class="na">addField</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+    <span class="nv">$document</span><span class="o">-&gt;</span><span class="na">addField</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 </div>
@@ -142,12 +142,12 @@
 </section>
 <section id="id2">
 <h4>Example<a class="headerlink" href="#id2" title="Lien vers cette rubrique"></a></h4>
-<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$sharedEventManager</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="s1">&#39;Solr\Querier&#39;</span><span class="p">,</span> <span class="s1">&#39;solr.query&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="nv">$sharedEventManager</span><span class="o">-&gt;</span><span class="na">attach</span><span class="p">(</span><span class="s1">'Solr\Querier'</span><span class="p">,</span> <span class="s1">'solr.query'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$solrQuery</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getTarget</span><span class="p">();</span>
-    <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">);</span>
-    <span class="nv">$solrNode</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">&#39;solrNode&#39;</span><span class="p">);</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">'query'</span><span class="p">);</span>
+    <span class="nv">$solrNode</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getParam</span><span class="p">(</span><span class="s1">'solrNode'</span><span class="p">);</span>
 
-    <span class="nv">$solrQuery</span><span class="o">-&gt;</span><span class="na">addFilterQuery</span><span class="p">(</span><span class="s1">&#39;foo:bar&#39;</span><span class="p">);</span>
+    <span class="nv">$solrQuery</span><span class="o">-&gt;</span><span class="na">addFilterQuery</span><span class="p">(</span><span class="s1">'foo:bar'</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 </div>
