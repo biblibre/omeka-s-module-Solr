@@ -2,6 +2,8 @@
 
 This module provides a [Search](https://github.com/biblibre/omeka-s-module-Search) adapter for [Solr](https://lucene.apache.org/solr/).
 
+The complete documentation can be found at <https://biblibre.github.io/omeka-s-module-Solr/>
+
 ## Requirements
 
 - PHP >= 8.0
