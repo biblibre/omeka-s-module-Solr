@@ -472,3 +472,11 @@ msgstr ""
 #: src/Api/Adapter/SolrNodeAdapter.php:109
 msgid "Another Solr node already uses this URI"
 msgstr ""
+
+#: src/Transformation/PrefixWithSortKey.php:11
+msgid "Prefix with sort key (for facets)"
+msgstr ""
+
+#: src/FacetValueRenderer/StripSortKey.php:13
+msgid "Strip sort key (Solr)"
+msgstr ""

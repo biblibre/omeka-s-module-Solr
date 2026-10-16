@@ -527,3 +527,11 @@ msgstr "L'URI ne peut pas être vide"
 #: src/Api/Adapter/SolrNodeAdapter.php:109
 msgid "Another Solr node already uses this URI"
 msgstr "Un autre nœud Solr utilise déjà cette URI"
+
+#: src/Transformation/PrefixWithSortKey.php:11
+msgid "Prefix with sort key (for facets)"
+msgstr "Préfixer avec une clé de tri (pour les facettes)"
+
+#: src/FacetValueRenderer/StripSortKey.php:13
+msgid "Strip sort key (Solr)"
+msgstr "Retirer la clé de tri (Solr)"

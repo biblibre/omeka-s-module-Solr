@@ -251,6 +251,11 @@ return [
             'solr' => Service\AdapterFactory::class,
         ],
     ],
+    'search_facet_value_renderers' => [
+        'invokables' => [
+            'solr_strip_sort_key' => FacetValueRenderer\StripSortKey::class,
+        ],
+    ],
     'solr_http_client' => [
     ],
     'solr_transformations' => [
@@ -261,6 +266,7 @@ return [
         'invokables' => [
             'Solr\Transformation\ConvertResourceToString' => Transformation\ConvertResourceToString::class,
             'Solr\Transformation\ConvertToSolrDateRange' => Transformation\ConvertToSolrDateRange::class,
+            'Solr\Transformation\PrefixWithSortKey' => Transformation\PrefixWithSortKey::class,
             'Solr\Transformation\StripHtmlTags' => Transformation\StripHtmlTags::class,
         ],
     ],

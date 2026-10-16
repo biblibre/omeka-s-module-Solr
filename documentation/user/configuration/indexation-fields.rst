@@ -38,3 +38,27 @@ Transformations
     format.
 
     Other modules can add their own transformations
+
+Sort facets alphabetically
+--------------------------
+
+Solr sorts facet values in *Index order* using their binary representation:
+uppercase letters come before lowercase letters, accented letters come after
+``z``, and values starting with a whitespace or an invisible character (non
+breaking space, zero width space, ...) come first.
+
+To get a sort order that is insensitive to case, accents and leading
+whitespace:
+
+1. Create a mapping for the facet, using a ``*_ss`` Solr field (for instance
+   ``dcterms_subject_facet_ss``), and add the transformation *Prefix with sort
+   key (for facets)* **at the end** of the transformations list. Keep a
+   separate mapping (``*_txt`` for instance) for full text search.
+2. In the node's search fields, use this Solr field as *Facet field*.
+3. In the search page facets configuration, set *Value renderer* to *Strip sort
+   key (Solr)* and *Sort* to *Index order asc*.
+4. Reindex.
+
+The indexed value looks like ``elephant||Éléphant``: Solr sorts on the
+normalized part, the value renderer only displays the part after ``||``. If the
+value renderer is not configured, the whole value is displayed.
