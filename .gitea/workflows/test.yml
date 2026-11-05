@@ -1,0 +1,42 @@
+name: security
+
+# À déposer dans .gitea/workflows/security.yml du dépôt du MODULE.
+#
+# Le module ne contient que ce fichier : ni config, ni règles, ni script.
+# Tout vit dans omeka-s-audit, que le job clone. Mettre à jour les règles pour
+# tous les modules se fait donc en poussant sur omeka-s-audit.
+#
+# Gitea Actions fait le checkout à la racine du workspace, où lib/audit.sh doit
+# reconstituer omeka-s/modules/<Module>. D'où le checkout à l'écart dans
+# _module, puis SRC qui indique au script où trouver le module à mettre en place.
+
+on:
+  push:
+    branches: [master, main, test-actions]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (omeka ${{ matrix.omeka }} / php ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { omeka: "4.2.1", php: "8.4" }
+          # Borne basse : decommenter pour verifier le plus ancien runtime.
+          # - { omeka: "4.1.1", php: "8.1" }
+    container:
+      image: git.biblibre.com/omeka-s/omeka-s-ci:${{ matrix.omeka }}-php${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: _module
+
+      - name: Test
+        run: |
+          echo "Test"
